@@ -51,7 +51,6 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          
           <SWRConfig
             value={{ fetcher: (url: string) => axios(url).then(r => r.data) }}
           >
