@@ -3,6 +3,7 @@ import {Grid, AppBar, Toolbar, Typography, Button, InputBase} from '@material-ui
 import Link from 'next/link'
 import BarChartIcon from '@material-ui/icons/BarChart'
 import SearchIcon from '@material-ui/icons/Search';
+import logout from '../requests/logout'
 
 
 const useStyles = makeStyles(theme => ({
@@ -66,7 +67,8 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Header() {
+export default function Header({loggedIn}) {
+
     const classes = useStyles()
     return (
         <AppBar position="sticky" className={classes.navBar}>
@@ -93,7 +95,12 @@ export default function Header() {
                 <Button color="inherit">About</Button>
                 <Button color="inherit">Tutorial</Button>
                 <Button color="inherit">Manual</Button>
-                <Button color="inherit">Login</Button>
+                {!loggedIn ? <Button color="inherit">
+                    <Link href="/login">
+                        <a style={{color:'inherit', textDecoration:'none'}}>Login</a>
+                    </Link>
+                </Button> : 
+                <Button color="inherit" onClick={(e) => logout()}>Logout</Button>}
             </Toolbar>
         </AppBar>
     )
