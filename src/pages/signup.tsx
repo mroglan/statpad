@@ -81,16 +81,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const initialValues = {
-    firstName: '',
-    lastName: '',
+    username: '',
     email: '',
     password: '',
     passwordConfirmation: ''
 }
 
 interface submitI {
-    firstName: string;
-    lastName: string;
+    username: string;
     email: string;
     password: string;
     passwordConfirmation: string;
@@ -139,9 +137,9 @@ export default function SignUp() {
                         <Grid container justify="center">
                             <Typography variant="h4" gutterBottom>Create an Account</Typography>
                         </Grid>
-                        <Grid container style={{marginBottom: '1rem'}}>
+                        <Grid container>
                             {serverErrors.map((error, index) => (
-                                <Grid item xs={12} key={index}>
+                                <Grid item xs={12} key={index} style={{marginBottom: '1rem'}}>
                                     <ErrorBox msg={error.msg} index={index} handleRemoveError={handleRemoveError} />
                                 </Grid>
                             ))}
@@ -149,8 +147,7 @@ export default function SignUp() {
                         <Box>
                             <Formik validationSchema={
                                 object({
-                                    firstName: string().required('Your first name is required').min(2).max(100),
-                                    lastName: string().required('Your last name is required').min(2).max(100),
+                                    username: string().required('A username is required').min(2).max(100),
                                     email: string().required('Email required').email('A valid email is needed'),
                                     password: string().required('A password is required').min(8).max(128),
                                     passwordConfirmation: string().when('password', {
@@ -165,23 +162,7 @@ export default function SignUp() {
                                     <Form>
                                         <Box mb={2}>
                                             <FormGroup>
-                                                <FormikTextField name="firstName" label="First Name" InputProps={{classes: {
-                                                    root: classes.input,
-                                                    error: classes.error
-                                                }}}
-                                                InputLabelProps={{classes: {
-                                                    root: classes.textField,
-                                                    error: classes.errorLabel
-                                                }}}
-                                                FormHelperTextProps={{classes: {
-                                                    root: classes.helperText,
-                                                    error: classes.helperTextError
-                                                }}} />
-                                            </FormGroup>
-                                        </Box>
-                                        <Box mb={2}>
-                                            <FormGroup>
-                                                <FormikTextField name="lastName" label="Last Name" InputProps={{classes: {
+                                                <FormikTextField name="username" label="Username" InputProps={{classes: {
                                                         root: classes.input,
                                                         error: classes.error
                                                     }}}

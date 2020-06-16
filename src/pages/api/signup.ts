@@ -20,6 +20,11 @@ export default async function signUp(req: NextApiRequest, res: NextApiResponse) 
             throw 'new error'
         }
 
+        if(users.find(user => user.username === req.body.username)) {
+            errors.push({msg: 'This username is already in use'})
+            throw 'new error'
+        }
+
         if(req.body.password !== req.body.passwordConfirmation) {
             errors.push({msg: 'Passwords do not match'})
             throw 'new error'
@@ -34,8 +39,7 @@ export default async function signUp(req: NextApiRequest, res: NextApiResponse) 
         })
         //console.log('successfully hashed password')
         const user = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+            username: req.body.username,
             email: req.body.email,
             password: hashedPassword
         }

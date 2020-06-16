@@ -138,14 +138,14 @@ export default function Login({signedUp}) {
                         <Grid container justify="center">
                             <Typography variant="h4" gutterBottom>Login to Statpad</Typography>
                         </Grid>
-                        <Grid container style={{marginBottom: '1rem'}}>
-                            {signedUpMessage && <Grid item xs={12}>
+                        <Grid container>
+                            {signedUpMessage && <Grid item xs={12} style={{marginBottom: '1rem'}}>
                                     <SuccessBox msg={'You can now login in!'} handleRemoveSuccess={handleRemoveSuccess} />
                                 </Grid>}
                         </Grid>
-                        <Grid container style={{marginBottom: '1rem'}}>
+                        <Grid container>
                             {serverErrors.map((error, index) => (
-                                <Grid item xs={12} key={index}>
+                                <Grid item xs={12} key={index} style={{marginBottom: '1rem'}}>
                                     <ErrorBox msg={error.msg} index={index} handleRemoveError={handleRemoveError} />
                                 </Grid>
                             ))}

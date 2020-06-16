@@ -7,8 +7,7 @@ import {ObjectID} from 'mongodb'
 
 interface UserI {
     _id: ObjectID;
-    firstName: string;
-    lastName: string;
+    username: string;
     email: string;
     password: string;
 }
@@ -42,8 +41,7 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         const claims = {
             _id: user._id,
             email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName
+            username: user.username
         }
         console.log('set claims...')
         console.log(process.env.SIGNATURE)
