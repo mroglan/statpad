@@ -4,6 +4,23 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import App from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import Router from 'next/dist/client/router';
+
+NProgress.configure({showSpinner: false})
+
+Router.events.on('routeChangeStart', () => {
+  NProgress.start()
+})
+
+Router.events.on('routeChangeComplete', () => {
+  NProgress.done()
+})
+
+Router.events.on('routeChangeError', () => {
+  NProgress.done()
+})
 
 // Create a theme instance.
 export const theme = createMuiTheme({
@@ -52,6 +69,11 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
+          <style jsx global>{`
+            #nprogress .bar {
+              background: hsl(301, 77%, 40%)
+            }
+          `}</style>
             <Container maxWidth={false} style={{backgroundColor: theme.palette.primary.dark}}>
                 <Component {...pageProps} />
             </Container>

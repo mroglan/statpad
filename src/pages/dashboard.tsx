@@ -2,13 +2,14 @@ import router from 'next/router'
 import { GetServerSideProps, NextPageContext, GetServerSidePropsContext } from 'next'
 import database from '../database/database'
 import getUser from '../requests/getUser'
-import Header from '../components/Header'
+import Header from '../components/nav/Header'
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Paper, Button, Box, Typography} from '@material-ui/core'
 import SideNav from '../components/nav/SideNav'
 import MenuIcon from '@material-ui/icons/Menu';
 import {useRef} from 'react'
 import Link from 'next/link'
+import ProjectList from '../components/lists/ProjectList'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -82,7 +83,6 @@ const useStyles = makeStyles(theme => ({
     recentsContent: {
         display: 'flex',
         alignItems: 'stretch',
-        maxHeight: 350,
         minHeight: 150
     },
     noProjectsTitle: {
@@ -111,7 +111,7 @@ export default function Dashboard({user, recentProjects}) {
                     </Paper>
                 </Grid>
                 <Grid item className={classes.mainContent} md={9} xs={12}>
-                    <Box my={3}>
+                    <Box mb={3}>
                         <Typography variant="h1" className={classes.welcomeMessage}>
                             Welcome, {user.username}
                         </Typography>
@@ -138,7 +138,7 @@ export default function Dashboard({user, recentProjects}) {
                                             </Link>
                                         </Box>
                                     </Box>
-                                </Box> : ''}
+                                </Box> : <ProjectList projects={recentProjects} />}
                             </Box>
                         </Paper>
                     </Box>
@@ -150,6 +150,12 @@ export default function Dashboard({user, recentProjects}) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const user = await getUser(ctx)
-    console.log(user)
-    return {props: {user, recentProjects: []}}
+    const db = await database()
+    const recentProjectsFound = await db.collection('projects').find({}).sort({updateDate: -1}).limit(5).toArray()
+    const recentProjects = recentProjectsFound.map(doc => {
+        const editors = doc.editors.map(editor => editor.toString())
+        return {...doc, _id: doc._id.toString(), owner: doc.owner.toString(), createDate: doc.createDate.toString(), updateDate: doc.updateDate.toString(), editors}
+    })
+    console.log(recentProjects)
+    return {props: {user, recentProjects}}
 }

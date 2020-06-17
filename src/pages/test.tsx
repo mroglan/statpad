@@ -1,6 +1,6 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Typography, Paper, Button, Box, Select, InputLabel, MenuItem} from '@material-ui/core'
-import Header from '../components/Header'
+import Header from '../components/nav/Header'
 import DataTable from '../components/test'
 import {useState, useEffect} from 'react'
 import AddIcon from '@material-ui/icons/Add';

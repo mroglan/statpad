@@ -3,7 +3,7 @@ import {Grid, AppBar, Toolbar, Typography, Button, InputBase} from '@material-ui
 import Link from 'next/link'
 import BarChartIcon from '@material-ui/icons/BarChart'
 import SearchIcon from '@material-ui/icons/Search';
-import logout from '../requests/logout'
+import logout from '../../requests/logout'
 import MenuIcon from '@material-ui/icons/Menu'
 import {useRef} from 'react'
 

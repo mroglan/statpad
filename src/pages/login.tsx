@@ -1,5 +1,5 @@
 import {makeStyles} from '@material-ui/core/styles'
-import Header from '../components/Header'
+import Header from '../components/nav/Header'
 import {Grid, Paper, Box, Typography, FormGroup, TextField, Button} from '@material-ui/core'
 import {Form, Formik, Field, useField, ErrorMessage} from 'formik'
 import {object, string, number, boolean, array, mixed, ref} from 'yup'
@@ -97,7 +97,7 @@ export default function Login({signedUp}) {
     const [signedUpMessage, setSignedUpMessage] = useState(signedUp)
 
     const handleSubmit = async (values, actions) => {
-        const res = await fetch('http://localhost:3000/api/login', {
+        const res = await fetch(`${process.env.API_ROUTE}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

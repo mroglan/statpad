@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from "next";
 
 
 export default async function Authenticated(ctx:GetServerSidePropsContext) {
-    const res = await fetch('http://localhost:3000/api/checknotauthenticated', {
+    const res = await fetch(`${process.env.API_ROUTE}/checknotauthenticated`, {
         headers: {
             cookie: ctx.req?.headers.cookie
         }

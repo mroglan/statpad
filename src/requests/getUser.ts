@@ -4,7 +4,8 @@ import Router from 'next/router'
 
 export default async function getUser(ctx: GetServerSidePropsContext) {
     try {
-        const res = await fetch('http://localhost:3000/api/finduser', {
+        //console.log(process.env.API_ROUTE)
+        const res = await fetch(`${process.env.API_ROUTE}/finduser`, {
             headers: {
                 cookie: ctx.req?.headers.cookie
             }

@@ -1,6 +1,6 @@
 import {makeStyles} from '@material-ui/core/styles'
-import Header from '../../components/Header'
-import {Grid, Paper, Box, Typography, FormGroup, TextField, Button} from '@material-ui/core'
+import Header from '../../components/nav/Header'
+import {Grid, Paper, Box, Typography, FormGroup, TextField, Button, RadioGroup, Radio} from '@material-ui/core'
 import {Form, Formik, Field, useField, ErrorMessage} from 'formik'
 import {object, string, number, boolean, array, mixed, ref} from 'yup'
 import {useState} from 'react'
@@ -96,6 +96,23 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none'
         }
+    },
+    textWhite: {
+        color: '#fff'
+    },
+    radio: {
+        '&$checked': {
+            color: theme.palette.success.main
+        }
+    },
+    checked: {},
+    createButton: {
+        backgroundColor: 'hsl(140, 81%, 31%)',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: 'hsl(140, 60%, 31%)'
+        },
+        margin: theme.spacing(1)
     }
 }))
 
@@ -103,10 +120,9 @@ export default function CreateProject({user}) {
 
     const initialValues = {
         name: '',
-        owner: user.username,
-        type: 'none',
-        password: '',
-        description: ''
+        owner: user._id,
+        description: '',
+        public: true
     }
 
     const [serverErrors, setServerError] = useState([])
@@ -119,7 +135,23 @@ export default function CreateProject({user}) {
     }
 
     const handleSubmit = async (values, actions) => {
+        const res = await fetch(`${process.env.API_ROUTE}/projects/newproject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        })
 
+        const json = await res.json()
+        if(res.status !== 200) {
+            setServerError(json)
+            actions.setSubmitting(false)
+            return
+        }
+        //const id = json.ops[0]._id
+        console.log(json)
+        router.push(`/projects/${json}`)
     }
 
     const classes = useStyles()
@@ -156,15 +188,17 @@ export default function CreateProject({user}) {
                             object({
                                 name: string().required('You must specify a Project Name').max(50),
                                 description: string(),
-                                password: string().required('You must specify a password'),
                                 public: boolean()
                             })
                         } initialValues={initialValues} onSubmit={(values, actions) => handleSubmit(values, actions)} >
-                            {({values, errors, isSubmitting, isValidating}) => (
+                            {({values, isSubmitting, isValidating, setFieldValue}) => (
                                 <Form>
                                     <Box mb={2} className={classes.pathContainer}>
                                         <FormGroup className={classes.pathInput}>
-                                            <TextField label="Owner" variant="outlined" disabled value={user.username} name="owner" />
+                                            <TextField label="Owner" variant="outlined" disabled value={user.username} name="owner"
+                                            InputProps={{classes: {
+                                                disabled: classes.input
+                                            }}} />
                                         </FormGroup>
                                         <Box mx={3}>
                                             <Typography variant="h3" className={classes.pathSlash}> / </Typography>
@@ -184,6 +218,64 @@ export default function CreateProject({user}) {
                                             }}} />
                                         </FormGroup>
                                         <div style={{flexGrow: 1}} />
+                                    </Box>
+                                    <Box mb={2}>
+                                        <FormGroup>
+                                            <FormikTextField name="description" label="Optional Description" variant="outlined" InputProps={{classes: {
+                                                root: classes.input,
+                                                error: classes.error
+                                            }}}
+                                            InputLabelProps={{classes: {
+                                                root: classes.textField,
+                                                error: classes.errorLabel
+                                            }}}
+                                            FormHelperTextProps={{classes: {
+                                                root: classes.helperText,
+                                                error: classes.helperTextError
+                                            }}} />
+                                        </FormGroup>
+                                    </Box>
+                                    <Box mb={2}>
+                                        <FormGroup>
+                                            <RadioGroup aria-label="privacy" name="privacy">
+                                                <Grid container alignItems="center" wrap="nowrap"
+                                                style={{marginBottom: '1rem'}} >
+                                                    <Grid item>
+                                                        <Radio value={true} checked={values.public} 
+                                                        onChange={(e) => setFieldValue('public', true)}
+                                                        classes={{root: classes.radio, checked: classes.checked}} />
+                                                    </Grid>
+                                                    <Grid item style={{flexGrow: 1}}>
+                                                        <Typography variant="h5" className={classes.textWhite}>
+                                                            Public
+                                                        </Typography>
+                                                        <Typography variant="body1" className={classes.dimWhite}>
+                                                            Anyone will be able to see your project but you choose who can edit it.
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid container alignItems="center" wrap="nowrap">
+                                                    <Grid item>
+                                                        <Radio value={false} checked={!values.public}
+                                                        onChange={(e) => setFieldValue('public', false)}
+                                                        classes={{root: classes.radio, checked: classes.checked}} />
+                                                    </Grid>
+                                                    <Grid item style={{flexGrow: 1}}>
+                                                        <Typography variant="h5" className={classes.textWhite}>
+                                                            Private
+                                                        </Typography>
+                                                        <Typography variant="body1" className={classes.dimWhite}>
+                                                            Only people you invite to edit will be able to see your project.
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </RadioGroup>
+                                        </FormGroup>
+                                    </Box>
+                                    <Box mt={3}>
+                                        <Button type="submit" className={classes.createButton}>
+                                            Create Project
+                                        </Button>
                                     </Box>
                                 </Form>
                             )}
