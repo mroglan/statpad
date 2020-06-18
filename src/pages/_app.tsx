@@ -71,7 +71,8 @@ export default class MyApp extends App {
           <CssBaseline />
           <style jsx global>{`
             #nprogress .bar {
-              background: hsl(301, 77%, 40%)
+              background: hsl(301, 77%, 40%);
+              height: .2rem
             }
           `}</style>
             <Container maxWidth={false} style={{backgroundColor: theme.palette.primary.dark}}>

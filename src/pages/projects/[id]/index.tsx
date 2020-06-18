@@ -84,6 +84,22 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: 'hsl(140, 60%, 31%)'
         },
         margin: theme.spacing(1)
+    },
+    deleteButton: {
+        backgroundColor: 'hsla(348, 91%, 40%, 1)',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: 'hsla(348, 91%, 40%, .9)'
+        },
+        margin: theme.spacing(1)
+    },
+    inviteButton: {
+        backgroundColor: 'hsla(31, 82%, 54%, 1)',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: 'hsla(31, 82%, 54%, .9)'
+        },
+        margin: theme.spacing(1)
     }
 }))
 
@@ -95,8 +111,9 @@ export default function Project({user, project, serverComponents}) {
     const toggleNewComponentModal = (newComponent) => {
         setOpenModal(!openModal)
         if(!newComponent) return
+        console.log(newComponent)
         const compCopy = [...components]
-        compCopy.push(newComponent)
+        compCopy.unshift(newComponent)
         setComponents(compCopy)
     }
 
@@ -111,8 +128,7 @@ export default function Project({user, project, serverComponents}) {
                     </Paper>
                 </Grid>
                 <Grid item md={9} xs={12} className={classes.mainContent}>
-
-                    <Box my={3} px={3}>
+                    <Box mb={3} px={3}>
                         <Paper className={classes.paper}>
                             <Box>
                                 <Typography variant="h3" className={classes.projectTitle}>
@@ -134,6 +150,29 @@ export default function Project({user, project, serverComponents}) {
                                         </Box>
                                     </Box>
                                 </Box> : <ComponentsList components={components} />}
+                            </Box>
+                        </Paper>
+                    </Box>
+                    <Box mb={3} px={3}>
+                        <Paper className={classes.paper}>
+                            <Box px={3}>
+                                <Grid container direction="row" spacing={3}>
+                                    <Grid item>
+                                        <Button className={classes.newButton} onClick={(e) => toggleNewComponentModal(null)} >
+                                            New Component
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button className={classes.deleteButton}>
+                                            Remove Component
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button className={classes.inviteButton}>
+                                            Invite a User
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             </Box>
                         </Paper>
                     </Box>

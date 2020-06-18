@@ -7,6 +7,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core'
 import {useRef, useState} from 'react'
 import Router from 'next/router'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -27,6 +28,14 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             backgroundColor: 'hsl(140, 60%, 31%)'
         }
+    },
+    progressContainer: {
+        position: 'absolute',
+        top: '1rem',
+        left: '1rem'
+    },
+    spinner: {
+        color: 'hsl(301, 77%, 40%)'
     }
 }))
 
@@ -37,6 +46,7 @@ export default function NewComponentDialog({open, toggleOpen, components, projec
 
     const [nameErr, setNameErr] = useState('')
     const [type, setType] = useState('data')
+    const [loading, setLoading] = useState(false)
 
     const newComponent = async () => {
         if(components.find(component => component.name === nameRef.current.value)) {
@@ -44,6 +54,7 @@ export default function NewComponentDialog({open, toggleOpen, components, projec
             return
         }
         console.log('type', type)
+        setLoading(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/newcomponent`, {
             method: 'POST',
             headers: {
@@ -55,14 +66,20 @@ export default function NewComponentDialog({open, toggleOpen, components, projec
                 type: type
             })
         })
-        const json = res.json()
+        const json = await res.json()
+        console.log(json.ops[0])
+        setLoading(false)
         if(res.status !== 200) return
-        toggleOpen(JSON.parse(JSON.stringify(json)))
+        toggleOpen(JSON.parse(JSON.stringify(json.ops[0])))
+    }
+
+    const closeDialog = () => {
+        toggleOpen(null)
     }
 
     const classes = useStyles()
     return (
-        <Dialog fullWidth open={open} onClose={toggleOpen} aria-labelledby="New Component Dialog" 
+        <Dialog fullWidth open={open} onClose={closeDialog} aria-labelledby="New Component Dialog" 
         classes={{paper: classes.dialog}}>
             <DialogTitle style={{textAlign: "center"}} className={classes.textWhite}>New Component</DialogTitle>
             <DialogContent>
@@ -92,6 +109,9 @@ export default function NewComponentDialog({open, toggleOpen, components, projec
                     </Button>
                 </Box>
             </DialogContent>
+            {loading && <div className={classes.progressContainer}>
+                <CircularProgress classes={{svg: classes.spinner}} />
+            </div>}
         </Dialog>  
     )
 }
