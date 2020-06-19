@@ -1,10 +1,15 @@
 import { Grid, Input, Typography, Button, Box, FormControl, InputLabel, Select, MenuItem, Switch } from "@material-ui/core";
-import {useState, useMemo} from 'react'
+import {useState, useMemo, useEffect} from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import calc1VarStats from '../utilities/calcVar1Stats'
 
 interface statProps {
     rows: any;
+    basic: boolean;
+    syncData: any;
+    sync: boolean;
+    index: number;
+    initialGraph: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -49,9 +54,33 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Var1Stats({rows}:statProps) {
+export default function Var1Stats({rows, basic, syncData, index, sync, initialGraph}:statProps) {
 
-    const [list, setList] = useState(0)
+    const [list, setList] = useState(!basic ? initialGraph.properties : 0)
+
+    useEffect(() => {
+        if(!sync) return
+        console.log('syncing data ' + index)
+        const uploadData = async () => {
+            const res = await fetch(`${process.env.API_ROUTE}/projects/components/updategraph`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: initialGraph._id,
+                    properties: list,
+                    charts: 0
+                })
+            })
+            if(res.status !== 200) {
+                syncData(index, false)
+                return
+            }
+            syncData(index, true)
+        }
+        uploadData()
+    }, [sync])
 
     const handleListChange = (e:any) => {
         setList(e.target.value)

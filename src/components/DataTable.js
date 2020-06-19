@@ -4,7 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import {useState, useEffect, createRef, useRef} from 'react'
+import {useState, useEffect, createRef, useRef, useMemo} from 'react'
 import { Input, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -160,22 +160,38 @@ const useStyles = makeStyles((theme) => ({
     },
     animateAppear: {
         animation: `$appear 200ms ease-in`,
+    },
+    syncing: {
+        animation: '$rotate 2000ms infinite'
+    },
+    '@keyframes rotate': {
+        '0%': {
+            transform: 'rotate(0)'
+        },
+        '100%': {
+            transform: 'rotate(360deg)'
+        }
     }
 }))
 
-export default function DataTable({syncData}) {
+export default function DataTable({syncData, initialData, syncing, basic}) {
+
+    //console.log(initialData)
 
     // const [cellRefs, setCellRefs] = useState([
     //     [createRef(), createRef()], [createRef(), createRef()], [createRef(), createRef()],
     //      [createRef(), createRef()], [createRef(), createRef()], [createRef(), createRef()]
     // ])
 
-    const [cells, setCells] = useState([
-        ['', ''], ['', ''], ['', ''],
-         ['', ''], ['', ''], ['', '']
-    ])
+    const [cells, setCells] = useState(initialData)
 
     const cellRefs = cells.map(cell => cell.map(el => createRef()))
+
+    useMemo(() => {
+        if(basic) return
+        console.log('initial data change')
+        setCells(initialData)
+    }, [initialData])
     //console.log(cellRefs)
 
     //const [rowAdded, setRowAdded] = useState(false)
@@ -183,13 +199,7 @@ export default function DataTable({syncData}) {
     const prevCells = useRef()
 
     useEffect(() => {
-        // console.log(cellRefs)
-        // if(rowAdded) cellRefs[cellRefs.length - 1][0].current.focus()
-        // else {
-        //     console.log('processing data')
-        //     processData()
-        // } 
-        //setRowAdded(!rowAdded)
+        if(!basic) return
         console.log(prevCells)
         // console.log(cellRefs)
         let copy = []
@@ -306,7 +316,7 @@ export default function DataTable({syncData}) {
         <Paper elevation={3} className={classes.paperBG}>
             <div style={{position: 'absolute'}}>
                 <IconButton className={classes.syncButton} aria-label="sync data" onClick={(e) => processData()}>
-                    <SyncIcon />
+                    <SyncIcon className={syncing && syncing !== 'basic-page' ? classes.syncing : ''} />
                 </IconButton>
             </div>
             <Typography className={classes.dataColor} variant="h5" display="block" align="center">

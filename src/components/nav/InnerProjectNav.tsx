@@ -31,21 +31,19 @@ export default function InnerProjectNav({tabs}) {
     const classes = useStyles()
     return (
         <Box>
-            <Paper className={classes.paper}>
-                <Box mx="auto">
-                    <Breadcrumbs className={classes.crumbs} separator={<NavigateNextIcon fontSize="small" style={{color: 'rgba(255, 255, 255, .5)'}} />} aria-label="project navigation">
-                        <Link href="/projects">
-                            <a className={classes.dimWhite}>Projects</a>
-                        </Link>
-                        <Link href="/projects/[id]" as={`/projects/${tabs[0]._id}`}>
-                            <a className={classes.dimWhite}>{tabs[0].name}</a>
-                        </Link>
-                        <Link href="/projects/[id]/[compId]" as={`/projects/${tabs[0]._id}/${tabs[1]._id}`}>
-                            <a className={classes.white}>{tabs[1].name}</a>
-                        </Link>
-                    </Breadcrumbs>
-                </Box>
-            </Paper>
+            <Box mx="auto">
+                <Breadcrumbs className={classes.crumbs} separator={<NavigateNextIcon fontSize="small" style={{color: 'rgba(255, 255, 255, .5)'}} />} aria-label="project navigation">
+                    <Link href="/projects">
+                        <a className={classes.dimWhite}>Projects</a>
+                    </Link>
+                    <Link href="/projects/[id]" as={`/projects/${tabs[0]._id}`}>
+                        <a className={classes.dimWhite}>{tabs[0].name}</a>
+                    </Link>
+                    <Link href="/projects/[id]/[compId]" as={`/projects/${tabs[0]._id}/${tabs[1]._id}`}>
+                        <a className={classes.white}>{tabs[1].name}</a>
+                    </Link>
+                </Breadcrumbs>
+            </Box>
         </Box>
     )
 }

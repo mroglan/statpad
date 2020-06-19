@@ -1,5 +1,5 @@
 import { Grid, Input, Typography, Button, Box, FormControl, InputLabel, Select, MenuItem, Switch } from "@material-ui/core";
-import {useState, useMemo} from 'react'
+import {useState, useMemo, useEffect} from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import ScatterPlot from './charts/ScatterPlot'
 import BarGraph from './charts/BarGraph'
@@ -26,7 +26,12 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 
 interface GraphProps {
-    rows: any
+    rows: any;
+    basic: boolean;
+    syncData: any;
+    sync: boolean;
+    index: number;
+    initialGraph: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -160,9 +165,36 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Graph({rows}: GraphProps) {
+export default function Graph({rows, basic, syncData, index, sync, initialGraph}: GraphProps) {
 
-    const [chartProperties, setChartProperties] = useState([{
+    //console.log('sync', sync)
+
+    useEffect(() => {
+        //console.log(sync)
+        if(!sync) return
+        console.log('syncing data ' + index)
+        const uploadData = async () => {
+            const res = await fetch(`${process.env.API_ROUTE}/projects/components/updategraph`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: initialGraph._id,
+                    properties: graphProperties,
+                    charts: chartProperties
+                })
+            })
+            if(res.status !== 200) {
+                syncData(index, false)
+                return
+            }
+            syncData(index, true)
+        }
+        uploadData()
+    }, [sync])
+
+    const [chartProperties, setChartProperties] = useState(!basic ? initialGraph.charts : [{
         type: 'scatter',
         label: null,
         regressionType: null,
@@ -203,7 +235,7 @@ export default function Graph({rows}: GraphProps) {
 
     const [optionsSwitch, setOptionsSwitch] = useState([false, false])
 
-    const [graphProperties, setGraphProperties] = useState({
+    const [graphProperties, setGraphProperties] = useState(!basic ? initialGraph.properties : {
         axis: {
             titles: {
                 color: '#fff'
@@ -378,7 +410,7 @@ export default function Graph({rows}: GraphProps) {
 
     return (
         <Grid container>
-            <Grid item sm={rows[0].length === 2 ? 12 : 9}>
+            <Grid item sm={rows[0].length === 2 || !basic ? 12 : 9}>
                 {chartProperties[0].type === 'scatter' || chartProperties[0].type === 'line' ? <ScatterPlot data={rows} properties={chartProperties} graphProperties={graphProperties} /> : ''}
                 {chartProperties[0].type === 'bar' || chartProperties[0].type === 'histogram' ? <BarGraph data={rows} properties={chartProperties} graphProperties={graphProperties} /> : '' }
                 {chartProperties[0].type === 'pie' && <PieChart data={rows} properties={chartProperties} graphProperties={graphProperties} /> }
@@ -389,7 +421,7 @@ export default function Graph({rows}: GraphProps) {
             justify="center" alignItems="center" spacing={3}>
                 {graphProperties.legend.display && <Legend properties={chartProperties} length={rows[0].length} /> }
             </Grid>
-            <Grid container item xs={12} sm={rows[0].length === 2 ? 12 : 9} className={classes.extraPadding}>
+            <Grid container item xs={12} sm={rows[0].length === 2 || !basic ? 12 : 9} className={classes.extraPadding}>
                 <Grid container item sm={4} className={classes.flexAlignJustifyCenter}>
                     <Input placeholder="My Graph" inputProps={{'aria-label': 'Graph title'}} className={classes.title}
                     disableUnderline classes={{input: classes.titleInput}} onChange={(e) => handleTitleChange(e)} />
@@ -411,7 +443,7 @@ export default function Graph({rows}: GraphProps) {
                     </Box> : ''}
                 </Grid>
             </Grid>
-            <Grid item xs={12} sm={rows[0].length === 2 ? 12 : 9} className={classes.chartSelectionContainer}>
+            <Grid item xs={12} sm={rows[0].length === 2 || !basic ? 12 : 9} className={classes.chartSelectionContainer}>
                 <Grid key={'chart'} xs={12} container item>
                     <Grid container item sm={3} justify="center" alignItems="center">
                         <Typography variant="h4" className={classes.textWhite}>Chart</Typography>

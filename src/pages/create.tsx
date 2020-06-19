@@ -123,6 +123,11 @@ export default function Create({loggedIn}) {
         graphsCopy[index] = null
         setGraphs(graphsCopy)
     }
+
+    const initialData = [
+        ['', ''], ['', ''], ['', ''],
+        ['', ''], ['', ''], ['', '']
+    ]
     
     const classes = useStyles()
 
@@ -132,7 +137,7 @@ export default function Create({loggedIn}) {
             <Grid container spacing={3}>
                 <Grid item md={graphRows[0].length === 2 ? 4 : graphRows[0].length === 3 || graphRows[0].length === 4 ? 8 : 12}
                  className={`${classes.centered} ${classes.loadIn}`} >
-                    <DataTable syncData={syncData} />
+                    <DataTable syncData={syncData} initialData={initialData} syncing={false} basic={true} />
                     <Box className={graphRows[0].length < 3 ? classes.stickyTable : ''}>
                         <Grid container direction={graphRows[0].length === 2 ? 'column' : 'row'} justify="center" alignItems="center" className={classes.newButtonsContainer}>
                             <Button variant="contained" className={classes.newButton} onClick={(e) => addGraph()}>
@@ -157,7 +162,7 @@ export default function Create({loggedIn}) {
                                     onClick={(e) => deleteGraph(index)} >
                                         <DeleteOutlineIcon />
                                     </IconButton>
-                                    <Graph rows={graphRows} />
+                                    <Graph rows={graphRows} basic={true} sync={false} syncData={null} initialGraph={null} index={null} />
                                 </Paper>
                             )
                         } if(graph === 'mixedGraph') {
@@ -167,7 +172,7 @@ export default function Create({loggedIn}) {
                                     onClick={(e) => deleteGraph(index)} >
                                         <DeleteOutlineIcon />
                                     </IconButton>
-                                    <MixedGraph rows={graphRows} />
+                                    <MixedGraph rows={graphRows} basic={true} sync={false} syncData={null} initialGraph={null} index={null} />
                                 </Paper>
                             )
                         } if(graph === '1varStats') {
@@ -177,7 +182,7 @@ export default function Create({loggedIn}) {
                                     onClick={(e) => deleteGraph(index)} >
                                         <DeleteOutlineIcon />
                                     </IconButton>
-                                    <Var1Stats rows={graphRows} />
+                                    <Var1Stats rows={graphRows} basic={true} sync={false} syncData={null} initialGraph={null} index={null} />
                                 </Paper>
                             )
                         }
