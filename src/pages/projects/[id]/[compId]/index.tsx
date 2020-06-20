@@ -12,6 +12,7 @@ import DataTable from "../../../../components/DataTable";
 import {useState} from 'react'
 import Data from '../../../../components/projectComponents/Data'
 import Graphs from '../../../../components/projectComponents/Graphs'
+import SimProb from '../../../../components/projectComponents/SimProb'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -77,7 +78,8 @@ export default function Component({user, component, project, allComponents, data
                     <Box my={3}>
                         {/* <DataTable syncData={syncData} initialData={initialData} syncing={syncing} /> */}
                         {component.type === 'data' ? <Data component={component} /> : 
-                        component.type === 'graphs' ? <Graphs component={component} data={data} /> : '' }
+                        component.type === 'graphs' ? <Graphs component={component} data={data} /> :
+                        component.type === 'sim+prob' ? <SimProb component={component} data={data} /> : '' }
                     </Box>
                 </Grid>
             </Grid>

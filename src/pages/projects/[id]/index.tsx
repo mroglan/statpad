@@ -8,8 +8,10 @@ import SideNav from '../../../components/nav/SideNav'
 import {Grid, Paper, Box, Typography, Button} from '@material-ui/core'
 import ComponentsList from "../../../components/lists/ComponentsList"
 import NewComponentDialog from '../../../components/dialogs/newComponentDialog'
+import DeleteComponentDialog from '../../../components/dialogs/deleteComponentDialog'
 import Link from 'next/link'
 import {useState} from 'react'
+import {ObjectId} from 'mongodb'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -106,15 +108,23 @@ const useStyles = makeStyles(theme => ({
 export default function Project({user, project, serverComponents}) {
 
     const [openModal, setOpenModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
     const [components, setComponents] = useState(serverComponents)
 
     const toggleNewComponentModal = (newComponent) => {
         setOpenModal(!openModal)
         if(!newComponent) return
-        console.log(newComponent)
+        //console.log(newComponent)
         const compCopy = [...components]
         compCopy.unshift(newComponent)
         setComponents(compCopy)
+    }
+
+    const toggleRemoveComponentModal = (remainingComponents) => {
+        setDeleteModal(!deleteModal)
+        if(!remainingComponents) return
+
+        setComponents(remainingComponents)
     }
 
     const classes = useStyles()
@@ -163,7 +173,7 @@ export default function Project({user, project, serverComponents}) {
                                         </Button>
                                     </Grid>
                                     <Grid item>
-                                        <Button className={classes.deleteButton}>
+                                        <Button className={classes.deleteButton} onClick={(e) => toggleRemoveComponentModal(null)} >
                                             Remove Component
                                         </Button>
                                     </Grid>
@@ -180,14 +190,19 @@ export default function Project({user, project, serverComponents}) {
             </Grid>
             <NewComponentDialog open={openModal} toggleOpen={toggleNewComponentModal} components={components}
             projectId={project._id} />
+            <DeleteComponentDialog open={deleteModal} toggleOpen={toggleRemoveComponentModal} components={components}
+            projectId={project._id} />
         </div>
     )
 }
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const user = await getUser(ctx)
-    const projectInfo = await getProjectInfo(Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id)
-    const serverComponents = await getComponents(projectInfo._id)
+    const id = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
+    const [projectInfo, serverComponents] = await Promise.all([ getProjectInfo(id),
+    getComponents(new ObjectId(id))])
+    // const projectInfo = await getProjectInfo(Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id)
+    // const serverComponents = await getComponents(projectInfo._id)
 
     return {props: {user, project: JSON.parse(JSON.stringify(projectInfo)), serverComponents: JSON.parse(JSON.stringify(serverComponents))}}
 }
