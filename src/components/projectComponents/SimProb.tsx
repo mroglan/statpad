@@ -232,9 +232,11 @@ export default function SimProb({component, data}) {
                 </Button>
             </Grid>
 
-            <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
-                <TwoWayTable component={null} syncData={null} sync={null} index={null} />
-            </Paper>
+            <Box mb={4}>
+                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                    <TwoWayTable component={null} syncData={null} sync={null} index={null} />
+                </Paper>
+            </Box>
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -260,7 +262,7 @@ export default function SimProb({component, data}) {
                         )
                     } if(test.type === 'twoWayTable') {
                         return (
-                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
+                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
                                 <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
                                 onClick={(e) => deleteTest(index, test._id)}>
                                     <DeleteOutlineIcon />

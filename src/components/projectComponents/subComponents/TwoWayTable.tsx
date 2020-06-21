@@ -1,6 +1,6 @@
-import {useState, useEffect, useRef, createRef, useMemo} from 'react'
-import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton, InputBase} from '@material-ui/core'
-import {makeStyles} from '@material-ui/core/styles'
+import {useState, useEffect, useRef, createRef, useMemo, Fragment} from 'react'
+import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton, InputBase, Switch, FormControlLabel} from '@material-ui/core'
+import {makeStyles, withStyles} from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Table from '@material-ui/core/Table';
@@ -46,6 +46,7 @@ const useStyles = makeStyles(theme => ({
     },
     contentTitle: {
         color: '#fff',
+        fontSize: '1.3rem',
         '& input': {
             fontSize: '1.3rem',
             textAlign: 'center'
@@ -60,6 +61,7 @@ const useStyles = makeStyles(theme => ({
     },
     contentInput: {
         color: 'rgba(255, 255, 255, .7)',
+        fontSize: '1.3rem',
         width: '100%',
         '& input': {
             textAlign: 'center',
@@ -69,6 +71,7 @@ const useStyles = makeStyles(theme => ({
     contentInputSm: {
         color: 'rgba(255, 255, 255, .7)',
         width: '100%',
+        fontSize: '1.3rem',
         '& input': {
             textAlign: 'center',
             fontSize: '1rem'
@@ -124,6 +127,26 @@ const useStyles = makeStyles(theme => ({
             opacity: 1,
             transform: 'scale(1.1)'
         }
+    },
+    scrollX: {
+        overflowX: 'scroll',
+        '&::-webkit-scrollbar': {
+            width: 10
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: 'hsl(241, 82%, 60%)',
+            borderRadius: '.3rem',
+            '&:hover': {
+                background: 'hsl(241, 82%, 57%)'
+            }
+        }
+    },
+    verticalTitleLabel: {
+        position: 'absolute',
+        left: 0,
+        bottom: '0%',
+        transform: ' rotate(270deg)',
+        transformOrigin: '0 0'
     }
 }))
 
@@ -132,6 +155,16 @@ const fakeData = [
     ['row 1', '5', '9'],
     ['row 2', '8', '13']
 ]
+
+const fakeProperties = {
+    horzTitle: '',
+    verticalTitle: '',
+    displayTotals: false,
+    // displayRelativeProb: false,
+    // displayConditionalProbHorz: false,
+    // displayConditionalProbVertical: false,
+    contentType: 'frequency'
+}
 
 export default function TwoWayTable({component, syncData, sync, index}:TableI) {
     
@@ -162,8 +195,7 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
     tableCellItemCount.current = 0
 
     const [tableData, setTableData] = useState<string[][]>(fakeData) // change to component.data
-    //const [minWidth, setMinWidth] = useState(0)
-    // minWidth = #columns * 150
+    const [tableProperties, setTableProperties] = useState(fakeProperties) // change to component.properties
 
     const changeCellValue = (e:any, rowNum:number, cellNum:number) => {
         const dataCopy = [...tableData]
@@ -212,50 +244,177 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
         setTableData(dataCopy)
     }
 
+    const changeHorzTitle = (e:any) => {
+        const propertyCopy = {...tableProperties}
+        propertyCopy.horzTitle = e.target.value
+        setTableProperties(propertyCopy)
+    }
+
+    const changeVerticalTitle = (e:any) => {
+        const propertyCopy = {...tableProperties}
+        propertyCopy.verticalTitle = e.target.value
+        setTableProperties(propertyCopy)
+    }
+
+    const TotalsSwitch = withStyles((theme) => ({
+        root: {
+            width: 42,
+            height: 26,
+            padding: 0,
+            margin: theme.spacing(1),
+          },
+          switchBase: {
+            padding: 1,
+            '&$checked': {
+              transform: 'translateX(16px)',
+              color: theme.palette.common.white,
+              '& + $track': {
+                backgroundColor: '#52d869',
+                opacity: 1,
+                border: 'none',
+              },
+            },
+            '&$thumb': {
+              color: '#52d869',
+              border: '6px solid #fff',
+            },
+          },
+          thumb: {
+            width: 24,
+            height: 24,
+          },
+          track: {
+            borderRadius: 26 / 2,
+            border: `1px solid ${theme.palette.grey[400]}`,
+            backgroundColor: theme.palette.grey[400],
+            opacity: 1,
+            transition: theme.transitions.create(['background-color', 'border']),
+          },
+          checked: {},
+    }))(Switch)
+
+    const totalsCellHorz = (rowNum:number, cellNum:number) => {
+       if(cellNum === tableData[0].length - 1 && rowNum !== 0) return <TableCell className={classes.contentInputCell}>
+           <Typography variant="body1" style={{textAlign: 'center'}} className={classes.contentInput} >
+               {tableData[rowNum].reduce((total:number, cell:string, i:number) => i !== 0 ? total += Number(cell) : total, 0)}
+           </Typography>
+       </TableCell>
+       if(cellNum === tableData[0].length - 1 && rowNum === 0) return <TableCell className={classes.contentTitleCell}>
+           <Typography variant="body1" style={{textAlign: 'center'}} className={classes.contentTitle}>
+               Totals
+           </Typography>
+       </TableCell>
+    }
+
+    const totalsRow = (rowNum:number) => {
+        if(rowNum !== tableData.length - 1) return
+        const totalsArray:string[] = tableData[0].map((cell:string, cellNum:number) => {
+            if(cellNum === 0) return 'Totals'
+            const total = tableData.reduce((currentTotal:number, row:string[], rowIndex:number) => {
+                if(rowIndex === 0) return currentTotal
+                return currentTotal += Number(row[cellNum])
+            }, 0)
+            return total.toString()
+        })
+        totalsArray.push(totalsArray.reduce((currentTotal:number, val:string, index:number) => index === 0 ? currentTotal : currentTotal += Number(val), 0).toString())
+        return <TableRow className={classes.tableRow}>
+            {totalsArray.map((val:string, index:number) => <TableCell className={index === 0 ? classes.contentTitleCell : classes.contentInputCell}>
+                <Typography variant="body1" style={{textAlign: 'center'}} className={index === 0 ? classes.contentTitle : classes.contentInput}>
+                    {val}
+                </Typography>
+            </TableCell>)}
+        </TableRow>
+    }
+
     const classes = useStyles()
     const minWidth = tableData[0].length * 200
     return (
-        <Grid container justify="center" style={{minWidth: minWidth}}>
-            <Paper elevation={0} style={{backgroundColor: 'hsl(241, 82%, 50%)'}}>
-                <TableContainer>
-                    <Table className={classes.table}>
-                        <TableBody>
-                            {tableData.map((row:string[], rowNum:number) => (
-                                <TableRow key={rowNum} className={`${classes.tableRow}`}>
-                                    {row.map((cell:string, cellNum:number) => (
-                                        <TableCell key={cellNum} className={`${tableCellClasses(rowNum, cellNum)}`} >
-                                            {cell !== null ? <>
-                                                <InputBase value={cell} onChange={(e) => changeCellValue(e, rowNum, cellNum)}
-                                                inputProps={{'aria-label': 'Table Input'}} 
-                                                className={`${classes.textCenter} ${inputClasses(rowNum, cellNum)}`} /> 
-                                                {rowNum === 0 && <IconButton size="small" className={classes.deleteBtn}
-                                                onClick={(e) => deleteCol(cellNum)} >
-                                                    <DeleteOutlineIcon />
-                                                </IconButton>}
-                                                {cellNum === 0 && <IconButton size="small" className={classes.deleteBtn}
-                                                onClick={(e) => deleteRow(rowNum)} >
-                                                    <DeleteOutlineIcon />
-                                                </IconButton>}
-                                            </> : 
-                                            <>
-                                                <IconButton size="small" className={classes.addColBtn}
-                                                onClick={(e) => addCol()} >
-                                                    <AddIcon />
-                                                </IconButton>
-                                                <IconButton size="small" className={classes.addRowBtn}
-                                                onClick={(e) => addRow()} >
-                                                    <AddIcon />
-                                                </IconButton>
-                                            </>
-                                            }
-                                        </TableCell>
+        <Box>
+            <Box>
+                <Typography variant="h6" style={{textAlign: 'center'}} className={classes.textWhite}>
+                    {tableProperties.horzTitle}
+                </Typography>
+            </Box>
+            <Box pl={4} style={{position: 'relative'}} className={`${classes.scrollX}`}>
+                <Box className={classes.verticalTitleLabel}>
+                    <Typography variant="h6" className={classes.textWhite}>
+                        {tableProperties.verticalTitle}
+                    </Typography>
+                </Box>
+                <Grid container justify="center" style={{minWidth: minWidth}}>
+                    <Paper elevation={0} style={{backgroundColor: 'hsl(241, 82%, 50%)'}}>
+                        <TableContainer>
+                            <Table className={classes.table}>
+                                <TableBody>
+                                    {tableData.map((row:string[], rowNum:number) => (
+                                        <Fragment key={rowNum}>
+                                            <TableRow className={`${classes.tableRow}`}>
+                                                {row.map((cell:string, cellNum:number) => (
+                                                    <Fragment key={cellNum}>
+                                                        <TableCell className={`${tableCellClasses(rowNum, cellNum)}`} >
+                                                            {cell !== null ? <>
+                                                                <InputBase value={cell} onChange={(e) => changeCellValue(e, rowNum, cellNum)}
+                                                                inputProps={{'aria-label': 'Table Input'}} 
+                                                                className={`${classes.textCenter} ${inputClasses(rowNum, cellNum)}`} /> 
+                                                                {rowNum === 0 && <IconButton size="small" disableRipple className={classes.deleteBtn}
+                                                                onClick={(e) => deleteCol(cellNum)} >
+                                                                    <DeleteOutlineIcon />
+                                                                </IconButton>}
+                                                                {cellNum === 0 && <IconButton size="small" disableRipple className={classes.deleteBtn}
+                                                                onClick={(e) => deleteRow(rowNum)} >
+                                                                    <DeleteOutlineIcon />
+                                                                </IconButton>}
+                                                            </> : 
+                                                            <>
+                                                                <IconButton size="small" className={classes.addColBtn}
+                                                                onClick={(e) => addCol()} >
+                                                                    <AddIcon />
+                                                                </IconButton>
+                                                                <IconButton size="small" className={classes.addRowBtn}
+                                                                onClick={(e) => addRow()} >
+                                                                    <AddIcon />
+                                                                </IconButton>
+                                                            </>
+                                                            }
+                                                        </TableCell>
+                                                        {tableProperties.displayTotals && totalsCellHorz(rowNum, cellNum)}
+                                                    </Fragment>
+                                                ))}
+                                            </TableRow>
+                                            {tableProperties.displayTotals && totalsRow(rowNum)}
+                                        </Fragment>
                                     ))}
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Paper>
-        </Grid>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
+                </Grid>
+            </Box>
+            <Box px={3} mt={3}>
+                <Grid container spacing={5}>
+                    <Grid item sm={6}>
+                        <TextField label="Horizontal Title" value={tableProperties.horzTitle} fullWidth 
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}} onChange={(e) => changeHorzTitle(e)} />
+                    </Grid>
+                    <Grid item sm={6}>
+                        <TextField label="Vertical Title" value={tableProperties.verticalTitle} fullWidth 
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}} onChange={(e) => changeVerticalTitle(e)} />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={5}>
+                    <Grid item sm={6} style={{textAlign: 'center'}}>
+                        <FormControlLabel control={<TotalsSwitch 
+                        onChange={(e) => setTableProperties({...tableProperties, displayTotals: !tableProperties.displayTotals})} 
+                        checked={tableProperties.displayTotals} name="Show Totals" />} 
+                        label="Show Totals" labelPlacement="start" classes={{label: classes.textWhite}} />
+                    </Grid>
+                    <Grid item sm={6}>
+
+                    </Grid>
+                </Grid>
+            </Box>
+        </Box>
     )
 }
