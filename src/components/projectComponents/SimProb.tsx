@@ -83,6 +83,19 @@ const defaultTreeDiagramData = {
     ]
 }
 
+const defaultTwoWayTableData = [
+    [null, '', ''],
+    ['', '', ''],
+    ['', '', '']
+]
+
+const defaultTwoWayTableProperties = {
+    horzTitle: '',
+    verticalTitle: '',
+    displayTotals: false,
+    contentType: 'frequency'
+}
+
 export default function SimProb({component, data}) {
 
     const [tests, setTests] = useState([])
@@ -173,6 +186,7 @@ export default function SimProb({component, data}) {
 
     const addToDatabase = async (newTest:TestI, type:string) => {
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: true})
+        else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: true})
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newtest`, {
             method: 'POST',
@@ -184,6 +198,7 @@ export default function SimProb({component, data}) {
         const json = await res.json()
 
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: false})
+        else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: false})
 
         if(res.status !== 200) {
             setServerError(true)
@@ -204,6 +219,16 @@ export default function SimProb({component, data}) {
         await addToDatabase(newDiagram, 'treeDiagram')
     }
 
+    const createTwoWayTable = async () => {
+        const newTable = {
+            component: component._id,
+            type: 'twoWayTable',
+            data: defaultTwoWayTableData,
+            properties: defaultTwoWayTableProperties
+        }
+
+        await addToDatabase(newTable, 'twoWayTable')
+    }
 
     const classes = useStyles()
     return (
@@ -212,8 +237,8 @@ export default function SimProb({component, data}) {
                 <Button variant="contained" className={classes.newButton} onClick={(e) => createTreeDiagram()} >
                     {newTestLoading.treeDiagram ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Tree Diagram'}
                 </Button>
-                <Button variant="contained" className={classes.newButton}>
-                    New 2 Way Table
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createTwoWayTable()} >
+                    {newTestLoading.twoWayTable ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Way Table'}
                 </Button>
                 <Button variant="contained" className={classes.newButton}>
                     New Simulation
@@ -232,11 +257,11 @@ export default function SimProb({component, data}) {
                 </Button>
             </Grid>
 
-            <Box mb={4}>
+            {/* <Box mb={4}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
                     <TwoWayTable component={null} syncData={null} sync={null} index={null} />
                 </Paper>
-            </Box>
+            </Box> */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>

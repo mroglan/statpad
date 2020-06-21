@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef, createRef, useMemo, Fragment} from 'react'
-import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton, InputBase, Switch, FormControlLabel} from '@material-ui/core'
+import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton, InputBase, Switch, 
+    FormControlLabel, Select, FormControl, MenuItem} from '@material-ui/core'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -147,6 +148,12 @@ const useStyles = makeStyles(theme => ({
         bottom: '0%',
         transform: ' rotate(270deg)',
         transformOrigin: '0 0'
+    },
+    formControl: {
+        '& > div': {
+            border: '1px solid hsl(241, 82%, 90%)',
+            borderRadius: '1rem'
+        }
     }
 }))
 
@@ -178,8 +185,8 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
                 },
                 body: JSON.stringify({
                     id: component._id,
-                    //data: tableData,
-                    //properties: tableProperties
+                    data: tableData,
+                    properties: tableProperties
                 })
             })
             if(res.status !== 200) {
@@ -194,8 +201,18 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
     const tableCellItemCount = useRef<number>(0)
     tableCellItemCount.current = 0
 
-    const [tableData, setTableData] = useState<string[][]>(fakeData) // change to component.data
-    const [tableProperties, setTableProperties] = useState(fakeProperties) // change to component.properties
+    const frequencyTotal = useRef<number>()
+
+    const [tableData, setTableData] = useState<string[][]>(component.data) // change to component.data
+    const [tableProperties, setTableProperties] = useState(component.properties) // change to component.properties
+
+    useMemo(() => {
+        frequencyTotal.current = tableData.reduce((total:number, row:string[], rowNum:number) => {
+            if(rowNum === 0) return total
+            return total += row.reduce((rowTotal:number, cell:string, cellNum:number) => cellNum === 0 ? rowTotal : rowTotal += Number(cell), 0)
+        }, 0)
+        //console.log(frequencyTotal.current)
+    }, [tableData])
 
     const changeCellValue = (e:any, rowNum:number, cellNum:number) => {
         const dataCopy = [...tableData]
@@ -293,17 +310,25 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
           checked: {},
     }))(Switch)
 
-    const totalsCellHorz = (rowNum:number, cellNum:number) => {
-       if(cellNum === tableData[0].length - 1 && rowNum !== 0) return <TableCell className={classes.contentInputCell}>
-           <Typography variant="body1" style={{textAlign: 'center'}} className={classes.contentInput} >
-               {tableData[rowNum].reduce((total:number, cell:string, i:number) => i !== 0 ? total += Number(cell) : total, 0)}
-           </Typography>
-       </TableCell>
-       if(cellNum === tableData[0].length - 1 && rowNum === 0) return <TableCell className={classes.contentTitleCell}>
-           <Typography variant="body1" style={{textAlign: 'center'}} className={classes.contentTitle}>
-               Totals
-           </Typography>
-       </TableCell>
+    const cellInput = (cell:string, rowNum:number, cellNum:number) => {
+        if(tableProperties.contentType === 'frequency') {
+            return (
+                <InputBase value={cell} onChange={(e) => changeCellValue(e, rowNum, cellNum)}
+                inputProps={{'aria-label': 'Table Input'}} 
+                className={`${classes.textCenter} ${inputClasses(rowNum, cellNum)}`} />
+            )
+        } if(tableProperties.contentType === 'relative') {
+            return (
+                <InputBase value={rowNum !== 0 && cellNum !== 0 ? (Number(cell) / frequencyTotal.current).toFixed(4) : cell} 
+                disabled={rowNum !== 0 && cellNum !== 0} className={`${classes.textCenter} ${inputClasses(rowNum, cellNum)}`}
+                classes={{disabled: `${inputClasses(rowNum, cellNum)}`}} />
+            )
+        }
+    }
+
+    const totalValue = (val:string, rowNum:number, cellNum:number) => {
+        if(tableProperties.contentType === 'frequency') return val
+        if(tableProperties.contentType === 'relative') return rowNum !== 0 && cellNum !== 0 ? (Number(val) / frequencyTotal.current).toFixed(4) : val
     }
 
     const totalsRow = (rowNum:number) => {
@@ -320,11 +345,24 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
         return <TableRow className={classes.tableRow}>
             {totalsArray.map((val:string, index:number) => <TableCell className={index === 0 ? classes.contentTitleCell : classes.contentInputCell}>
                 <Typography variant="body1" style={{textAlign: 'center'}} className={index === 0 ? classes.contentTitle : classes.contentInput}>
-                    {val}
+                    {totalValue(val, tableData.length, index)}
                 </Typography>
             </TableCell>)}
         </TableRow>
     }
+
+    const totalsCellHorz = (rowNum:number, cellNum:number) => {
+        if(cellNum === tableData[0].length - 1 && rowNum !== 0) return <TableCell className={classes.contentInputCell}>
+            <Typography variant="body1" style={{textAlign: 'center'}} className={classes.contentInput} >
+                {totalValue(tableData[rowNum].reduce((total:number, cell:string, i:number) => i !== 0 ? total += Number(cell) : total, 0).toString(), rowNum, cellNum)}
+            </Typography>
+        </TableCell>
+        if(cellNum === tableData[0].length - 1 && rowNum === 0) return <TableCell className={classes.contentTitleCell}>
+            <Typography variant="body1" style={{textAlign: 'center'}} className={classes.contentTitle}>
+                Totals
+            </Typography>
+        </TableCell>
+     }
 
     const classes = useStyles()
     const minWidth = tableData[0].length * 200
@@ -353,9 +391,7 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
                                                     <Fragment key={cellNum}>
                                                         <TableCell className={`${tableCellClasses(rowNum, cellNum)}`} >
                                                             {cell !== null ? <>
-                                                                <InputBase value={cell} onChange={(e) => changeCellValue(e, rowNum, cellNum)}
-                                                                inputProps={{'aria-label': 'Table Input'}} 
-                                                                className={`${classes.textCenter} ${inputClasses(rowNum, cellNum)}`} /> 
+                                                                {cellInput(cell, rowNum, cellNum)}
                                                                 {rowNum === 0 && <IconButton size="small" disableRipple className={classes.deleteBtn}
                                                                 onClick={(e) => deleteCol(cellNum)} >
                                                                     <DeleteOutlineIcon />
@@ -410,8 +446,20 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
                         checked={tableProperties.displayTotals} name="Show Totals" />} 
                         label="Show Totals" labelPlacement="start" classes={{label: classes.textWhite}} />
                     </Grid>
-                    <Grid item sm={6}>
-
+                    <Grid item sm={6} container justify="center" alignItems="center" spacing={3}>
+                        <Typography variant="h6" className={classes.textWhite} id="content-type-label">
+                            Displaying
+                        </Typography>
+                        <Box px={1}></Box>
+                        <FormControl variant="filled" className={classes.formControl} hiddenLabel margin="dense">
+                            <Select disableUnderline={true} 
+                            value={tableProperties.contentType} onChange={(e) => setTableProperties({...tableProperties, contentType: e.target.value.toString()})}
+                             aria-label="Chart Y Axis"
+                            classes={{icon: classes.textWhite, filled: classes.textWhite }}>
+                                <MenuItem value="frequency">Frequencies</MenuItem>
+                                <MenuItem value="relative">Relaitve Probability</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
             </Box>
