@@ -2,9 +2,9 @@ import {useState, useMemo, useEffect, useRef} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Box, Button, CircularProgress, Paper, IconButton, Typography} from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
-import Graph from '../../components/Graph'
-import MixedGraph from '../../components/MixedGraph'
-import Var1Stats from '../../components/Var1Stats'
+import Graph from './subComponents/Graph'
+import MixedGraph from './subComponents/MixedGraph'
+import Var1Stats from './subComponents/Var1Stats'
 import { Snackbar } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close'
 
@@ -222,6 +222,7 @@ export default function Graphs({component, data}) {
     const deleteGraph = async (index:number, id:string) => {
         const graphsCopy = [...graphs]
         graphsCopy.splice(index, 1)
+        syncedRef.current.splice(index, 1)
         setGraphs(graphsCopy)
         await fetch(`${process.env.API_ROUTE}/projects/components/deletegraph`, {
             method: 'POST',
@@ -253,7 +254,8 @@ export default function Graphs({component, data}) {
             setServerError(true)
             return
         }
-        setGraphs([...graphs, newGraph])
+        syncedRef.current.push(false)
+        setGraphs([...graphs, json])
     }
 
     const addGraph = async () => {
@@ -299,11 +301,11 @@ export default function Graphs({component, data}) {
             syncedCount.current = 0
             setSync(false)
             if(syncedRef.current.includes(false)) {
+                syncedRef.current = syncedRef.current.map(el => false)
                 setErrorMsg(true)
-                setSuccessMsg(false)
             } else {
+                syncedRef.current = syncedRef.current.map(el => false)
                 setSuccessMsg(true)
-                setErrorMsg(false)
             }
         }
     }

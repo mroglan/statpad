@@ -1,8 +1,15 @@
 import {useState, useEffect, useRef, useMemo} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
-import {Grid, Button, CircularProgress, Typography, Paper, IconButton} from '@material-ui/core'
+import {Grid, Button, CircularProgress, Typography, Paper, IconButton, Snackbar, Box} from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import TreeDiagram from './subComponents/TreeDiagram'
+import CloseIcon from '@material-ui/icons/Close'
+import TwoWayTable from './subComponents/TwoWayTable'
+
+interface TestI {
+    type: string;
+    data: any;
+}
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -34,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     loadIn: {
         animation: '$appear 400ms'
     },
-    deleteGraphButton: {
+    deleteTestButton: {
         position: 'absolute',
         top: '0',
         left: '0',
@@ -52,8 +59,29 @@ const useStyles = makeStyles(theme => ({
     },
     errorMsg: {
         backgroundColor: theme.palette.error.main
+    },
+    scrollX: {
+        overflowX: 'scroll',
+        '&::-webkit-scrollbar': {
+            width: 10
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: 'hsl(241, 82%, 60%)',
+            borderRadius: '.3rem',
+            '&:hover': {
+                background: 'hsl(241, 82%, 57%)'
+            }
+        }
     }
 }))
+
+const defaultTreeDiagramData = {
+    name: '',
+    probability: '1',
+    children: [
+        {name: '', probability: '0.5', children: []}, {name: '', probability: '0.5', children: []}
+    ]
+}
 
 export default function SimProb({component, data}) {
 
@@ -65,6 +93,13 @@ export default function SimProb({component, data}) {
     const syncedCount = useRef(0)
     const [errorMsg, setErrorMsg] = useState(false)
     const [successMsg, setSuccessMsg] = useState(false)
+    const [newTestLoading, setNewTestLoading] = useState({
+        treeDiagram: false,
+        twoWayTable: false,
+        simulation: false,
+        binomial: false,
+        geometric: false
+    })
 
     useEffect(() => {
         const getComponents = async () => {
@@ -113,11 +148,60 @@ export default function SimProb({component, data}) {
             syncedCount.current = 0
             setSync(false)
             if(syncedRef.current.includes(false)) {
+                syncedRef.current = syncedRef.current.map(el => false)
                 setErrorMsg(true)
             } else {
+                syncedRef.current = syncedRef.current.map(el => false)
                 setSuccessMsg(true)
             }
         }
+    }
+
+    const deleteTest = async (index:number, id:string) => {
+        const testsCopy = [...tests]
+        testsCopy.splice(index, 1)
+        syncedRef.current.splice(index, 1)
+        setTests(testsCopy)
+        await fetch(`${process.env.API_ROUTE}/projects/components/deletetest`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(id)
+        })
+    }
+
+    const addToDatabase = async (newTest:TestI, type:string) => {
+        if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: true})
+
+        const res = await fetch(`${process.env.API_ROUTE}/projects/components/newtest`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTest)
+        })
+        const json = await res.json()
+
+        if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: false})
+
+        if(res.status !== 200) {
+            setServerError(true)
+            return
+        }
+        syncedRef.current.push(false)
+        setTests([...tests, json])
+    }
+
+    const createTreeDiagram = async () => {
+        const newDiagram = {
+            component: component._id,
+            type: 'treeDiagram',
+            data: defaultTreeDiagramData,
+            properties: 0
+        }
+
+        await addToDatabase(newDiagram, 'treeDiagram')
     }
 
 
@@ -125,8 +209,8 @@ export default function SimProb({component, data}) {
     return (
         <div>
             <Grid container direction="row" spacing={3} justify="center" style={{marginBottom: '1rem'}}>
-                <Button variant="contained" className={classes.newButton}>
-                    New Tree Diagram
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createTreeDiagram()} >
+                    {newTestLoading.treeDiagram ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Tree Diagram'}
                 </Button>
                 <Button variant="contained" className={classes.newButton}>
                     New 2 Way Table
@@ -143,13 +227,13 @@ export default function SimProb({component, data}) {
             </Grid>
 
             <Grid container justify="center" style={{marginBottom: '1.5rem'}}>
-                <Button variant="contained" className={classes.newButton} >
+                <Button variant="contained" className={classes.newButton} onClick={(e) => setSync(true)} >
                     {sync ? <Grid container alignItems="center" ><CircularProgress classes={{svg: classes.spinner}} size={20} /> Saving</Grid> : 'Save Changes'}
                 </Button>
             </Grid>
 
-            <Paper elevation={3} className={classes.paper} >
-                <TreeDiagram data={null} syncData={syncData} sync={sync} index={null} />
+            <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
+                <TwoWayTable component={null} syncData={null} sync={null} index={null} />
             </Paper>
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
@@ -161,22 +245,49 @@ export default function SimProb({component, data}) {
                         <Typography variant="h6" style={{color: '#fff'}}>Loading...</Typography>
                     </Grid>
                 </Grid>
-            </div> : <Grid container direction="column">
+            </div> : <Box>
                 {tests.map((test, index) => {
 
                     if(test.type === 'treeDiagram') {
                         return (
-                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                                <IconButton disableRipple aria-label="remove test" className={classes.deleteGraphButton}
+                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
+                                <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
                                 onClick={(e) => deleteTest(index, test._id)} >
                                     <DeleteOutlineIcon />
                                 </IconButton>
                                 <TreeDiagram data={test} syncData={syncData} sync={sync} index={index} />
                             </Paper>
                         )
+                    } if(test.type === 'twoWayTable') {
+                        return (
+                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
+                                <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                onClick={(e) => deleteTest(index, test._id)}>
+                                    <DeleteOutlineIcon />
+                                </IconButton>
+                                <TwoWayTable component={test} syncData={syncData} sync={sync} index={index} />
+                            </Paper>
+                        )
                     }
                 })}
-            </Grid>}
+            </Box>}
+
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} open={successMsg} onClose={(e) => setSuccessMsg(false)}
+            message="Changes saved" autoHideDuration={6000} ContentProps={{classes: {
+                root: classes.successMsg
+            }}} action={
+                <IconButton size="small" aria-label="close" onClick={(e) => setSuccessMsg(false)} style={{color: '#fff'}} >
+                    <CloseIcon />
+                </IconButton>
+            } />
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} open={errorMsg} onClose={(e) => setErrorMsg(false)}
+            message="Error saving" autoHideDuration={6000} ContentProps={{classes: {
+                root: classes.errorMsg
+            }}} action={
+                <IconButton size="small" aria-label="close" onClick={(e) => setErrorMsg(false)} style={{color: '#fff'}}>
+                    <CloseIcon />
+                </IconButton>
+            } />
         </div>
     )
 }

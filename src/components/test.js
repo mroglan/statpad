@@ -13,7 +13,7 @@ import Header from './nav/Header'
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab'
 import FormControl from '@material-ui/core/FormControl'
-import Graph from './Graph'
+import Graph from './projectComponents/subComponents/Graph'
 import SyncIcon from '@material-ui/icons/Sync';
 import IconButton from '@material-ui/core/IconButton'
 import {makeStyles} from '@material-ui/core/styles'

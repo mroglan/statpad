@@ -1,14 +1,14 @@
 import { Grid, Input, Typography, Button, Box, FormControl, InputLabel, Select, MenuItem, Switch, IconButton } from "@material-ui/core";
 import {useState, useMemo, useEffect} from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
-import MixedChart from './charts/MixedChart'
-import ScatterOptionsDialog from './dialogs/scatterOptionsDialog'
-import LineOptionsDialog from './dialogs/lineOptionsDialog'
-import BarOptionsDialog from './dialogs/barOptionsDialog'
-import PieOptionsDialog from './dialogs/pieOptionsDialog'
-import BubbleOptionsDialog from './dialogs/bubbleOptionsDialog'
-import GraphOptionsDialog from './dialogs/graphOptionsDialog'
-import Legend from './legends/Legend'
+import MixedChart from '../../charts/MixedChart'
+import ScatterOptionsDialog from '../../dialogs/scatterOptionsDialog'
+import LineOptionsDialog from '../../dialogs/lineOptionsDialog'
+import BarOptionsDialog from '../../dialogs/barOptionsDialog'
+import PieOptionsDialog from '../../dialogs/pieOptionsDialog'
+import BubbleOptionsDialog from '../../dialogs/bubbleOptionsDialog'
+import GraphOptionsDialog from '../../dialogs/graphOptionsDialog'
+import Legend from '../../legends/Legend'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 
 interface GraphProps {

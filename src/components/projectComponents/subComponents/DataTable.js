@@ -9,7 +9,7 @@ import { Input, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import {Grid, Typography, Paper, Button, Box, Select, InputLabel, MenuItem} from '@material-ui/core'
-import Header from './nav/Header'
+import Header from '../../nav/Header'
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab'
 import FormControl from '@material-ui/core/FormControl'

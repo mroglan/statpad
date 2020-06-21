@@ -24,6 +24,6 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "src/components/DataTable.js", "src/components/test.js"
+    "**/*.tsx", "src/components/projectComponents/subComponents/DataTable.js", "src/components/test.js"
   ]
 }

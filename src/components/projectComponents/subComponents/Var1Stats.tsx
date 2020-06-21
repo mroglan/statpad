@@ -1,7 +1,7 @@
 import { Grid, Input, Typography, Button, Box, FormControl, InputLabel, Select, MenuItem, Switch } from "@material-ui/core";
 import {useState, useMemo, useEffect} from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
-import calc1VarStats from '../utilities/calcVar1Stats'
+import calc1VarStats from '../../../utilities/calcVar1Stats'
 
 interface statProps {
     rows: any;
