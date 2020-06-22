@@ -6,7 +6,7 @@ import {useState, useEffect} from 'react'
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab'
 import FormControl from '@material-ui/core/FormControl'
-import Graph from '../components/projectComponents/subComponents/Graph'
+import Graph from '../components/projectComponents/graphSubs/Graph'
 import SyncIcon from '@material-ui/icons/Sync';
 import IconButton from '@material-ui/core/IconButton'
 

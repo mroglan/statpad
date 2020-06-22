@@ -2,10 +2,10 @@ import {useState, useEffect, useRef, useMemo} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Button, CircularProgress, Typography, Paper, IconButton, Snackbar, Box} from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
-import TreeDiagram from './subComponents/TreeDiagram'
+import TreeDiagram from './simProbSubs/TreeDiagram'
 import CloseIcon from '@material-ui/icons/Close'
-import TwoWayTable from './subComponents/TwoWayTable'
-import Simulation from './subComponents/Simulation'
+import TwoWayTable from './simProbSubs/TwoWayTable'
+import Simulation from './simProbSubs/Simulation'
 
 interface TestI {
     type: string;
@@ -95,6 +95,21 @@ const defaultTwoWayTableProperties = {
     verticalTitle: '',
     displayTotals: false,
     contentType: 'frequency'
+}
+
+const defaultSimulationData = {
+    output: []
+}
+
+const defaultSimulationProperties = {
+    trials: '0',
+    inputType: 'range',
+    range: {
+        min: '0',
+        max: '0'
+    },
+    datasetNum: 0,
+    displayGraph: false
 }
 
 export default function SimProb({component, data}) {
@@ -188,6 +203,7 @@ export default function SimProb({component, data}) {
     const addToDatabase = async (newTest:TestI, type:string) => {
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: true})
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: true})
+        else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: true})
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newtest`, {
             method: 'POST',
@@ -200,6 +216,7 @@ export default function SimProb({component, data}) {
 
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: false})
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: false})
+        else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: false})
 
         if(res.status !== 200) {
             setServerError(true)
@@ -231,6 +248,17 @@ export default function SimProb({component, data}) {
         await addToDatabase(newTable, 'twoWayTable')
     }
 
+    const createSimulation = async () => {
+        const newSimulation = {
+            component: component._id,
+            type: 'simulation',
+            data: defaultSimulationData,
+            properties: defaultSimulationProperties
+        }
+
+        await addToDatabase(newSimulation, 'simulation')
+    }
+
     const classes = useStyles()
     return (
         <div>
@@ -241,8 +269,8 @@ export default function SimProb({component, data}) {
                 <Button variant="contained" className={classes.newButton} onClick={(e) => createTwoWayTable()} >
                     {newTestLoading.twoWayTable ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Way Table'}
                 </Button>
-                <Button variant="contained" className={classes.newButton}>
-                    New Simulation
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createSimulation()} >
+                {newTestLoading.simulation ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Simulation'}
                 </Button>
                 <Button variant="contained" className={classes.newButton}>
                     New Binomial Probability
@@ -258,11 +286,11 @@ export default function SimProb({component, data}) {
                 </Button>
             </Grid>
 
-            <Box mb={4}>
+            {/* <Box mb={4}>
                 <Paper elevation={3} style={{paddingTop: '1rem'}} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
                     <Simulation component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box> 
+            </Box>  */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -298,11 +326,13 @@ export default function SimProb({component, data}) {
                         )
                     } if(test.type === 'simulation') {
                         return (
-                            <Box mb={4}>
-                                <Paper elevation={3} style={{paddingTop: '1rem'}} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                                    <Simulation component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
-                                </Paper>
-                            </Box> 
+                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                onClick={(e) => deleteTest(index, test._id)}>
+                                    <DeleteOutlineIcon />
+                                </IconButton>
+                                <Simulation component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                            </Paper>
                         )
                     }
                 })}

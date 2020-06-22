@@ -37,7 +37,7 @@ export default function BarGraph({data, properties, graphProperties}: BarGraphPr
                 },
                 scaleLabel: {
                     display: true,
-                    labelString: data[0][properties[0].y.num] || 'no title',
+                    labelString: data[0][properties[0].x.num] || 'no title',
                     fontColor: '#fff',
                     fontSize: 20
                 }

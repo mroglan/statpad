@@ -8,7 +8,7 @@ import {Grid, Paper, Box, Typography} from '@material-ui/core'
 import getComponents from "../../../../requests/getComponents";
 import InnerProjectNav from '../../../../components/nav/InnerProjectNav'
 import {ObjectId} from 'mongodb'
-import DataTable from "../../../../components/projectComponents/subComponents/DataTable";
+import DataTable from "../../../../components/projectComponents/graphSubs/DataTable";
 import {useState} from 'react'
 import Data from '../../../../components/projectComponents/Data'
 import Graphs from '../../../../components/projectComponents/Graphs'

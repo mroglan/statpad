@@ -1,4 +1,4 @@
-import DataTable from "./subComponents/DataTable";
+import DataTable from "./graphSubs/DataTable";
 import {useState} from 'react'
 import { Snackbar, IconButton } from "@material-ui/core";
 import {makeStyles} from '@material-ui/core/styles'

@@ -11,6 +11,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
+import SimGraph from  './SimGraph'
 
 
 const useStyles = makeStyles(theme => ({
@@ -89,15 +90,15 @@ interface SimulationI {
 }
 
 const fakeData:any = {
-    output: [1, 2, 4, 2, 3, 2, 1]
+    output: []
 }
 
 const fakeProperties:any = {
-    trials: '7',
+    trials: '0',
     inputType: 'range',
     range: {
-        min: '1',
-        max: '4'
+        min: '0',
+        max: '0'
     },
     datasetNum: 0,
     displayGraph: false
@@ -116,8 +117,8 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
                 },
                 body: JSON.stringify({
                     id: component._id,
-                    //data: simData,
-                    //properties: simProperties
+                    data: simData,
+                    properties: simProperties
                 })
             })
             if(res.status !== 200) {
@@ -132,8 +133,8 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
     const tableCellItemCount = useRef<number>(0)
     tableCellItemCount.current = 0
 
-    const [simData, setSimData] = useState(fakeData) // change to component.data
-    const [simProperties, setSimProperties] = useState(fakeProperties) // change to component.properties
+    const [simData, setSimData] = useState(component.data) // change to component.data
+    const [simProperties, setSimProperties] = useState(component.properties) // change to component.properties
 
     // useMemo(() => {
         
@@ -204,8 +205,8 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
     const minWidth = Number(simProperties.trials) * 50
     
     return (
-        <Box>
-            <Box px={3}>
+        <Box mt={4}>
+            <Box px={6}>
                 <Grid container direction="row" spacing={3}>
                     <Grid item>
                         <FormControl variant="filled" className={classes.formControl}>
@@ -322,7 +323,9 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
                 </Grid>
             </Box>
             <Box>
-                {/* histogram */}
+                {simProperties.displayGraph && <Box>
+                    <SimGraph output={simData.output} lists={data} properties={simProperties} />
+                </Box>}
             </Box>
         </Box>
     )

@@ -2,9 +2,9 @@ import {useState, useMemo, useEffect, useRef} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Box, Button, CircularProgress, Paper, IconButton, Typography} from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
-import Graph from './subComponents/Graph'
-import MixedGraph from './subComponents/MixedGraph'
-import Var1Stats from './subComponents/Var1Stats'
+import Graph from './graphSubs/Graph'
+import MixedGraph from './graphSubs/MixedGraph'
+import Var1Stats from './graphSubs/Var1Stats'
 import { Snackbar } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close'
 
