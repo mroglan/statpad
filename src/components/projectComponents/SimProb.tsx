@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import TreeDiagram from './subComponents/TreeDiagram'
 import CloseIcon from '@material-ui/icons/Close'
 import TwoWayTable from './subComponents/TwoWayTable'
+import Simulation from './subComponents/Simulation'
 
 interface TestI {
     type: string;
@@ -257,11 +258,11 @@ export default function SimProb({component, data}) {
                 </Button>
             </Grid>
 
-            {/* <Box mb={4}>
-                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <TwoWayTable component={null} syncData={null} sync={null} index={null} />
+            <Box mb={4}>
+                <Paper elevation={3} style={{paddingTop: '1rem'}} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                    <Simulation component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box> */}
+            </Box> 
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -294,6 +295,14 @@ export default function SimProb({component, data}) {
                                 </IconButton>
                                 <TwoWayTable component={test} syncData={syncData} sync={sync} index={index} />
                             </Paper>
+                        )
+                    } if(test.type === 'simulation') {
+                        return (
+                            <Box mb={4}>
+                                <Paper elevation={3} style={{paddingTop: '1rem'}} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <Simulation component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                                </Paper>
+                            </Box> 
                         )
                     }
                 })}

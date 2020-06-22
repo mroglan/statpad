@@ -343,7 +343,7 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
         })
         totalsArray.push(totalsArray.reduce((currentTotal:number, val:string, index:number) => index === 0 ? currentTotal : currentTotal += Number(val), 0).toString())
         return <TableRow className={classes.tableRow}>
-            {totalsArray.map((val:string, index:number) => <TableCell className={index === 0 ? classes.contentTitleCell : classes.contentInputCell}>
+            {totalsArray.map((val:string, index:number) => <TableCell key={index} className={index === 0 ? classes.contentTitleCell : classes.contentInputCell}>
                 <Typography variant="body1" style={{textAlign: 'center'}} className={index === 0 ? classes.contentTitle : classes.contentInput}>
                     {totalValue(val, tableData.length, index)}
                 </Typography>
