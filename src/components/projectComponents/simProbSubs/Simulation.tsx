@@ -205,7 +205,7 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
     const minWidth = Number(simProperties.trials) * 50
     
     return (
-        <Box mt={4}>
+        <Box pt={4}>
             <Box px={6}>
                 <Grid container direction="row" spacing={3}>
                     <Grid item>
@@ -280,7 +280,7 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
                     </Grid>
                 </Grid>
             </Box>
-            <Box mt={3} pl={3} className={classes.scrollX}>
+            <Box pt={3} pl={3} className={classes.scrollX}>
                 <Grid container style={{minWidth: minWidth}}>
                     <Paper elevation={0} style={{backgroundColor: 'hsl(241, 82%, 47%)'}}>
                         <TableContainer>

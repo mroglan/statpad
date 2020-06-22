@@ -6,6 +6,7 @@ import TreeDiagram from './simProbSubs/TreeDiagram'
 import CloseIcon from '@material-ui/icons/Close'
 import TwoWayTable from './simProbSubs/TwoWayTable'
 import Simulation from './simProbSubs/Simulation'
+import BinomialProb from './simProbSubs/BinomialProb'
 
 interface TestI {
     type: string;
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     paper: {
         backgroundColor: 'hsl(241, 82%, 50%)',
         position: 'relative',
-        marginBottom: '1rem'
+        //marginBottom: '1rem'
     },
     '@keyframes appear': {
         '0%': {
@@ -109,6 +110,14 @@ const defaultSimulationProperties = {
         max: '0'
     },
     datasetNum: 0,
+    displayGraph: false
+}
+
+const defaultBinomialProperties = {
+    type: 'single',
+    trials: '0',
+    probability: '0.0',
+    successes: '0',
     displayGraph: false
 }
 
@@ -204,6 +213,7 @@ export default function SimProb({component, data}) {
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: true})
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: true})
         else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: true})
+        else if(type === 'binomial') setNewTestLoading({...newTestLoading, binomial: true})
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newtest`, {
             method: 'POST',
@@ -217,6 +227,7 @@ export default function SimProb({component, data}) {
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: false})
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: false})
         else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: false})
+        else if(type === 'binomial') setNewTestLoading({...newTestLoading, binomial: false})
 
         if(res.status !== 200) {
             setServerError(true)
@@ -259,6 +270,17 @@ export default function SimProb({component, data}) {
         await addToDatabase(newSimulation, 'simulation')
     }
 
+    const createBinomial = async () => {
+        const newBinomial = {
+            component: component._id,
+            type: 'binomial',
+            data: 0,
+            properties: defaultBinomialProperties
+        }
+
+        await addToDatabase(newBinomial, 'binomial')
+    }
+
     const classes = useStyles()
     return (
         <div>
@@ -272,8 +294,8 @@ export default function SimProb({component, data}) {
                 <Button variant="contained" className={classes.newButton} onClick={(e) => createSimulation()} >
                 {newTestLoading.simulation ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Simulation'}
                 </Button>
-                <Button variant="contained" className={classes.newButton}>
-                    New Binomial Probability
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createBinomial()} >
+                {newTestLoading.binomial ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Binomial Probability'}
                 </Button>
                 <Button variant="contained" className={classes.newButton}>
                     New Geometric Probability
@@ -286,11 +308,11 @@ export default function SimProb({component, data}) {
                 </Button>
             </Grid>
 
-            {/* <Box mb={4}>
-                <Paper elevation={3} style={{paddingTop: '1rem'}} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <Simulation component={null} syncData={null} sync={null} index={null} data={formattedData} />
+             {/* <Box>
+                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                    <BinomialProb component={null} syncData={null} sync={null} index={null} />
                 </Paper>
-            </Box>  */}
+            </Box>   */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -306,33 +328,51 @@ export default function SimProb({component, data}) {
 
                     if(test.type === 'treeDiagram') {
                         return (
-                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
-                                <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
-                                onClick={(e) => deleteTest(index, test._id)} >
-                                    <DeleteOutlineIcon />
-                                </IconButton>
-                                <TreeDiagram data={test} syncData={syncData} sync={sync} index={index} />
-                            </Paper>
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper} ${classes.scrollX}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)} >
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <TreeDiagram data={test} syncData={syncData} sync={sync} index={index} />
+                                </Paper>
+                            </Box>
                         )
                     } if(test.type === 'twoWayTable') {
                         return (
-                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                                <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
-                                onClick={(e) => deleteTest(index, test._id)}>
-                                    <DeleteOutlineIcon />
-                                </IconButton>
-                                <TwoWayTable component={test} syncData={syncData} sync={sync} index={index} />
-                            </Paper>
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <TwoWayTable component={test} syncData={syncData} sync={sync} index={index} />
+                                </Paper>
+                            </Box>
                         )
                     } if(test.type === 'simulation') {
                         return (
-                            <Paper key={index} elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                                <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
-                                onClick={(e) => deleteTest(index, test._id)}>
-                                    <DeleteOutlineIcon />
-                                </IconButton>
-                                <Simulation component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
-                            </Paper>
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <Simulation component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                                </Paper>
+                            </Box>
+                        )
+                    } if(test.type === 'binomial') {
+                        return (
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <BinomialProb component={test} syncData={syncData} sync={sync} index={index} />
+                                </Paper>
+                            </Box>
                         )
                     }
                 })}

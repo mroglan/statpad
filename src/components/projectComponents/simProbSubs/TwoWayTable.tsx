@@ -426,7 +426,7 @@ export default function TwoWayTable({component, syncData, sync, index}:TableI) {
                     </Paper>
                 </Grid>
             </Box>
-            <Box px={3} mt={3}>
+            <Box px={3} pt={3}>
                 <Grid container spacing={5}>
                     <Grid item sm={6}>
                         <TextField label="Horizontal Title" value={tableProperties.horzTitle} fullWidth 
