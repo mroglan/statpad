@@ -7,6 +7,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import TwoWayTable from './simProbSubs/TwoWayTable'
 import Simulation from './simProbSubs/Simulation'
 import BinomialProb from './simProbSubs/BinomialProb'
+import GeoProb from './simProbSubs/GeometricProb'
 
 interface TestI {
     type: string;
@@ -121,6 +122,13 @@ const defaultBinomialProperties = {
     displayGraph: false
 }
 
+const defaultGeometricProperties = {
+    type: 'single',
+    probability: '0.0',
+    successNum: '0',
+    displayGraph: false
+}
+
 export default function SimProb({component, data}) {
 
     const [tests, setTests] = useState([])
@@ -214,6 +222,7 @@ export default function SimProb({component, data}) {
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: true})
         else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: true})
         else if(type === 'binomial') setNewTestLoading({...newTestLoading, binomial: true})
+        else if(type === 'geometric') setNewTestLoading({...newTestLoading, geometric: true})
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newtest`, {
             method: 'POST',
@@ -228,6 +237,7 @@ export default function SimProb({component, data}) {
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: false})
         else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: false})
         else if(type === 'binomial') setNewTestLoading({...newTestLoading, binomial: false})
+        else if(type === 'geometric') setNewTestLoading({...newTestLoading, geometric: false})
 
         if(res.status !== 200) {
             setServerError(true)
@@ -281,6 +291,17 @@ export default function SimProb({component, data}) {
         await addToDatabase(newBinomial, 'binomial')
     }
 
+    const createGeometric = async () => {
+        const newGeo = {
+            component: component._id,
+            type: 'geometric',
+            data: 0,
+            properties: defaultGeometricProperties
+        }
+
+        await addToDatabase(newGeo, 'geometric')
+    }
+
     const classes = useStyles()
     return (
         <div>
@@ -292,13 +313,13 @@ export default function SimProb({component, data}) {
                     {newTestLoading.twoWayTable ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Way Table'}
                 </Button>
                 <Button variant="contained" className={classes.newButton} onClick={(e) => createSimulation()} >
-                {newTestLoading.simulation ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Simulation'}
+                    {newTestLoading.simulation ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Simulation'}
                 </Button>
                 <Button variant="contained" className={classes.newButton} onClick={(e) => createBinomial()} >
-                {newTestLoading.binomial ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Binomial Probability'}
+                    {newTestLoading.binomial ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Binomial Probability'}
                 </Button>
-                <Button variant="contained" className={classes.newButton}>
-                    New Geometric Probability
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createGeometric()} >
+                    {newTestLoading.geometric ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Geometric Probability'}
                 </Button>
             </Grid>
 
@@ -308,11 +329,11 @@ export default function SimProb({component, data}) {
                 </Button>
             </Grid>
 
-             {/* <Box>
+            {/* <Box pb={'.5rem'}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <BinomialProb component={null} syncData={null} sync={null} index={null} />
+                    <GeoProb component={null} syncData={null} sync={null} index={null} />
                 </Paper>
-            </Box>   */}
+            </Box>  */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -371,6 +392,18 @@ export default function SimProb({component, data}) {
                                         <DeleteOutlineIcon />
                                     </IconButton>
                                     <BinomialProb component={test} syncData={syncData} sync={sync} index={index} />
+                                </Paper>
+                            </Box>
+                        )
+                    } if(test.type === 'geometric') {
+                        return (
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <GeoProb component={test} syncData={syncData} sync={sync} index={index} />
                                 </Paper>
                             </Box>
                         )
