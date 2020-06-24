@@ -4,6 +4,7 @@ import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton,
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import oneSampleProp from '../../../utilities/oneSampleProp'
 import oneSampleMean from '../../../utilities/oneSampleMean'
+import NormalCurveCI from './NormalCurveCI'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -51,7 +52,8 @@ const fakeProperties = {
         sampleSD: '0',
         datasetNum: 0,
         confidence: 0.95
-    }
+    },
+    displayGraph: false
 }
 
 export default function OneSampleCI({component, syncData, sync, index, data}:SampleI) {
@@ -81,11 +83,48 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
 
     const [intervalProperties, setIntervalProperties] = useState(fakeProperties) // change to component.properties
 
-    const intervalInfo = useMemo(() => {
+    const intervalInfo:any = useMemo(() => {
         return intervalProperties.type === 'proportion' ? oneSampleProp(intervalProperties, data) : oneSampleMean(intervalProperties, data)
     }, [intervalProperties])
 
     console.log(intervalInfo)
+
+    const GraphSwitch = withStyles((theme) => ({
+        root: {
+            width: 42,
+            height: 26,
+            padding: 0,
+            margin: theme.spacing(1),
+          },
+          switchBase: {
+            padding: 1,
+            '&$checked': {
+              transform: 'translateX(16px)',
+              color: theme.palette.common.white,
+              '& + $track': {
+                backgroundColor: '#52d869',
+                opacity: 1,
+                border: 'none',
+              },
+            },
+            '&$thumb': {
+              color: '#52d869',
+              border: '6px solid #fff',
+            },
+          },
+          thumb: {
+            width: 24,
+            height: 24,
+          },
+          track: {
+            borderRadius: 26 / 2,
+            border: `1px solid ${theme.palette.grey[400]}`,
+            backgroundColor: theme.palette.grey[400],
+            opacity: 1,
+            transition: theme.transitions.create(['background-color', 'border']),
+          },
+          checked: {},
+    }))(Switch)
 
     const classes = useStyles()
     return (
@@ -95,7 +134,7 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
                     <FormControl variant="filled" className={classes.formControl}>
                         <InputLabel id="type-label" className={classes.selectLabel}>Type</InputLabel>
                         <Select labelId="type-label" id="type" disableUnderline={true} 
-                        value={intervalProperties.type} onChange={(e) => setIntervalProperties({...intervalProperties, type: e.target.value.toString()})}
+                        value={intervalProperties.type} onChange={(e) => setIntervalProperties({...intervalProperties, type: e.target.value.toString(), inputMethod: 'manual'})}
                             label="Data Type" classes={{icon: classes.textWhite, filled: classes.textWhite }}>
                             <MenuItem value="proportion">Proportion</MenuItem>
                             <MenuItem value="mean">Mean</MenuItem>
@@ -140,7 +179,7 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
                             sampleSize: e.target.value.toString()
                         }})} />
                     </Grid>
-                    <Grid item>
+                    {intervalProperties.type === 'mean' && <Grid item>
                         <TextField label="Sample SD" value={intervalProperties.inputs.sampleSD} className={classes.numInput}
                         variant="outlined" InputProps={{className: classes.textWhite}}
                         InputLabelProps={{className: classes.dimWhite}}
@@ -148,7 +187,7 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
                             ...intervalProperties.inputs,
                             sampleSD: e.target.value.toString()
                         }})} />
-                    </Grid>
+                    </Grid>}
                 </> : <Grid item>
                     <FormControl variant="filled" className={classes.formControl}>
                         <InputLabel id="num-label" className={classes.selectLabel}>List</InputLabel>
@@ -180,12 +219,18 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
                         </Select>
                     </FormControl>
                 </Grid>
+                <Grid item>
+                    <FormControlLabel control={<GraphSwitch 
+                    onChange={(e) => setIntervalProperties({...intervalProperties, displayGraph: !intervalProperties.displayGraph})} 
+                    checked={intervalProperties.displayGraph} name="Display Graph" />} 
+                    label="Display Graph" labelPlacement="start" classes={{label: classes.textWhite}} />
+                </Grid>
             </Grid>
             <Grid container style={{marginTop: '1rem'}}>
                 <Grid item xs={12} sm={6}>
                     <Box textAlign="center">
                         <Typography variant="h6" style={{display: 'inline'}} className={classes.lightWhite}>
-                            {intervalInfo.type === 'proportion' ? 'Sample Proportion:' : 'Sample Mean:'} 
+                            {intervalProperties.type === 'proportion' ? 'Sample Proportion:' : 'Sample Mean:'} 
                         </Typography>
                         <Typography variant="h6" style={{paddingLeft: '1rem', display: 'inline'}} className={classes.textWhite}>
                             {intervalProperties.type === 'proportion' ? intervalInfo.prop : intervalInfo.mean}
@@ -215,6 +260,11 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
                     </Box>
                 </Grid>
             </Grid>
+            <Box>
+                {intervalProperties.displayGraph && <NormalCurveCI mean={intervalProperties.type === 'proportion' ? Number(intervalInfo.prop) : Number(intervalInfo.mean)}
+                SD={intervalInfo.SE} range={intervalInfo.interval} 
+                confidence={intervalProperties.inputs.confidence} name={intervalProperties.type === 'proportion' ? 'Proportion' : 'Mean'} />}
+            </Box>
         </Box>
     )
 }
