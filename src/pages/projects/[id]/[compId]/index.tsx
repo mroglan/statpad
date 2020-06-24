@@ -13,6 +13,7 @@ import {useState} from 'react'
 import Data from '../../../../components/projectComponents/Data'
 import Graphs from '../../../../components/projectComponents/Graphs'
 import SimProb from '../../../../components/projectComponents/SimProb'
+import ConfidenceIntervals from '../../../../components/projectComponents/ConfidenceIntervals'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,7 +29,6 @@ const useStyles = makeStyles(theme => ({
             '& nav': {
                 display: 'flex',
                 flexFlow: 'row wrap',
-                justifyContent: 'center',
                 maxWidth: 600,
                 [theme.breakpoints.down('xs')]: {
                     maxWidth: 300
@@ -79,7 +79,8 @@ export default function Component({user, component, project, allComponents, data
                         {/* <DataTable syncData={syncData} initialData={initialData} syncing={syncing} /> */}
                         {component.type === 'data' ? <Data component={component} /> : 
                         component.type === 'graphs' ? <Graphs component={component} data={data} /> :
-                        component.type === 'sim+prob' ? <SimProb component={component} data={data} /> : '' }
+                        component.type === 'sim+prob' ? <SimProb component={component} data={data} /> : 
+                        component.type === 'confidenceIntervals' ? <ConfidenceIntervals component={component} data={data} /> : '' }
                     </Box>
                 </Grid>
             </Grid>
