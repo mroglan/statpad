@@ -69,7 +69,7 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
                 },
                 body: JSON.stringify({
                     id: component._id,
-                    //properties: intervalProperties
+                    properties: intervalProperties
                 })
             })
             if(res.status !== 200) {
@@ -81,7 +81,7 @@ export default function OneSampleCI({component, syncData, sync, index, data}:Sam
         uploadData()
     }, [sync])
 
-    const [intervalProperties, setIntervalProperties] = useState(fakeProperties) // change to component.properties
+    const [intervalProperties, setIntervalProperties] = useState(component.properties) // change to component.properties
 
     const intervalInfo:any = useMemo(() => {
         return intervalProperties.type === 'proportion' ? oneSampleProp(intervalProperties, data) : oneSampleMean(intervalProperties, data)

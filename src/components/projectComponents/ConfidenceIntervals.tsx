@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Button, CircularProgress, Typography, Paper, IconButton, Snackbar, Box} from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import OneSampleCI from './CISubs/OneSampleCI'
+import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -68,9 +69,23 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const defaultOneSampleCIProperties = {
+    type: 'proportion',
+    inputMethod: 'manual', // other option is dataset
+    inputs: {
+        proportion: '0',
+        mean: '0',
+        sampleSize: '0',
+        sampleSD: '0',
+        datasetNum: 0,
+        confidence: 0.95
+    },
+    displayGraph: false
+}
+
 export default function ConfidenceIntervals({component, data}) {
     
-    const [intervals, setIntervals] = useState([])
+    const [intervals, setIntervals] = useState<any>([])
     const [loading, setLoading] = useState(false)
     const [serverError, setServerError] = useState(false)
     const [sync, setSync] = useState(false)
@@ -154,11 +169,43 @@ export default function ConfidenceIntervals({component, data}) {
         })
     }
 
+    const addToDatabase = async (newInterval, type:string) => {
+        if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: true})
+
+        const res = await fetch(`${process.env.API_ROUTE}/projects/components/newinterval`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newInterval)
+        })
+        const json = await res.json()
+
+        if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: false})
+
+        if(res.status !== 200) {
+            setServerError(true)
+            return
+        }
+        syncedRef.current.push(false)
+        setIntervals([...intervals, json])
+    }
+
+    const create1SampleCI = async () => {
+        const newSample = {
+            component: component._id,
+            type: '1sampleCI',
+            properties: defaultOneSampleCIProperties
+        }
+
+        await addToDatabase(newSample, '1sampleCI')
+    }
+
     const classes = useStyles()
     return (
         <div>
             <Grid container direction="row" spacing={3} justify="center" style={{marginBottom: '1rem'}}>
-                <Button variant="contained" className={classes.newButton}>
+                <Button variant="contained" className={classes.newButton} onClick={(e) => create1SampleCI()} >
                     {newIntervalLoading.sample1 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 1 Sample CI'}
                 </Button>
                 <Button variant="contained" className={classes.newButton}>
@@ -175,11 +222,11 @@ export default function ConfidenceIntervals({component, data}) {
                 </Button>
             </Grid>
 
-            <Box py={'.5rem'} style={{overflow: 'hidden'}}>
+            {/* <Box py={'.5rem'} style={{overflow: 'hidden'}}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
                     <OneSampleCI component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box>
+            </Box> */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -207,6 +254,23 @@ export default function ConfidenceIntervals({component, data}) {
                     }
                 })}
             </Box>}
+
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} open={successMsg} onClose={(e) => setSuccessMsg(false)}
+            message="Changes saved" autoHideDuration={6000} ContentProps={{classes: {
+                root: classes.successMsg
+            }}} action={
+                <IconButton size="small" aria-label="close" onClick={(e) => setSuccessMsg(false)} style={{color: '#fff'}} >
+                    <CloseIcon />
+                </IconButton>
+            } />
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} open={errorMsg} onClose={(e) => setErrorMsg(false)}
+            message="Error saving" autoHideDuration={6000} ContentProps={{classes: {
+                root: classes.errorMsg
+            }}} action={
+                <IconButton size="small" aria-label="close" onClick={(e) => setErrorMsg(false)} style={{color: '#fff'}}>
+                    <CloseIcon />
+                </IconButton>
+            } />
         </div>
     )
 }

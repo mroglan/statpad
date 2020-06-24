@@ -44,9 +44,9 @@ export default function NormalCurveCI({mean, SD, range, confidence, name}:Normal
     const upperXVals = calcXValues(mean + range, upperBound, (1 - confidence) * 1000)
     const upperVals = upperXVals.map((val:number) => ({x: val, y: calcYValue(val)}))
 
-    console.log('within ci', withinCIVals)
-    console.log('upper', upperVals)
-    console.log('lower', lowerVals)
+    // console.log('within ci', withinCIVals)
+    // console.log('upper', upperVals)
+    // console.log('lower', lowerVals)
 
     const plotData = [
         {
