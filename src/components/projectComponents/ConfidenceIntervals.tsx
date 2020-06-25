@@ -84,6 +84,25 @@ const defaultOneSampleCIProperties = {
     displayGraph: false
 }
 
+const defaultTwoSampleCIProperties = {
+    type: 'proportion',
+    inputMethod: 'manual', // other option is dataset
+    inputs: {
+        proportion1: '0',
+        proportion2: '0',
+        mean1: '0',
+        mean2: '0',
+        sampleSize1: '0',
+        sampleSize2: '0',
+        sample1SD: '0',
+        sample2SD: '0',
+        dataset1Num: 0,
+        dataset2Num: 0,
+        confidence: 0.95
+    },
+    displayGraph: false
+}
+
 export default function ConfidenceIntervals({component, data}) {
     
     const [intervals, setIntervals] = useState<any>([])
@@ -172,6 +191,7 @@ export default function ConfidenceIntervals({component, data}) {
 
     const addToDatabase = async (newInterval, type:string) => {
         if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: true})
+        else if(type === '2sampleCI') setNewIntervalLoading({...newIntervalLoading, sample2: true})
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newinterval`, {
             method: 'POST',
@@ -183,6 +203,7 @@ export default function ConfidenceIntervals({component, data}) {
         const json = await res.json()
 
         if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: false})
+        else if(type === '2sampleCI') setNewIntervalLoading({...newIntervalLoading, sample2: false})
 
         if(res.status !== 200) {
             setServerError(true)
@@ -202,6 +223,16 @@ export default function ConfidenceIntervals({component, data}) {
         await addToDatabase(newSample, '1sampleCI')
     }
 
+    const create2SampleCI = async () => {
+        const newSample = {
+            component: component._id,
+            type: '2sampleCI',
+            properties: defaultTwoSampleCIProperties
+        }
+
+        await addToDatabase(newSample, '2sampleCI')
+    }
+
     const classes = useStyles()
     return (
         <div>
@@ -209,7 +240,7 @@ export default function ConfidenceIntervals({component, data}) {
                 <Button variant="contained" className={classes.newButton} onClick={(e) => create1SampleCI()} >
                     {newIntervalLoading.sample1 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 1 Sample CI'}
                 </Button>
-                <Button variant="contained" className={classes.newButton}>
+                <Button variant="contained" className={classes.newButton} onClick={(e) => create2SampleCI()} >
                     {newIntervalLoading.sample2 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Sample CI'}
                 </Button>
                 <Button variant="contained" className={classes.newButton}>
@@ -223,11 +254,11 @@ export default function ConfidenceIntervals({component, data}) {
                 </Button>
             </Grid>
 
-            <Box py={'.5rem'} style={{overflow: 'hidden'}}>
+            {/* <Box py={'.5rem'} style={{overflow: 'hidden'}}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
                     <TwoSampleCI component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box> 
+            </Box>  */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
