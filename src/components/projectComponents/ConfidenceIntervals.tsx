@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Button, CircularProgress, Typography, Paper, IconButton, Snackbar, Box} from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import OneSampleCI from './CISubs/OneSampleCI'
+import TwoSampleCI from './CISubs/TwoSampleCI'
 import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles(theme => ({
@@ -222,11 +223,11 @@ export default function ConfidenceIntervals({component, data}) {
                 </Button>
             </Grid>
 
-            {/* <Box py={'.5rem'} style={{overflow: 'hidden'}}>
+            <Box py={'.5rem'} style={{overflow: 'hidden'}}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <OneSampleCI component={null} syncData={null} sync={null} index={null} data={formattedData} />
+                    <TwoSampleCI component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box> */}
+            </Box> 
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -248,6 +249,18 @@ export default function ConfidenceIntervals({component, data}) {
                                         <DeleteOutlineIcon />
                                     </IconButton>
                                     <OneSampleCI component={interval} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                                </Paper>
+                            </Box>
+                        )
+                    } if(interval.type === '2sampleCI') {
+                        return (
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteInterval(index, interval._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <TwoSampleCI component={interval} syncData={syncData} sync={sync} index={index} data={formattedData} />
                                 </Paper>
                             </Box>
                         )
