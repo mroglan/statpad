@@ -10,7 +10,7 @@ export default async function DeleteInterval(req:NextApiRequest, res:NextApiResp
 
     try {
         const db = await database()
-        await db.collection('intervals').deleteOne({'_id': new ObjectId(req.body.id)})
+        await db.collection('intervals').deleteOne({'_id': new ObjectId(req.body)})
 
         return res.status(200).json({msg: 'Successful Deletion'})
     } catch(e) {

@@ -4,6 +4,7 @@ import {Grid, Button, CircularProgress, Typography, Paper, IconButton, Snackbar,
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import OneSampleCI from './CISubs/OneSampleCI'
 import TwoSampleCI from './CISubs/TwoSampleCI'
+import RegressionCI from './CISubs/RegressionCI'
 import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles(theme => ({
@@ -103,6 +104,13 @@ const defaultTwoSampleCIProperties = {
     displayGraph: false
 }
 
+const defaultRegressionProperties = {
+    xNum: 0,
+    yNum: 0,
+    confidence: .95,
+    displayGraph: false
+}
+
 export default function ConfidenceIntervals({component, data}) {
     
     const [intervals, setIntervals] = useState<any>([])
@@ -192,6 +200,7 @@ export default function ConfidenceIntervals({component, data}) {
     const addToDatabase = async (newInterval, type:string) => {
         if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: true})
         else if(type === '2sampleCI') setNewIntervalLoading({...newIntervalLoading, sample2: true})
+        else if(type === 'regression') setNewIntervalLoading({...newIntervalLoading, regression: true})
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newinterval`, {
             method: 'POST',
@@ -204,6 +213,7 @@ export default function ConfidenceIntervals({component, data}) {
 
         if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: false})
         else if(type === '2sampleCI') setNewIntervalLoading({...newIntervalLoading, sample2: false})
+        else if(type === 'regression') setNewIntervalLoading({...newIntervalLoading, regression: false})
 
         if(res.status !== 200) {
             setServerError(true)
@@ -233,6 +243,16 @@ export default function ConfidenceIntervals({component, data}) {
         await addToDatabase(newSample, '2sampleCI')
     }
 
+    const createRegressionCI = async () => {
+        const newRegression = {
+            component: component._id,
+            type: 'regression',
+            properties: defaultRegressionProperties
+        }
+
+        await addToDatabase(newRegression, 'regression')
+    }
+
     const classes = useStyles()
     return (
         <div>
@@ -243,7 +263,7 @@ export default function ConfidenceIntervals({component, data}) {
                 <Button variant="contained" className={classes.newButton} onClick={(e) => create2SampleCI()} >
                     {newIntervalLoading.sample2 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Sample CI'}
                 </Button>
-                <Button variant="contained" className={classes.newButton}>
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createRegressionCI()} >
                     {newIntervalLoading.regression ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Regression CI'}
                 </Button>
             </Grid>
@@ -256,9 +276,9 @@ export default function ConfidenceIntervals({component, data}) {
 
             {/* <Box py={'.5rem'} style={{overflow: 'hidden'}}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <TwoSampleCI component={null} syncData={null} sync={null} index={null} data={formattedData} />
+                    <RegressionCI component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box>  */}
+            </Box>   */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -292,6 +312,18 @@ export default function ConfidenceIntervals({component, data}) {
                                         <DeleteOutlineIcon />
                                     </IconButton>
                                     <TwoSampleCI component={interval} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                                </Paper>
+                            </Box>
+                        )
+                    } if(interval.type === 'regression') {
+                        return (
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteInterval(index, interval._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <RegressionCI component={interval} syncData={syncData} sync={sync} index={index} data={formattedData} />
                                 </Paper>
                             </Box>
                         )
