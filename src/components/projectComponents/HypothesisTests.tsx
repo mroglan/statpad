@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import CloseIcon from '@material-ui/icons/Close'
 import OneSampleHT from './HTSubs/OneSampleHT'
 import TwoSampleHT from './HTSubs/TwoSampleHT'
+import RegressionHT from './HTSubs/RegressionHT'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -100,6 +101,12 @@ const defaultTwoSampleProperties = {
         datasetNum2: 0,
         comparison: 'less', // 'greater' 'both'
     }
+}
+
+const defaultRegressionProperties = {
+    xNum: 0,
+    yNum: 0,
+    comparison: 'less'
 }
 
 export default function HypotheisTests({component, data}) {
@@ -234,6 +241,16 @@ export default function HypotheisTests({component, data}) {
         await addToDatabase(newSample, '2sampleHT')
     }
 
+    const createRegressionHT = async () => {
+        const newReg = {
+            component: component._id,
+            type: 'regression',
+            properties: defaultRegressionProperties
+        }
+
+        await addToDatabase(newReg, 'regression')
+    }
+
     const classes = useStyles()
     return (
         <div>
@@ -244,7 +261,7 @@ export default function HypotheisTests({component, data}) {
                 <Button variant="contained" className={classes.newButton} onClick={(e) => createTwoSampleHT()} >
                     {newIntervalLoading.sample2 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Sample HT'}
                 </Button>
-                <Button variant="contained" className={classes.newButton} >
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createRegressionHT()} >
                     {newIntervalLoading.regression ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New Regression HT'}
                 </Button>
             </Grid>
@@ -257,7 +274,7 @@ export default function HypotheisTests({component, data}) {
 
             {/* <Box py={'.5rem'} style={{overflow: 'hidden'}}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <TwoSampleHT component={null} syncData={null} sync={null} index={null} data={formattedData} />
+                    <RegressionHT component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
             </Box> */}
 
@@ -296,9 +313,38 @@ export default function HypotheisTests({component, data}) {
                                 </Paper>
                             </Box>
                         )
+                    } if(test.type === 'regression') {
+                        return (
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <RegressionHT component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                                </Paper>
+                            </Box>
+                        )
                     }
                 })}
             </Box>}
+
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} open={successMsg} onClose={(e) => setSuccessMsg(false)}
+            message="Changes saved" autoHideDuration={6000} ContentProps={{classes: {
+                root: classes.successMsg
+            }}} action={
+                <IconButton size="small" aria-label="close" onClick={(e) => setSuccessMsg(false)} style={{color: '#fff'}} >
+                    <CloseIcon />
+                </IconButton>
+            } />
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} open={errorMsg} onClose={(e) => setErrorMsg(false)}
+            message="Error saving" autoHideDuration={6000} ContentProps={{classes: {
+                root: classes.errorMsg
+            }}} action={
+                <IconButton size="small" aria-label="close" onClick={(e) => setErrorMsg(false)} style={{color: '#fff'}}>
+                    <CloseIcon />
+                </IconButton>
+            } />
         </div>
     )
 }
