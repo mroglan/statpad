@@ -12,7 +12,7 @@ export default async function DeleteHTest(req:NextApiRequest, res:NextApiRespons
         const db = await database()
         await db.collection('hTests').deleteOne({'_id': new ObjectId(req.body)})
 
-        return res.status(500).json({msg: 'Successfully Deleted'})
+        return res.status(200).json({msg: 'Successfully Deleted'})
     } catch(e) {
         console.log(e)
         return res.status(500).json({msg: 'Internal Server Error'})

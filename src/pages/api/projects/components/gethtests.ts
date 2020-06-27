@@ -10,8 +10,7 @@ export default async function GetHTests(req:NextApiRequest, res:NextApiResponse)
 
     try {
         const db = await database()
-        const tests = await db.collection('hTests').find({'_id': new ObjectId(req.body._id)}).toArray()
-
+        const tests = await db.collection('hTests').find({'component': new ObjectId(req.body._id)}).toArray()
         return res.status(200).json(tests)
     } catch(e) {
         console.log(e)

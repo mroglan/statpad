@@ -4,6 +4,7 @@ import {Grid, Button, CircularProgress, Typography, Paper, IconButton, Snackbar,
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import CloseIcon from '@material-ui/icons/Close'
 import OneSampleHT from './HTSubs/OneSampleHT'
+import TwoSampleHT from './HTSubs/TwoSampleHT'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -68,6 +69,38 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }))
+
+const defaultOneSampleProperties = {
+    type: 'proportion',
+    inputMethod: 'manual', // other option is dataset
+    inputs: {
+        proportion: '0',
+        mean: '0',
+        sampleSize: '0',
+        sampleSD: '0',
+        datasetNum: 0,
+        comparison: 'less', // 'greater' 'both'
+        nullH: '0'
+    }
+}
+
+const defaultTwoSampleProperties = {
+    type: 'proportion',
+    inputMethod: 'manual', // other option is dataset
+    inputs: {
+        proportion1: '0',
+        proportion2: '0',
+        mean1: '0',
+        mean2: '0',
+        sampleSize1: '0',
+        sampleSize2: '0',
+        sampleSD1: '0',
+        sampleSD2: '0',
+        datasetNum1: 0,
+        datasetNum2: 0,
+        comparison: 'less', // 'greater' 'both'
+    }
+}
 
 export default function HypotheisTests({component, data}) {
 
@@ -181,14 +214,34 @@ export default function HypotheisTests({component, data}) {
         setTests([...tests, json])
     }
 
+    const createOneSampleHT = async () => {
+        const newSample = {
+            component: component._id,
+            type: '1sampleHT',
+            properties: defaultOneSampleProperties
+        }
+
+        await addToDatabase(newSample, '1sampleHT')
+    }
+
+    const createTwoSampleHT = async () => {
+        const newSample = {
+            component: component._id,
+            type: '2sampleHT',
+            properties: defaultTwoSampleProperties
+        }
+
+        await addToDatabase(newSample, '2sampleHT')
+    }
+
     const classes = useStyles()
     return (
         <div>
             <Grid container direction="row" spacing={3} justify="center" style={{marginBottom: '1rem'}}>
-                <Button variant="contained" className={classes.newButton} >
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createOneSampleHT()} >
                     {newIntervalLoading.sample1 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 1 Sample HT'}
                 </Button>
-                <Button variant="contained" className={classes.newButton} >
+                <Button variant="contained" className={classes.newButton} onClick={(e) => createTwoSampleHT()} >
                     {newIntervalLoading.sample2 ? <Grid container alignItems="center"><CircularProgress classes={{svg: classes.spinner}} size={20} /> Adding</Grid> : 'New 2 Sample HT'}
                 </Button>
                 <Button variant="contained" className={classes.newButton} >
@@ -202,11 +255,11 @@ export default function HypotheisTests({component, data}) {
                 </Button>
             </Grid>
 
-            <Box py={'.5rem'} style={{overflow: 'hidden'}}>
+            {/* <Box py={'.5rem'} style={{overflow: 'hidden'}}>
                 <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
-                    <OneSampleHT component={null} syncData={null} sync={null} index={null} data={formattedData} />
+                    <TwoSampleHT component={null} syncData={null} sync={null} index={null} data={formattedData} />
                 </Paper>
-            </Box>
+            </Box> */}
 
             {loading ? <div style={{marginBottom: '1.5rem'}}>
                 <Grid container direction="row" alignItems="center" spacing={3}>
@@ -228,6 +281,18 @@ export default function HypotheisTests({component, data}) {
                                         <DeleteOutlineIcon />
                                     </IconButton>
                                     <OneSampleHT component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
+                                </Paper>
+                            </Box>
+                        )
+                    } if(test.type === '2sampleHT') {
+                        return (
+                            <Box key={index} py={'.5rem'} style={{overflow: 'hidden'}}>
+                                <Paper elevation={3} className={`${!sync ? classes.loadIn : ''} ${classes.paper}`}>
+                                    <IconButton disableRipple aria-label="remove test" className={classes.deleteTestButton}
+                                    onClick={(e) => deleteTest(index, test._id)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <TwoSampleHT component={test} syncData={syncData} sync={sync} index={index} data={formattedData} />
                                 </Paper>
                             </Box>
                         )

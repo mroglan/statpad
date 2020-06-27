@@ -2,8 +2,9 @@ import {useState, useEffect, useRef, createRef, useMemo} from 'react'
 import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton,
      FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, Button} from '@material-ui/core'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
-import oneSamplePropHT from '../../../utilities/oneSamplePropHT'
-import oneSampleMeanHT from '../../../utilities/oneSampleMeanHT'
+import twoSamplePropHT from '../../../utilities/twoSamplePropHT'
+import twoSampleMeanHT from '../../../utilities/twoSampleMeanHT'
+
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -58,17 +59,21 @@ const fakeProperties = {
     type: 'proportion',
     inputMethod: 'manual', // other option is dataset
     inputs: {
-        proportion: '0',
-        mean: '0',
-        sampleSize: '0',
-        sampleSD: '0',
-        datasetNum: 0,
+        proportion1: '0',
+        proportion2: '0',
+        mean1: '0',
+        mean2: '0',
+        sampleSize1: '0',
+        sampleSize2: '0',
+        sampleSD1: '0',
+        sampleSD2: '0',
+        datasetNum1: 0,
+        datasetNum2: 0,
         comparison: 'less', // 'greater' 'both'
-        nullH: '0'
     }
 }
 
-export default function OneSampleHT({component, syncData, sync, index, data}:TestI) {
+export default function TwoSampleHT({component, syncData, sync, index, data}:TestI) {
 
     useEffect(() => {
         if(!sync) return
@@ -94,15 +99,10 @@ export default function OneSampleHT({component, syncData, sync, index, data}:Tes
     }, [sync])
 
     const [testProperties, setTestProperties] = useState(component.properties) // change to component.properties
-    const [testInfo, setTestInfo] = useState({prob: 0, zScore: 0, testStat: 0})
-
-    // const testInfo = useMemo(() => {
-    //     return testProperties.type === 'proportion' ? oneSamplePropHT(testProperties, data) : oneSampleMeanHT(testProperties, data)
-    // }, [testProperties])
+    const [testInfo, setTestInfo] = useState({prob: 0, zScore: 0, testStat1: 0, testStat2: 0})
 
     const calculateHT = () => {
-        console.log('starting calculation')
-        setTestInfo(testProperties.type === 'proportion' ? oneSamplePropHT(testProperties, data) : oneSampleMeanHT(testProperties, data))
+        setTestInfo(testProperties.type === 'proportion' ? twoSamplePropHT(testProperties, data) : twoSampleMeanHT(testProperties, data))
     }
 
     const classes = useStyles()
@@ -131,83 +131,10 @@ export default function OneSampleHT({component, syncData, sync, index, data}:Tes
                         </Select>
                     </FormControl>
                 </Grid>}
-                <Grid item>
-                    <TextField label="Ho" value={testProperties.inputs.nullH} className={classes.numInput}
-                        variant="outlined" InputProps={{className: classes.textWhite}}
-                        InputLabelProps={{className: classes.dimWhite}}
-                        onChange={(e) => setTestProperties({...testProperties, inputs: {
-                            ...testProperties.inputs,
-                            nullH: e.target.value.toString()
-                        }})} />
-                </Grid>
-                {testProperties.type === 'proportion' ? <>
-                    <Grid item>
-                        <TextField label="Sample Prop." value={testProperties.inputs.proportion} className={classes.numInput}
-                        variant="outlined" InputProps={{className: classes.textWhite}}
-                        InputLabelProps={{className: classes.dimWhite}}
-                        onChange={(e) => setTestProperties({...testProperties, inputs: {
-                            ...testProperties.inputs,
-                            proportion: e.target.value.toString()
-                        }})} />
-                    </Grid>
-                    <Grid item>
-                        <TextField label="Sample Size" value={testProperties.inputs.sampleSize} className={classes.numInput}
-                        variant="outlined" InputProps={{className: classes.textWhite}}
-                        InputLabelProps={{className: classes.dimWhite}}
-                        onChange={(e) => setTestProperties({...testProperties, inputs: {
-                            ...testProperties.inputs,
-                            sampleSize: e.target.value.toString()
-                        }})} />
-                    </Grid>
-                </> : testProperties.inputMethod === 'manual' ? <>
-                    <Grid item>
-                        <TextField label="Sample Mean" value={testProperties.inputs.mean} className={classes.numInput}
-                        variant="outlined" InputProps={{className: classes.textWhite}}
-                        InputLabelProps={{className: classes.dimWhite}}
-                        onChange={(e) => setTestProperties({...testProperties, inputs: {
-                            ...testProperties.inputs,
-                            mean: e.target.value.toString()
-                        }})} />
-                    </Grid>
-                    <Grid item>
-                        <TextField label="Sample Size" value={testProperties.inputs.sampleSize} className={classes.numInput}
-                        variant="outlined" InputProps={{className: classes.textWhite}}
-                        InputLabelProps={{className: classes.dimWhite}}
-                        onChange={(e) => setTestProperties({...testProperties, inputs: {
-                            ...testProperties.inputs,
-                            sampleSize: e.target.value.toString()
-                        }})} />
-                    </Grid>
-                    <Grid item>
-                        <TextField label="Sample SD" value={testProperties.inputs.sampleSD} className={classes.numInput}
-                        variant="outlined" InputProps={{className: classes.textWhite}}
-                        InputLabelProps={{className: classes.dimWhite}}
-                        onChange={(e) => setTestProperties({...testProperties, inputs: {
-                            ...testProperties.inputs,
-                            sampleSD: e.target.value.toString()
-                        }})} />
-                    </Grid>
-                </> : <>
-                    <Grid item>
-                        <FormControl variant="filled" className={classes.formControl}>
-                            <InputLabel id="num-label" className={classes.selectLabel}>List</InputLabel>
-                            <Select labelId="num-label" id="num" disableUnderline={true} 
-                            value={testProperties.inputs.datasetNum} onChange={(e) => setTestProperties({...testProperties, inputs: {
-                                ...testProperties.inputs,
-                                datasetNum: Number(e.target.value)
-                            }})}
-                            label="Data Type" classes={{icon: classes.textWhite, filled: classes.textWhite }}>
-                                {data[0].map((cell:string, cellNum:number) => (
-                                    <MenuItem key={cellNum} value={cellNum}>{cell}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </>}
                 <Grid item style={{display: 'flex', alignItems: 'center'}}>
                     <Grid item style={{padding: '0 .5rem'}}>
                         <Typography variant="h6" className={classes.textWhite}>
-                            {testProperties.type === 'proportion' ? 'Prop' : 'Mean'}
+                            &#956;<sub>1</sub>
                         </Typography>
                     </Grid>
                     <Grid item style={{padding: '0 .5rem'}}>
@@ -226,33 +153,185 @@ export default function OneSampleHT({component, syncData, sync, index, data}:Tes
                     </Grid>
                     <Grid item style={{padding: '0 .5rem'}}>
                         <Typography variant="h6" className={classes.textWhite}>
-                            {testProperties.inputs.nullH}
+                            &#956;<sub>2</sub>
                         </Typography>
                     </Grid>
                 </Grid>
-                {/* <Grid item>
-                    <FormControlLabel control={<GraphSwitch 
-                    onChange={(e) => setTestProperties({...testProperties, displayGraph: !testProperties.displayGraph})} 
-                    checked={testProperties.displayGraph} name="Display Graph" />} 
-                    label="Display Graph" labelPlacement="start" classes={{label: classes.textWhite}} />
-                </Grid> */}
                 <Grid item>
                     <Button variant="contained" className={classes.calcButton} onClick={(e) => calculateHT()} >
                         Calculate
                     </Button>
                 </Grid>
             </Grid>
+            <Grid container alignItems="center" spacing={3} style={{marginTop: '1rem'}}>
+                <Grid item sm={3}>
+                    <Box textAlign="center">
+                        <Typography variant="h6" className={classes.textWhite}>
+                            Sample 1
+                        </Typography>
+                    </Box>
+                </Grid>
+                {testProperties.type === 'proportion' ? <>
+                    <Grid item>
+                        <TextField label="Sample Prop." value={testProperties.inputs.proportion1} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            proportion1: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Sample Size" value={testProperties.inputs.sampleSize1} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            sampleSize1: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                </> : testProperties.inputMethod === 'manual' ? <>
+                    <Grid item>
+                        <TextField label="Sample Mean" value={testProperties.inputs.mean1} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            mean1: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Sample Size" value={testProperties.inputs.sampleSize1} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            sampleSize1: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Sample SD" value={testProperties.inputs.sampleSD1} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            sampleSD1: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                </> : <>
+                    <Grid item>
+                        <FormControl variant="filled" className={classes.formControl}>
+                            <InputLabel id="num-label" className={classes.selectLabel}>List</InputLabel>
+                            <Select labelId="num-label" id="num" disableUnderline={true} 
+                            value={testProperties.inputs.datasetNum1} onChange={(e) => setTestProperties({...testProperties, inputs: {
+                                ...testProperties.inputs,
+                                datasetNum1: Number(e.target.value)
+                            }})}
+                            label="Data Type" classes={{icon: classes.textWhite, filled: classes.textWhite }}>
+                                {data[0].map((cell:string, cellNum:number) => (
+                                    <MenuItem key={cellNum} value={cellNum}>{cell}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </>}
+            </Grid>
+            <Grid container spacing={3} alignItems="center" style={{marginTop: '1rem'}}>
+                <Grid item sm={3}>
+                    <Box textAlign="center">
+                        <Typography variant="h6" className={classes.textWhite}>
+                            Sample 2
+                        </Typography>
+                    </Box>
+                </Grid>
+                {testProperties.type === 'proportion' ? <>
+                    <Grid item>
+                        <TextField label="Sample Prop." value={testProperties.inputs.proportion2} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            proportion2: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Sample Size" value={testProperties.inputs.sampleSize2} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            sampleSize2: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                </> : testProperties.inputMethod === 'manual' ? <>
+                    <Grid item>
+                        <TextField label="Sample Mean" value={testProperties.inputs.mean2} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            mean2: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Sample Size" value={testProperties.inputs.sampleSize2} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            sampleSize2: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Sample SD" value={testProperties.inputs.sampleSD2} className={classes.numInput}
+                        variant="outlined" InputProps={{className: classes.textWhite}}
+                        InputLabelProps={{className: classes.dimWhite}}
+                        onChange={(e) => setTestProperties({...testProperties, inputs: {
+                            ...testProperties.inputs,
+                            sampleSD2: e.target.value.toString()
+                        }})} />
+                    </Grid>
+                </> : <>
+                    <Grid item>
+                        <FormControl variant="filled" className={classes.formControl}>
+                            <InputLabel id="num-label" className={classes.selectLabel}>List</InputLabel>
+                            <Select labelId="num-label" id="num" disableUnderline={true} 
+                            value={testProperties.inputs.datasetNum2} onChange={(e) => setTestProperties({...testProperties, inputs: {
+                                ...testProperties.inputs,
+                                datasetNum2: Number(e.target.value)
+                            }})}
+                            label="Data Type" classes={{icon: classes.textWhite, filled: classes.textWhite }}>
+                                {data[0].map((cell:string, cellNum:number) => (
+                                    <MenuItem key={cellNum} value={cellNum}>{cell}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </>}
+            </Grid>
             <Grid container spacing={3} style={{marginTop: '1rem'}}>
                 <Grid item xs={12} sm={6}>
                     <Box textAlign="center">
                         <Typography variant="h6" style={{display: 'inline'}} className={classes.lightWhite}>
-                            {testProperties.type === 'proportion' ? 'Sample Proportion:' : 'Sample Mean:'} 
+                            {testProperties.type === 'proportion' ? 'Sample 1 Proportion:' : 'Sample 1 Mean:'} 
                         </Typography>
                         <Typography variant="h6" style={{paddingLeft: '1rem', display: 'inline'}} className={classes.textWhite}>
-                            {testInfo.testStat}
+                            {testInfo.testStat1}
                         </Typography>
                     </Box>
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Box textAlign="center">
+                        <Typography variant="h6" style={{display: 'inline'}} className={classes.lightWhite}>
+                            {testProperties.type === 'proportion' ? 'Sample 2 Proportion:' : 'Sample 2 Mean:'} 
+                        </Typography>
+                        <Typography variant="h6" style={{paddingLeft: '1rem', display: 'inline'}} className={classes.textWhite}>
+                            {testInfo.testStat2}
+                        </Typography>
+                    </Box>
+                </Grid>
+            </Grid>
+            <Grid container spacing={3} style={{marginTop: '1rem'}}>
                 <Grid item xs={12} sm={6}>
                     <Box textAlign="center">
                         <Typography variant="h6" style={{display: 'inline'}} className={classes.lightWhite}>
@@ -263,8 +342,6 @@ export default function OneSampleHT({component, syncData, sync, index, data}:Tes
                         </Typography>
                     </Box>
                 </Grid>
-            </Grid>
-            <Grid container spacing={3} style={{marginTop: '1rem'}}>
                 <Grid item xs={12} sm={6}>
                     <Box textAlign="center">
                         <Typography variant="h6" style={{display: 'inline'}} className={classes.lightWhite}>
