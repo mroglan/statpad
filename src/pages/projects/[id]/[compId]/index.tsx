@@ -15,6 +15,7 @@ import Graphs from '../../../../components/projectComponents/Graphs'
 import SimProb from '../../../../components/projectComponents/SimProb'
 import ConfidenceIntervals from '../../../../components/projectComponents/ConfidenceIntervals'
 import HypothesisTests from '../../../../components/projectComponents/HypothesisTests'
+import verifyEditor from '../../../../requests/verifyEditor'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -106,7 +107,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
     // console.log('project', project)
     // console.log('allComponents', allComponents)
 
-    console.log('component id', component._id)
+    verifyEditor(ctx, user._id, JSON.parse(JSON.stringify(project.editors)))
 
     const data = []
     allComponents.forEach((comp) => {

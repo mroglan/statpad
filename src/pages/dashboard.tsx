@@ -10,6 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {useRef} from 'react'
 import Link from 'next/link'
 import ProjectList from '../components/lists/ProjectList'
+import {ObjectId} from 'mongodb'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -151,7 +152,7 @@ export default function Dashboard({user, recentProjects}) {
 export const getServerSideProps: GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const user = await getUser(ctx)
     const db = await database()
-    const recentProjectsFound = await db.collection('projects').find({}).sort({updateDate: -1}).limit(5).toArray()
+    const recentProjectsFound = await db.collection('projects').find({'editors': new ObjectId(user._id)}).sort({updateDate: -1}).limit(5).toArray()
     const recentProjects = recentProjectsFound.map(doc => {
         const editors = doc.editors.map(editor => editor.toString())
         return {...doc, _id: doc._id.toString(), owner: doc.owner.toString(), createDate: doc.createDate.toString(), updateDate: doc.updateDate.toString(), editors}

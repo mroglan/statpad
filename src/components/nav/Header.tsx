@@ -162,7 +162,11 @@ export default function Header({loggedIn}) {
                     <div className={classes.usefulLinks}>
                         <Button color="inherit">About</Button>
                         <Button color="inherit">Tutorial</Button>
-                        <Button color="inherit">Manual</Button>
+                        <Button color="inherit">
+                            <Link href="/manual">
+                                <a style={{color: 'inherit', textDecoration:'none'}}>Manual</a>
+                            </Link>
+                        </Button>
                     {!loggedIn ? <Button color="inherit">
                         <Link href="/login">
                             <a style={{color:'inherit', textDecoration:'none'}}>Login</a>

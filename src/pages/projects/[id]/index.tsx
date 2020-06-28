@@ -12,6 +12,7 @@ import DeleteComponentDialog from '../../../components/dialogs/deleteComponentDi
 import Link from 'next/link'
 import {useState} from 'react'
 import {ObjectId} from 'mongodb'
+import verifyEditor from '../../../requests/verifyEditor'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -201,8 +202,8 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
     const id = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
     const [projectInfo, serverComponents] = await Promise.all([ getProjectInfo(id),
     getComponents(new ObjectId(id))])
-    // const projectInfo = await getProjectInfo(Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id)
-    // const serverComponents = await getComponents(projectInfo._id)
+    
+    verifyEditor(ctx, user._id, JSON.parse(JSON.stringify(projectInfo.editors)))
 
     return {props: {user, project: JSON.parse(JSON.stringify(projectInfo)), serverComponents: JSON.parse(JSON.stringify(serverComponents))}}
 }
