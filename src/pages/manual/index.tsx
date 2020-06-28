@@ -1,8 +1,6 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Typography, Paper, Button, Box, IconButton} from '@material-ui/core'
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Header from '../../components/nav/Header'
@@ -42,10 +40,7 @@ const useStyles = makeStyles(theme => ({
         minHeight: 100,
         [theme.breakpoints.up('sm')]: {
             minHeight: 200
-        },
-        [theme.breakpoints.up('lg')]: {
-            minHeight: 300
-        },
+        }
     },
     cardContent: {
         backgroundImage: 'linear-gradient(0deg, hsl(241, 82%, 60%), hsl(241, 82%, 43%))', //'hsl(241, 82%, 60%)',
@@ -110,7 +105,7 @@ export default function Manual({loggedIn}) {
                 </Grid>
                 <Box textAlign="center" my={3}>
                     <Typography variant="h4" className={classes.lightWhite}>
-                        The Manual
+                        Select a Component
                     </Typography>
                 </Box>
             </Box>
