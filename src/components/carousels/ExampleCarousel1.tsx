@@ -53,7 +53,9 @@ export default function ExampleCarousel({items}) {
             transform: 'scale(0)'
         },
         transform: i === 0 ? 'scale(1)' : 'scale(0)',
-        position: i === 0 ? 'initial' : 'absolute'
+        position: i === 0 ? 'initial' : 'absolute',
+        left: '25%',
+        top: 0
     }))
 
     const currentEx = useRef<number>()
@@ -62,7 +64,7 @@ export default function ExampleCarousel({items}) {
     const newExample = (dir:string) => {
         setExamples((i:number) => {
             if(i === currentEx.current) {
-                return {transform: `scale(0)`, position: 'absolute'}
+                return {transform: `scale(0)`, position: 'absolute', left: '25%%', top: 0}
             } else if(dir === 'next' && i === currentEx.current + 1) {
                 return {transform: 'scale(1)', position: 'initial'}
             } else if(dir === 'next' && currentEx.current + 1 === items.length && i === 0) {

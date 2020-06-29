@@ -5,7 +5,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import authenticated from '../../requests/authenticated'
 import ManualNav from '../../components/nav/ManualNav'
 import ManualSideNav from '../../components/nav/ManualSideNav'
-import ExampleCarousel from '../../components/carousels/ExampleCarousel'
+import ExampleCarousel from '../../components/carousels/ExampleCarousel1'
 
 const useStyles = makeStyles(theme => ({
     root: {
