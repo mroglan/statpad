@@ -9,6 +9,7 @@ import authenticated from '../../requests/authenticated'
 import {useMove, useHover} from 'react-use-gesture'
 import {useSprings, animated, interpolate} from 'react-spring'
 import Link from 'next/link'
+import {Fragment} from 'react'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,10 +17,9 @@ const useStyles = makeStyles(theme => ({
     },
     bar: {
         backgroundColor: 'transparent', //'hsl(241, 82%, 85%)',
-        width: '100%',
-        flexBasis: '20%',
-        borderLeft: '2.5px solid hsl(241, 82%, 43%)',
-        borderRight: '2.5px solid hsl(241, 82%, 43%)'
+        flexBasis: '19%',
+        // borderLeft: '2.5px solid hsl(241, 82%, 43%)',
+        // borderRight: '2.5px solid hsl(241, 82%, 43%)'
     },
     barsContainer: {
         backgroundImage: 'linear-gradient(to right, hsl(299, 50%, 46%), hsl(355, 81%, 55%))',
@@ -55,6 +55,10 @@ const useStyles = makeStyles(theme => ({
     cardGridItem: {
         flex: '0 0 305px',
         maxWidth: 400
+    },
+    barSeperator: {
+        flexBasis: '.5%',
+        background: 'hsl(241, 82%, 43%)'
     }
 }))
 
@@ -94,14 +98,20 @@ export default function Manual({loggedIn}) {
             <Box>
                 <Grid container direction="row" wrap="nowrap" alignItems="flex-end" justify="space-around"
                 className={classes.barsContainer} style={{margin: '0 auto'}}>
-                    {bars.map(({height}, index:number) => (
-                        <Grid item key={index} className={classes.bar} style={{height: '100%'}}>
+                    {bars.map(({height}, index:number) => (<Fragment key={index}>
+                        <Grid item className={classes.barSeperator} style={{height: '100%'}}>
+                            <Grid container></Grid>
+                        </Grid>
+                        <Grid item className={classes.bar} style={{height: '100%'}}>
                             <Grid container direction="column" style={{height: '100%'}}>
                                 <Grid item style={{flexGrow: 1, flexBasis: 0, backgroundColor: 'hsl(241, 82%, 43%)'}} />
                                 <AnimatedBar item style={{flexBasis: interpolate([height], height => `${height}%`), background: 'transparent'}} />
                             </Grid>
                         </Grid>
-                    ))}
+                        <Grid item className={classes.barSeperator} style={{height: '100%'}}>
+                            <Grid container></Grid>
+                        </Grid>
+                    </Fragment>))}
                 </Grid>
                 <Box textAlign="center" my={3}>
                     <Typography variant="h4" className={classes.lightWhite}>
