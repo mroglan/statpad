@@ -11,7 +11,7 @@ export default async function(ctx:GetServerSidePropsContext) {
         console.log('already authenticated...')
         //ctx.res.setHeader('Location', 'http://localhost:3000/dashboard')
         ctx.res.writeHead(302, {
-            Location: 'http://localhost:3000/dashboard'
+            Location: `${process.env.BASE_ROUTE}/dashboard`
         })
         ctx.res.end()
     }

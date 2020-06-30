@@ -13,7 +13,7 @@ export default function verifyEditor(ctx:GetServerSidePropsContext, userId:strin
 
     if(!isEditor && ctx.req) {
         ctx.res?.writeHead(302, {
-            Location: 'http://localhost:3000/projects'
+            Location: `${process.env.BASE_ROUTE}/projects`
         })
         ctx.res?.end()
         return

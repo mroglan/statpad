@@ -160,8 +160,11 @@ export default function Header({loggedIn}) {
                     </div>
                     <div className={classes.grow}></div>
                     <div className={classes.usefulLinks}>
-                        <Button color="inherit">About</Button>
-                        <Button color="inherit">Tutorial</Button>
+                        <Button color="inherit">
+                            <Link href="/about">
+                                <a style={{color: 'inherit', textDecoration: 'none'}}>About</a>
+                            </Link>
+                        </Button>
                         <Button color="inherit">
                             <Link href="/manual">
                                 <a style={{color: 'inherit', textDecoration:'none'}}>Manual</a>
@@ -171,8 +174,14 @@ export default function Header({loggedIn}) {
                         <Link href="/login">
                             <a style={{color:'inherit', textDecoration:'none'}}>Login</a>
                         </Link>
-                    </Button> : 
-                    <Button color="inherit" onClick={(e) => logout()}>Logout</Button>}
+                    </Button> : <>
+                    <Button color="inherit">
+                        <Link href="/dashboard">
+                            <a style={{color: 'inherit', textDecoration: 'none'}}>Dashboard</a>
+                        </Link>
+                    </Button>
+                    <Button color="inherit" onClick={(e) => logout()}>Logout</Button>
+                    </>}
                     </div>
                 </div>
                 <Button variant="contained" component="button" className={classes.showMenuBtn}

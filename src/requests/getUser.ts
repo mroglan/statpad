@@ -18,7 +18,7 @@ export default async function getUser(ctx: GetServerSidePropsContext) {
     
         if(res.status === 401 && ctx.req) {
             ctx.res?.writeHead(302, {
-                Location: 'http://localhost:3000/login'
+                Location: `${process.env.BASE_ROUTE}/login`
             })
             ctx.res?.end()
             return
