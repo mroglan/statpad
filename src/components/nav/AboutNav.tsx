@@ -26,17 +26,17 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function ManualNav({comp}) {
+export default function AboutNav({comp}) {
 
     const classes = useStyles()
     return (
         <Box>
             <Box mx="auto">
                 <Breadcrumbs className={classes.crumbs} separator={<NavigateNextIcon fontSize="small" style={{color: 'rgba(255, 255, 255, .5)'}} />} aria-label="project navigation">
-                    <Link href="/projects">
-                        <a className={classes.dimWhite}>Manual</a>
+                    <Link href="/about">
+                        <a className={classes.dimWhite}>About</a>
                     </Link>
-                    <Link href={`/manual/${comp.path}`}>
+                    <Link href={`/about/${comp.path}`}>
                         <a className={classes.white}>{comp.name}</a>
                     </Link>
                 </Breadcrumbs>

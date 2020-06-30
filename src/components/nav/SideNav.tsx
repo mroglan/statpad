@@ -57,7 +57,7 @@ export default function SideNav() {
                     </ListItemText>
                 </ListItem>
             </Link>
-            <Link href="/games">
+            <Link href="/about/games">
                 <ListItem button>
                     <ListItemIcon style={{color: 'hsl(129, 62%, 42%)'}}>
                         <SportsEsportsIcon />
