@@ -46,7 +46,7 @@ export default function About({loggedIn}) {
 
     const [circles, setCircles] = useSprings<any>(5, i => ({
         from: {
-            left: `${(i * 20) + 10}%`,
+            left: `50%`,
             top: '50%',
             transformX: 'translateX(-50%)',
             transformY: 'translateY(-50%)'
