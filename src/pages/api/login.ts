@@ -58,7 +58,7 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         res.status(200).json({msg: 'You are logged in'})
     } catch(e) {
         if(errors.length === 0) {
-            errors.push({msg: 'Internal Server Error'})
+            errors.push(e)
             return res.status(500).json(errors)
         }
         res.status(409).json(errors)
