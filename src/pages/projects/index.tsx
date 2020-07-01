@@ -136,6 +136,15 @@ export default function Projects({user, projects}) {
                             </Box>
                         </Paper>
                     </Box>
+                    {projects.length > 0 && <Box px={3}>
+                        <Link href="/projects/newproject">
+                            <a style={{textDecoration: 'none', color: 'inherit'}}>
+                                <Button className={classes.newButton} variant="contained">
+                                    New Project
+                                </Button>
+                            </a>
+                        </Link>
+                    </Box>}
                 </Grid>
             </Grid>
         </div>

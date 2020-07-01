@@ -87,7 +87,7 @@ export default function HypothesisTests({loggedIn}) {
                 </Grid>
                 <Grid item xs={12} md={9}>
                     <Box>
-                        <ManualNav comp={{name: 'Confidence Intervals', path: 'confidenceintervals'}} />
+                        <ManualNav comp={{name: 'Hypothesis Tests', path: 'hypothesistests'}} />
                     </Box>
                     <Box>
                         <Paper elevation={1} className={classes.paper}>
