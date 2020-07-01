@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb'
 
-const client = new MongoClient(process.env.DATABASE, {
+const client = new MongoClient(`${process.env.DATABASE}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
