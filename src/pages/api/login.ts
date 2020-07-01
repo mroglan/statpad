@@ -48,6 +48,8 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         const jwt = sign(claims, process.env.SIGNATURE, {expiresIn: '48hr'})
         console.log('jwt', jwt)
 
+        throw 'completed jwt so set header must be wrong'
+
         res.setHeader('Set-Cookie', cookie.serialize('auth', jwt, {
             httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
