@@ -51,7 +51,7 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         res.setHeader('Set-Cookie', cookie.serialize('auth', jwt, {
             // httpOnly: true,
             // secure: process.env.NODE_ENV !== 'development',
-            // sameSite: 'strict',
+            sameSite: 'strict',
             maxAge: 172800,
             path: '/'
         }))
