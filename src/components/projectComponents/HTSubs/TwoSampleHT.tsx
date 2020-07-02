@@ -103,6 +103,7 @@ export default function TwoSampleHT({component, syncData, sync, index, data}:Tes
 
     const calculateHT = () => {
         setTestInfo(testProperties.type === 'proportion' ? twoSamplePropHT(testProperties, data) : twoSampleMeanHT(testProperties, data))
+        //setTestInfo(twoSampleMeanHT(testProperties, data))
     }
 
     const classes = useStyles()

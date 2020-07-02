@@ -2,7 +2,7 @@ import {calcSampleProps} from './oneSampleMean'
 import errorFunction from './errorFunction'
 import {ITwoSampleHT} from '../components/projectComponents/projectInterfaces'
 
-export default function twoSampleMeanHT(info:ITwoSampleHT['properties'], data:string[][]) {
+export default function twoSampleMeanHT(info:any, data:string[][]) {
 
     const sample1Props = info.inputMethod === 'manual' ? {mean: info.inputs.mean1, n: info.inputs.sampleSize1, SD: info.inputs.sampleSD1} : calcSampleProps(info.inputs.datasetNum1, data)
     const sample2Props = info.inputMethod === 'manual' ? {mean: info.inputs.mean2, n: info.inputs.sampleSize2, SD: info.inputs.sampleSD2} : calcSampleProps(info.inputs.datasetNum2, data)
