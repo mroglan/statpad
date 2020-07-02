@@ -33,7 +33,7 @@ export default function ManualNav({comp}) {
         <Box>
             <Box mx="auto">
                 <Breadcrumbs className={classes.crumbs} separator={<NavigateNextIcon fontSize="small" style={{color: 'rgba(255, 255, 255, .5)'}} />} aria-label="project navigation">
-                    <Link href="/projects">
+                    <Link href="/manual">
                         <a className={classes.dimWhite}>Manual</a>
                     </Link>
                     <Link href={`/manual/${comp.path}`}>
