@@ -1,6 +1,7 @@
 import {List, ListItem, ListItemText, Grid, Typography, Box} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
 import Link from 'next/link'
+import {Component} from './listsInterfaces'
 
 const useStyles = makeStyles(theme => ({
     listItem: {
@@ -25,7 +26,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function SideComponentsList({components, current}) {
+interface Props {
+    components: Component[];
+    current: Component;
+}
+
+export default function SideComponentsList({components, current}:Props) {
 
     const classes = useStyles()
     return (

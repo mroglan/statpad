@@ -4,6 +4,7 @@ import { Snackbar, IconButton } from "@material-ui/core";
 import {makeStyles} from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
 import {useMemo} from 'react'
+import {DataComp} from './projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     successMsg: {
@@ -14,7 +15,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Data({component}) {
+interface Props {
+    component: DataComp;
+}
+
+export default function Data({component}:Props) {
 
     //console.log(component)
 

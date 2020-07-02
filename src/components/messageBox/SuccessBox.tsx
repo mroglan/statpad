@@ -2,7 +2,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import { Grid, Typography, Box, Button } from '@material-ui/core'
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 
-interface ErrorBoxProps {
+interface SuccessBoxProps {
     msg: string;
     handleRemoveSuccess: any;
 }
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function ErrorBox({msg, handleRemoveSuccess}:ErrorBoxProps) {
+export default function ErrorBox({msg, handleRemoveSuccess}:SuccessBoxProps) {
 
     const classes = useStyles()
     return (

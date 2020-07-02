@@ -11,12 +11,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
+import {ITwoWayTable, SyncData} from '../projectInterfaces'
 
 interface TableI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
+    component: ITwoWayTable;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
 }
 
 const useStyles = makeStyles(theme => ({

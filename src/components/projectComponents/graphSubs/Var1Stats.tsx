@@ -2,14 +2,15 @@ import { Grid, Input, Typography, Button, Box, FormControl, InputLabel, Select, 
 import {useState, useMemo, useEffect} from 'react'
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import calc1VarStats from '../../../utilities/calcVar1Stats'
+import {BaseGraph, Data, SyncData} from '../projectInterfaces'
 
 interface statProps {
-    rows: any;
+    rows: Data;
     basic: boolean;
-    syncData: any;
+    syncData: SyncData;
     sync: boolean;
     index: number;
-    initialGraph: any;
+    initialGraph: BaseGraph;
 }
 
 const useStyles = makeStyles(theme => ({

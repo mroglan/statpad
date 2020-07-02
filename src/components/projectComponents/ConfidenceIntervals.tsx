@@ -6,6 +6,7 @@ import OneSampleCI from './CISubs/OneSampleCI'
 import TwoSampleCI from './CISubs/TwoSampleCI'
 import RegressionCI from './CISubs/RegressionCI'
 import CloseIcon from '@material-ui/icons/Close'
+import {ConIntervalsComp, BaseConfidenceInterval, Data, InputData} from './projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -111,9 +112,14 @@ const defaultRegressionProperties = {
     displayGraph: false
 }
 
-export default function ConfidenceIntervals({component, data}) {
+interface Props {
+    component: ConIntervalsComp;
+    data: InputData;
+}
+
+export default function ConfidenceIntervals({component, data}:Props) {
     
-    const [intervals, setIntervals] = useState<any>([])
+    const [intervals, setIntervals] = useState<BaseConfidenceInterval[]>([])
     const [loading, setLoading] = useState(false)
     const [serverError, setServerError] = useState(false)
     const [sync, setSync] = useState(false)
@@ -149,11 +155,11 @@ export default function ConfidenceIntervals({component, data}) {
         getComponents()
     }, [component])
 
-    const [formattedData, setFormattedData] = useState([])
+    const [formattedData, setFormattedData] = useState<Data>([])
     useMemo(() => {
         let data2 = []
         console.log('using memo....')
-        const maxLength = data.reduce((max:number, current:number[][]) => current.length > max ? max = current.length : max, 0)
+        const maxLength = data.reduce((max:number, current) => current.length > max ? max = current.length : max, 0)
         for(let i = 0; i < maxLength; i++) {
             let pushArray = []
             for(let j = 0; j < data.length; j++) {
@@ -197,7 +203,7 @@ export default function ConfidenceIntervals({component, data}) {
         })
     }
 
-    const addToDatabase = async (newInterval, type:string) => {
+    const addToDatabase = async (newInterval:BaseConfidenceInterval, type:string) => {
         if(type === '1sampleCI') setNewIntervalLoading({...newIntervalLoading, sample1: true})
         else if(type === '2sampleCI') setNewIntervalLoading({...newIntervalLoading, sample2: true})
         else if(type === 'regression') setNewIntervalLoading({...newIntervalLoading, regression: true})

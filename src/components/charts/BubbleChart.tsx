@@ -1,18 +1,8 @@
 import {Bubble} from 'react-chartjs-2'
+import {ChartDataInterface, PlotProps, ScatterAndBubbleGraphOptions} from './chartInterfaces'
 
-interface BubbleChartProps {
-    data: any;
-    properties: any;
-    graphProperties: any;
-}
 
-interface ChartDataInterface {
-    x: number;
-    y: number;
-    r: number;
-}
-
-export default function BubbleChart({data, properties, graphProperties}: BubbleChartProps) {
+export default function BubbleChart({data, properties, graphProperties}: PlotProps) {
     const uniqueKey = () => Math.random()
 
     const chartData: ChartDataInterface[] = data.map((row:any, index:number) => {
@@ -29,7 +19,7 @@ export default function BubbleChart({data, properties, graphProperties}: BubbleC
 
     console.log(scaledChartData)
 
-    const graphOptions:any = {
+    const graphOptions:ScatterAndBubbleGraphOptions = {
         responsive: true,
         animation: {
             duration: 0
@@ -118,7 +108,7 @@ export default function BubbleChart({data, properties, graphProperties}: BubbleC
     }
 
     if(graphProperties.axis.ticks.xMax) {
-        graphMax = graphProperties.axis.ticks.xMax
+        graphMax = Number(graphProperties.axis.ticks.xMax)
     } else {
         for(let i = 0; i < excess; i++) {
             if((max + i) % excess === 0) {
@@ -139,7 +129,7 @@ export default function BubbleChart({data, properties, graphProperties}: BubbleC
         return returnArray
     } 
 
-    const xValues: any = range(graphMin, graphMax)
+    const xValues:number[] = range(graphMin, graphMax)
 
     const regressions = properties.map((property, index) => {
         if(property.type !== 'regression') return

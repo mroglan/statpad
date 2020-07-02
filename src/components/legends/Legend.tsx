@@ -1,6 +1,7 @@
 import PlotLegend from './PlotLegend'
 import {Grid} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
+import {ChartProperties} from './legendsInterfaces'
 
 const useStyles = makeStyles(theme => ({
     legendContainer: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface ILegend {
-    properties: any[];
+    properties: ChartProperties[];
     length: number;
 }
 

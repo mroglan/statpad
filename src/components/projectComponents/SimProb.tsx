@@ -8,11 +8,7 @@ import TwoWayTable from './simProbSubs/TwoWayTable'
 import Simulation from './simProbSubs/Simulation'
 import BinomialProb from './simProbSubs/BinomialProb'
 import GeoProb from './simProbSubs/GeometricProb'
-
-interface TestI {
-    type: string;
-    data: any;
-}
+import {BaseSimProbTest, InputData, Data, SimProbComp} from './projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -129,7 +125,12 @@ const defaultGeometricProperties = {
     displayGraph: false
 }
 
-export default function SimProb({component, data}) {
+interface Props {
+    component: SimProbComp;
+    data: InputData;
+}
+
+export default function SimProb({component, data}:Props) {
 
     const [tests, setTests] = useState([])
     const [loading, setLoading] = useState(false)
@@ -169,11 +170,11 @@ export default function SimProb({component, data}) {
         getComponents()
     }, [component])
 
-    const [formattedData, setFormattedData] = useState([])
+    const [formattedData, setFormattedData] = useState<Data>([])
     useMemo(() => {
         let data2 = []
         console.log('using memo....')
-        const maxLength = data.reduce((max:number, current:number[][]) => current.length > max ? max = current.length : max, 0)
+        const maxLength = data.reduce((max:number, current) => current.length > max ? max = current.length : max, 0)
         for(let i = 0; i < maxLength; i++) {
             let pushArray = []
             for(let j = 0; j < data.length; j++) {
@@ -217,7 +218,7 @@ export default function SimProb({component, data}) {
         })
     }
 
-    const addToDatabase = async (newTest:TestI, type:string) => {
+    const addToDatabase = async (newTest:BaseSimProbTest, type:string) => {
         if(type === 'treeDiagram') setNewTestLoading({...newTestLoading, treeDiagram: true})
         else if(type === 'twoWayTable') setNewTestLoading({...newTestLoading, twoWayTable: true})
         else if(type === 'simulation') setNewTestLoading({...newTestLoading, simulation: true})

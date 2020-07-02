@@ -10,14 +10,15 @@ import BubbleOptionsDialog from '../../dialogs/bubbleOptionsDialog'
 import GraphOptionsDialog from '../../dialogs/graphOptionsDialog'
 import Legend from '../../legends/Legend'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
+import {BaseGraph, Data, SyncData} from '../projectInterfaces'
 
 interface GraphProps {
-    rows: any;
+    rows: Data;
     basic: boolean;
-    syncData: any;
+    syncData: SyncData;
     sync: boolean;
     index: number;
-    initialGraph: any;
+    initialGraph: BaseGraph;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -142,7 +143,7 @@ export default function MixedGraph({rows, basic, syncData, index, sync, initialG
         uploadData()
     }, [sync])
 
-    const [chartProperties, setChartProperties] = useState(!basic ? initialGraph.charts : [{
+    const [chartProperties, setChartProperties] = useState<any>(!basic ? initialGraph.charts : [{
         type: 'scatter',
         label: null,
         options: {

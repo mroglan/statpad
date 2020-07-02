@@ -5,6 +5,7 @@ import {makeStyles, withStyles} from '@material-ui/core/styles'
 import oneSampleProp from '../../../utilities/oneSampleProp'
 import oneSampleMean from '../../../utilities/oneSampleMean'
 import NormalCurveCI from './NormalCurveCI'
+import {IOneSampleCI, SyncData, Data} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -34,12 +35,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-interface SampleI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
-    data:string[][];
+interface Props {
+    component: IOneSampleCI;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
+    data: Data;
 }
 
 const fakeProperties = {
@@ -56,7 +57,7 @@ const fakeProperties = {
     displayGraph: false
 }
 
-export default function OneSampleCI({component, syncData, sync, index, data}:SampleI) {
+export default function OneSampleCI({component, syncData, sync, index, data}:Props) {
 
     useEffect(() => {
         if(!sync) return

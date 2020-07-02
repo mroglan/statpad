@@ -1,18 +1,8 @@
 import {Scatter, Bar, Pie, Polar, Bubble} from 'react-chartjs-2'
+import {ChartDataInterface, MixedPlotProps, MixedGraphOptions} from './chartInterfaces'
 
-interface GraphProps {
-    data: any;
-    properties: any;
-    graphProperties: any;
-}
 
-interface ChartDataInterface {
-    x: number;
-    y: number;
-    r: number;
-}
-
-export default function MixedGraph({data, properties, graphProperties}: GraphProps) {
+export default function MixedGraph({data, properties, graphProperties}: MixedPlotProps) {
 
     const uniqueKey = () => Math.random()
 
@@ -30,7 +20,7 @@ export default function MixedGraph({data, properties, graphProperties}: GraphPro
         return {x: Number(point.x), y: Number(point.y)}
     })
 
-    const graphOptions:any = {
+    const graphOptions:MixedGraphOptions = {
         responsive: true,
         animation: {
             duration: 0

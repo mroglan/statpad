@@ -2,6 +2,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import {Breadcrumbs, Paper, Box} from '@material-ui/core'
 import Link from 'next/link'
 import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import {InnerProjectNavProps} from './navInterfaces'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function InnerProjectNav({tabs}) {
+export default function InnerProjectNav({tabs}:InnerProjectNavProps) {
 
     const classes = useStyles()
     return (

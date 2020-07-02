@@ -12,7 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import SimGraph from  './SimGraph'
-
+import {ISimulation, Data, SyncData} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -82,11 +82,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface SimulationI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
-    data:string[][];
+    component: ISimulation;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
+    data: Data;
 }
 
 const fakeData:any = {
@@ -133,7 +133,7 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
     const tableCellItemCount = useRef<number>(0)
     tableCellItemCount.current = 0
 
-    const [simData, setSimData] = useState(component.data) // change to component.data
+    const [simData, setSimData] = useState<any>(component.data) // change to component.data
     const [simProperties, setSimProperties] = useState(component.properties) // change to component.properties
 
     // useMemo(() => {
@@ -250,7 +250,7 @@ export default function Simulation({component, syncData, sync, index, data}:Simu
                             <FormControl variant="filled" className={classes.formControl}>
                                 <InputLabel id="plot-type-label" className={classes.selectLabel}>List</InputLabel>
                                 <Select labelId="plot-type-label" id="plot-type" disableUnderline={true} 
-                                value={simProperties.datasetNum} onChange={(e) => setSimProperties({...simProperties, datasetNum: e.target.value})}
+                                value={simProperties.datasetNum} onChange={(e) => setSimProperties({...simProperties, datasetNum: Number(e.target.value)})}
                                 label="Data Type" classes={{icon: classes.textWhite, filled: classes.textWhite }}>
                                     {data[0].map((cell:string, cellNum:number) => (
                                         <MenuItem key={cellNum} value={cellNum}>{cell}</MenuItem>

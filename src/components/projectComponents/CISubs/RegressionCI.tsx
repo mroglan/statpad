@@ -4,6 +4,7 @@ import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton,
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import regressionCI from '../../../utilities/regressionCI'
 import RegressionGraph from './RegressionGraph'
+import {IRegressionCI, Data, SyncData} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -34,11 +35,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface RegressionI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
-    data:string[][];
+    component: IRegressionCI;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
+    data: Data;
 }
 
 const fakeProperties = {

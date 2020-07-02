@@ -1,17 +1,8 @@
 import {Pie} from 'react-chartjs-2'
+import {ChartDataInterface, PlotProps, PolarAndPieGraphOptions} from './chartInterfaces'
 
-interface PieChartProps {
-    data: any;
-    properties: any;
-    graphProperties: any;
-}
 
-interface ChartDataInterface {
-    x: number;
-    y: number;
-}
-
-export default function PieChart({data, properties, graphProperties}: PieChartProps) {
+export default function PieChart({data, properties, graphProperties}: PlotProps) {
 
     const uniqueKey = () => Math.random()
 
@@ -21,7 +12,7 @@ export default function PieChart({data, properties, graphProperties}: PieChartPr
         return {x: row[properties[0].x.num], y: row[properties[0].y.num]}
     }).filter((dataPoint: ChartDataInterface) => dataPoint)
 
-    const graphOptions:any = {
+    const graphOptions:PolarAndPieGraphOptions = {
         responsive: true,
         animation: {
             duration: 0

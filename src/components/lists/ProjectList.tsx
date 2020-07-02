@@ -2,6 +2,7 @@ import {List, ListItem, ListItemIcon, ListItemText, Grid, Typography} from '@mat
 import {makeStyles} from '@material-ui/core/styles'
 import Link from 'next/link'
 import {useMemo} from 'react'
+import {Project} from './listsInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -17,7 +18,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function ProjectList({projects}) {
+interface Props {
+    projects: Project[]
+}
+
+export default function ProjectList({projects}:Props) {
 
     const formattedDate = (inputDate:string) => {
         const date = new Date(inputDate)

@@ -1,17 +1,8 @@
 import {Bar, Scatter} from 'react-chartjs-2'
+import {ChartDataInterface, PlotProps, BarAndHistogramGraphOptions} from './chartInterfaces'
 
-interface HistogramProps {
-    data: any;
-    properties: any;
-    graphProperties: any;
-}
 
-interface ChartDataInterface {
-    x: number;
-    y: number;
-}
-
-export default function Histogram({data, properties, graphProperties}: HistogramProps) {
+export default function Histogram({data, properties, graphProperties}: PlotProps) {
 
     const uniqueKey = () => Math.random()
 
@@ -21,7 +12,7 @@ export default function Histogram({data, properties, graphProperties}: Histogram
         return {x: Number(row[properties[0].x.num]), y: Number(row[properties[0].y.num])}
     }).filter((dataPoint: ChartDataInterface) => dataPoint)
 
-    const graphOptions:any = {
+    const graphOptions:BarAndHistogramGraphOptions = {
         responsive: true,
         animation: {
             duration: 0
@@ -103,7 +94,7 @@ export default function Histogram({data, properties, graphProperties}: Histogram
     }
 
     if(graphProperties.axis.ticks.xMax) {
-        graphMax = graphProperties.axis.ticks.xMax
+        graphMax = Number(graphProperties.axis.ticks.xMax)
     } else {
         for(let i = 0; i < excess; i++) {
             if((max + i) % excess === 0) {
@@ -124,7 +115,7 @@ export default function Histogram({data, properties, graphProperties}: Histogram
         return returnArray
     } 
 
-    const xValues: any = range(graphMin, graphMax)
+    const xValues:number[] = range(graphMin, graphMax)
 
     const regressions = properties.map((property, index) => {
         if(property.type !== 'regression') return

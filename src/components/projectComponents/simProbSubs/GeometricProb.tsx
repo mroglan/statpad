@@ -5,6 +5,7 @@ import {makeStyles, withStyles} from '@material-ui/core/styles'
 import geometpdf from '../../../utilities/geometpdf'
 import geometcdf from '../../../utilities/geometcdf'
 import GeometricGraph from './GeometricGraph'
+import {IGeometricProb, SyncData} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -35,10 +36,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface GeometricI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
+    component: IGeometricProb;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
 }
 
 const fakeProperties = {
@@ -191,7 +192,7 @@ export default function GeometricProb({component, syncData, sync, index}:Geometr
                 </Grid>
             </Grid>
             <Box>
-                {geoProperties.displayGraph && <GeometricGraph probability={geoProperties.probability} />}
+                {geoProperties.displayGraph && <GeometricGraph probability={Number(geoProperties.probability)} />}
             </Box>
         </Box>
     )

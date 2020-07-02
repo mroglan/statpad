@@ -3,6 +3,7 @@ import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton} fro
 import {makeStyles} from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import {ITreeDiagram, SyncData} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     parentCell: {
@@ -60,8 +61,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface TreeDiagramI {
-    data:any;
-    syncData:any;
+    data: ITreeDiagram;
+    syncData: SyncData;
     sync:boolean;
     index:number;
 }

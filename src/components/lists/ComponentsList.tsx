@@ -1,6 +1,7 @@
 import {List, ListItem, ListItemIcon, ListItemText, Grid, Typography} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
 import Link from 'next/link'
+import {Component} from './listsInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -27,7 +28,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function CopmonentList({components}) {
+interface Props {
+    components: Component[];
+}
+
+export default function CopmonentList({components}:Props) {
 
     const formattedDate = (inputDate:string) => {
         const date = new Date(inputDate)

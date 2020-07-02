@@ -4,7 +4,7 @@ import {Grid, Typography, Box, TextField, InputAdornment, Paper, IconButton,
 import {makeStyles, withStyles} from '@material-ui/core/styles'
 import twoSamplePropHT from '../../../utilities/twoSamplePropHT'
 import twoSampleMeanHT from '../../../utilities/twoSampleMeanHT'
-
+import {ITwoSampleHT, SyncData, Data} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -48,11 +48,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface TestI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
-    data:string[][];
+    component: ITwoSampleHT;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
+    data: Data;
 }
 
 const fakeProperties = {

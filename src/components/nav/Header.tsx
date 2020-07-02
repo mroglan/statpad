@@ -120,7 +120,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Header({loggedIn}) {
+interface Props {
+    loggedIn: boolean;
+}
+
+export default function Header({loggedIn}:Props) {
 
     const headInfoRef = useRef<HTMLDivElement>()
 

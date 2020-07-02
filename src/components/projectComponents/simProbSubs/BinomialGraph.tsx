@@ -5,17 +5,33 @@ import {useMemo, useRef} from 'react'
 const chartProperties = [{
     type: 'histogram',
     label: 'Probability',
+    regressionInfo: {
+
+    },
     x: {
         num: 0
     },
     y: {
         num: 1
     },
+    z: {
+        num: 0
+    },
     options: {
         bar: {
             backgroundColor: '#BF3535',
             borderColor: '#E81515',
             borderWidth: 1
+        },
+        line: {
+            color: '',
+            width: 0,
+            tension: 0
+        },
+        points: {
+            color: '',
+            radius: 0,
+            maxRadius: 0
         }
     }
 }]

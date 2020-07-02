@@ -24,14 +24,15 @@ import Legend from '../../legends/Legend'
 import RegressionEquation from '../../equations/RegressionEquation'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
+import {BaseGraph, Data, SyncData} from '../projectInterfaces'
 
 interface GraphProps {
-    rows: any;
+    rows: Data;
     basic: boolean;
-    syncData: any;
+    syncData: SyncData;
     sync: boolean;
     index: number;
-    initialGraph: any;
+    initialGraph: BaseGraph;
 }
 
 const useStyles = makeStyles(theme => ({

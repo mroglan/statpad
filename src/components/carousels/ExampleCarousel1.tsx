@@ -4,6 +4,11 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {useSprings, animated} from 'react-spring'
 import {useRef} from 'react'
+import {Item} from './carouselInterfaces'
+
+interface CarouselProps {
+    items: Item[]
+}
 
 const useStyles = makeStyles(theme => ({
     picBox: {
@@ -43,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function ExampleCarousel({items}) {
+export default function ExampleCarousel({items}:CarouselProps) {
 
     const AnimatedGrid = animated(Grid)
     const AnimatedTypography = animated(Typography)

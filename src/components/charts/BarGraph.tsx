@@ -1,17 +1,8 @@
 import {Bar} from 'react-chartjs-2'
+import {ChartDataInterface, PlotProps, BarAndHistogramGraphOptions} from './chartInterfaces'
 
-interface BarGraphProps {
-    data: any;
-    properties: any;
-    graphProperties: any;
-}
 
-interface ChartDataInterface {
-    x: number;
-    y: number;
-}
-
-export default function BarGraph({data, properties, graphProperties}: BarGraphProps) {
+export default function BarGraph({data, properties, graphProperties}: PlotProps) {
 
     const uniqueKey = () => Math.random()
 
@@ -21,7 +12,7 @@ export default function BarGraph({data, properties, graphProperties}: BarGraphPr
         return {x: row[properties[0].x.num], y: row[properties[0].y.num]}
     }).filter((dataPoint: ChartDataInterface) => dataPoint)
 
-    const graphOptions:any = {
+    const graphOptions:BarAndHistogramGraphOptions = {
         responsive: true,
         animation: {
             duration: 0

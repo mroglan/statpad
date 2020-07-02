@@ -1,17 +1,7 @@
 import {Scatter} from 'react-chartjs-2'
+import {ChartDataInterface, PlotProps, ScatterAndBubbleGraphOptions} from './chartInterfaces'
 
-interface ScatterPlotProps {
-    data: any;
-    properties: any;
-    graphProperties: any;
-}
-
-interface ChartDataInterface {
-    x: number;
-    y: number;
-}
-
-export default function ScatterPlot({data, properties, graphProperties}: ScatterPlotProps) {
+export default function ScatterPlot({data, properties, graphProperties}: PlotProps) {
 
     const uniqueKey = () => Math.random()
 
@@ -21,7 +11,7 @@ export default function ScatterPlot({data, properties, graphProperties}: Scatter
         return {x: Number(row[properties[0].x.num]), y: Number(row[properties[0].y.num])}
     }).filter((dataPoint: ChartDataInterface) => dataPoint)
 
-    const graphOptions:any = {
+    const graphOptions:ScatterAndBubbleGraphOptions = {
         responsive: true,
         animation: {
             duration: 0
@@ -111,7 +101,7 @@ export default function ScatterPlot({data, properties, graphProperties}: Scatter
     }
 
     if(graphProperties.axis.ticks.xMax) {
-        graphMax = graphProperties.axis.ticks.xMax
+        graphMax = Number(graphProperties.axis.ticks.xMax)
     } else {
         for(let i = 0; i < excess; i++) {
             if((max + i) % excess === 0) {
@@ -133,7 +123,7 @@ export default function ScatterPlot({data, properties, graphProperties}: Scatter
         return returnArray
     } 
 
-    const xValues: any = range(graphMin, graphMax)//won't accept number[] ???
+    const xValues:number[] = range(graphMin, graphMax)//won't accept number[] ???
     
     const regressions = properties.map((property, index) => {
         if(property.type !== 'regression') return

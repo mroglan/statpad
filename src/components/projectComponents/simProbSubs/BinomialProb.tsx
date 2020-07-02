@@ -5,6 +5,7 @@ import {makeStyles, withStyles} from '@material-ui/core/styles'
 import factorial from '../../../utilities/factorial'
 import binomialcdf from '../../../utilities/binomialcdf'
 import BinomialGraph from './BinomialGraph'
+import {IBinomialProb, SyncData} from '../projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -35,10 +36,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface BinomialI {
-    component:any;
-    syncData:any;
-    sync:boolean;
-    index:number;
+    component: IBinomialProb;
+    syncData: SyncData;
+    sync: boolean;
+    index: number;
 }
 
 const fakeProperties = {

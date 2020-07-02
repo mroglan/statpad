@@ -7,6 +7,7 @@ import MixedGraph from './graphSubs/MixedGraph'
 import Var1Stats from './graphSubs/Var1Stats'
 import { Snackbar } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close'
+import {BaseGraph, InputData, Data, GraphComp} from './projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -168,9 +169,14 @@ const defaultCharts = [{
     }
 }]
 
-export default function Graphs({component, data}) {
+interface Props {
+    component: GraphComp;
+    data: InputData;
+}
 
-    const [graphs, setGraphs] = useState([])
+export default function Graphs({component, data}:Props) {
+
+    const [graphs, setGraphs] = useState<BaseGraph[]>([])
     const [loading, setLoading] = useState(false)
     const [serverError, setServerError] = useState(false)
     const [sync, setSync] = useState(false)
@@ -204,11 +210,11 @@ export default function Graphs({component, data}) {
         getComponents()
     }, [component])
 
-    const [formattedData, setFormattedData] = useState([])
+    const [formattedData, setFormattedData] = useState<Data>([])
     useMemo(() => {
         let data2 = []
         console.log('using memo....')
-        const maxLength = data.reduce((max:number, current:number[][]) => current.length > max ? max = current.length : max, 0)
+        const maxLength = data.reduce((max:number, current) => current.length > max ? max = current.length : max, 0)
         for(let i = 0; i < maxLength; i++) {
             let pushArray = []
             for(let j = 0; j < data.length; j++) {
@@ -235,7 +241,7 @@ export default function Graphs({component, data}) {
 
     //console.log(formattedData)
 
-    const addToDatabase = async (newGraph, type) => {
+    const addToDatabase = async (newGraph:BaseGraph|any, type:string) => {
         if(type === 'graph') setNewGraph(true)
         else if(type === 'mixedGraph') setNewMixedGraph(true)
         else if(type === '1varStats') setNew1VarStats(true)
