@@ -1,7 +1,8 @@
 import errorFunction from './errorFunction'
 import {calcSampleProps} from './oneSampleMean'
+import {IOneSampleHT} from '../components/projectComponents/projectInterfaces'
 
-export default function oneSampleMeanHT(info, data:string[][]) {
+export default function oneSampleMeanHT(info:IOneSampleHT['properties'], data:string[][]) {
     const {inputs} = info
     const Ho = Number(inputs.nullH)
 

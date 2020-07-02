@@ -1,7 +1,7 @@
 import database from '../database/database'
 import {ObjectId} from 'mongodb'
 
-export default async function createNewComponent(projectId, name, type) {
+export default async function createNewComponent(projectId:string, name:string, type:string) {
     try {
         const db = await database()
         const component:any = {

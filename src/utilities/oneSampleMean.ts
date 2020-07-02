@@ -1,4 +1,4 @@
-
+import {IOneSampleCI} from '../components/projectComponents/projectInterfaces'
 
 export const tScores99 = [
     63.657, 9.925, 5.841, 4.604, 4.032, 3.707, 3.499, 3.355, 3.25, 3.169, 3.106, 3.055, 3.012, 2.977, 2.947, 2.921,
@@ -55,10 +55,10 @@ export const calcZScore = (confidence:number) => {
     return 0
 }
 
-export default function OneSampleMean(info, data:string[][]) {
+export default function OneSampleMean(info:IOneSampleCI['properties'], data:string[][]) {
     const sampleProps = info.inputMethod === 'manual' ? {mean: info.inputs.mean, n: info.inputs.sampleSize, SD: info.inputs.sampleSD} : calcSampleProps(info.inputs.datasetNum, data)
-    const SE = sampleProps.SD / Math.sqrt(sampleProps.n)
-    const tScore = sampleProps.n - 2 >= 0 && sampleProps.n - 2 < 30 ? calcTScore(info.inputs.confidence, sampleProps.n - 2) : calcZScore(info.inputs.confidence)
+    const SE = Number(sampleProps.SD) / Math.sqrt(Number(sampleProps.n))
+    const tScore = Number(sampleProps.n) - 2 >= 0 && Number(sampleProps.n) - 2 < 30 ? calcTScore(info.inputs.confidence, Number(sampleProps.n) - 2) : calcZScore(info.inputs.confidence)
 
     return {mean: sampleProps.mean, SE, interval: tScore * SE}
 }

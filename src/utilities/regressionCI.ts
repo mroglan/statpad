@@ -1,12 +1,13 @@
 import calcLinearRegression from './calcLinearRegression'
 import {calcTScore, calcZScore} from './oneSampleMean'
+import {IRegressionCI} from '../components/projectComponents/projectInterfaces'
 
 interface DataInterface {
     x: number;
     y: number;
 }
 
-export default function RegressionCI(info, data:string[][]) {
+export default function RegressionCI(info:IRegressionCI['properties'], data:string[][]) {
 
     const {xNum, yNum, confidence} = info
     const {a, b} = calcLinearRegression(data, xNum, yNum)

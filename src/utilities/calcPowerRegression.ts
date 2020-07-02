@@ -5,10 +5,10 @@ interface DataInterface {
     y: number;
 }
 
-export default function calcPowerRegression(rows, xNum, yNum) {
-    const data: DataInterface[] = rows.map((row:any, index:number) => {
+export default function calcPowerRegression(rows:string[][], xNum:number, yNum:number) {
+    const data: DataInterface[] = rows.map((row, index:number) => {
         if(index === 0) return
-        if(row[yNum] !== 0 || row[xNum] !== 0) if(!row[xNum] || !row[yNum]) return
+        if(!row[xNum] || !row[yNum]) return
         return {x: Number(row[xNum]), y: Number(row[yNum])}
     }).filter((dataPoint: DataInterface) => dataPoint)
 

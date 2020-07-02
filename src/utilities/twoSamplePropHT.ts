@@ -1,6 +1,7 @@
 import errorFunction from './errorFunction'
+import {ITwoSampleHT} from '../components/projectComponents/projectInterfaces'
 
-export default function twoSamplePropHT({inputs}, data:string[][]) {
+export default function twoSamplePropHT({inputs}:ITwoSampleHT['properties'], data:string[][]) {
     const p1 = Number(inputs.proportion1)
     const p2 = Number(inputs.proportion2)
     const n1 = Number(inputs.sampleSize1) 

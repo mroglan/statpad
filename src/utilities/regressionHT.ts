@@ -1,12 +1,13 @@
 import calcLinearRegression from './calcLinearRegression'
 import errorFunction from './errorFunction'
+import {IRegressionHT} from '../components/projectComponents/projectInterfaces'
 
 interface DataInterface {
     x: number;
     y: number;
 }
 
-export default function RegressionHT({xNum, yNum, comparison}, data:string[][]) {
+export default function RegressionHT({xNum, yNum, comparison}:IRegressionHT['properties'], data:string[][]) {
 
     const {a, b} = calcLinearRegression(data, xNum, yNum)
 

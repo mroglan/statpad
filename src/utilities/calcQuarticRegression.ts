@@ -41,10 +41,10 @@ export function determinant5x5(matrix: number[][]) {
     return (matrix[0][0] * matrix5Determinant) - (matrix[0][1] * matrix4Determinant) + (matrix[0][2] * matrix3Determinant) - (matrix[0][3] * matrix2Determinant) + (matrix[0][4] * matrix1Determinant)
 }
 
-export default function calcQuarticRegression(rows, xNum, yNum) {
-    const data: DataInterface[] = rows.map((row:any, index:number) => {
+export default function calcQuarticRegression(rows:string[][], xNum:number, yNum:number) {
+    const data: DataInterface[] = rows.map((row, index:number) => {
         if(index === 0) return
-        if(row[yNum] !== 0 || row[xNum] !== 0) if(!row[xNum] || !row[yNum]) return
+        if(!row[xNum] || !row[yNum]) return
         return {x: Number(row[xNum]), y: Number(row[yNum])}
     }).filter((dataPoint: DataInterface) => dataPoint)
 

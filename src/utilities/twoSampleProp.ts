@@ -1,6 +1,6 @@
+import {ITwoSampleCI} from '../components/projectComponents/projectInterfaces'
 
-
-export default function twoSampleProp(info:any, data:string[][]) {
+export default function twoSampleProp(info:ITwoSampleCI['properties'], data:string[][]) {
     const p1 = Number(info.inputs.proportion1)
     const p2 = Number(info.inputs.proportion2)
     const n1 = Number(info.inputs.sampleSize1)

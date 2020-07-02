@@ -5,10 +5,10 @@ interface dataInterface {
     y: number;
 }
 
-export default function calcLinearRegression(rows, xNum, yNum) {
-    const data: dataInterface[] = rows.map((row:any, index:number) => {
+export default function calcLinearRegression(rows:string[][], xNum:number, yNum:number) {
+    const data: dataInterface[] = rows.map((row, index:number) => {
         if(index === 0) return
-        if(row[yNum] !== 0 || row[xNum] !== 0) if(!row[xNum] || !row[yNum]) return
+        if(!row[xNum] || !row[yNum]) return
         return {x: Number(row[xNum]), y: Number(row[yNum])}
     }).filter((dataPoint: dataInterface) => dataPoint)
 
