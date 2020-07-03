@@ -9,6 +9,8 @@ import Header from '../../components/nav/Header'
 import ProjectList from '../../components/lists/ProjectList'
 import Link from 'next/link'
 import {ObjectId} from 'mongodb'
+import {useState} from 'react'
+import DeleteProjectDialog from '../../components/dialogs/deleteProjectDialog'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -94,10 +96,28 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: 'hsl(140, 60%, 31%)'
         },
         margin: theme.spacing(1)
-    }
+    },
+    deleteButton: {
+        backgroundColor: 'hsla(348, 91%, 40%, 1)',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: 'hsla(348, 91%, 40%, .9)'
+        },
+        margin: theme.spacing(1)
+    },
 }))
 
-export default function Projects({user, projects}) {
+export default function Projects({user, serverProjects}) {
+
+    const [viewDeleteModal, setViewDeleteModal] = useState(false)
+    const [projects, setProjects] = useState(serverProjects)
+
+    const toggleRemoveComponentModal = (remainingProjects) => {
+        setViewDeleteModal(!viewDeleteModal)
+        if(!remainingProjects) return
+
+        setProjects(remainingProjects)
+    }
 
     const classes = useStyles()
     return (
@@ -136,7 +156,7 @@ export default function Projects({user, projects}) {
                             </Box>
                         </Paper>
                     </Box>
-                    {projects.length > 0 && <Box px={3}>
+                    {/* {projects.length > 0 && <Box px={3}>
                         <Link href="/projects/newproject">
                             <a style={{textDecoration: 'none', color: 'inherit'}}>
                                 <Button className={classes.newButton} variant="contained">
@@ -144,9 +164,32 @@ export default function Projects({user, projects}) {
                                 </Button>
                             </a>
                         </Link>
-                    </Box>}
+                    </Box>} */}
+                    <Box mb={3} px={3}>
+                        <Paper className={classes.paper}>
+                            <Box px={3}>
+                                <Grid container direction="row" spacing={3}>
+                                    <Grid item>
+                                    <Link href="/projects/newproject">
+                                        <a style={{textDecoration: 'none', color: 'inherit'}}>
+                                            <Button className={classes.newButton} variant="contained">
+                                                New Project
+                                            </Button>
+                                        </a>
+                                    </Link>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button className={classes.deleteButton} onClick={(e) => toggleRemoveComponentModal(null)} >
+                                            Remove Project
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Paper>
+                    </Box>
                 </Grid>
             </Grid>
+            <DeleteProjectDialog open={viewDeleteModal} toggleOpen={toggleRemoveComponentModal} projects={projects} />
         </div>
     )
 }
@@ -156,5 +199,5 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
     //console.log(user)
     const projects = await getProjects({'editors': new ObjectId(user._id)})
 
-    return {props: {user, projects: JSON.parse(JSON.stringify(projects))}}
+    return {props: {user, serverProjects: JSON.parse(JSON.stringify(projects))}}
 }
