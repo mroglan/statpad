@@ -108,7 +108,7 @@ export default function ProjectList({projects}:Props) {
                     </ListItem>
                 </Link>
             ))}
-            {viewEditModal > -1 && <EditProjectDialog open={true} toggleOpen={toggleEditModal} project={projects[viewEditModal]} 
+            {viewEditModal > -1 && <EditProjectDialog open={true} toggleOpen={toggleEditModal} project={stateProjects[viewEditModal]} 
             index={viewEditModal} />}
         </List>
     )

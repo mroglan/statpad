@@ -54,7 +54,7 @@ interface NewInfo {
     description: string;
 }
 
-type ToggleOpen = (editIndex:number, newInfo?:NewInfo, index?:number) => void
+type ToggleOpen = (editIndex:number, newInfo?:NewInfo) => void
 
 interface Props {
     open: boolean;

@@ -36,7 +36,7 @@ export default function Data({component}:Props) {
 
     const syncData = async (newRows) => {
         setSyncing(true)
-        const res = await fetch(`${process.env.API_ROUTE}/projects/updatecomponent`, {
+        const res = await fetch(`${process.env.API_ROUTE}/projects/updatedata`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
