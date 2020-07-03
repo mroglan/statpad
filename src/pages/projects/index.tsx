@@ -116,6 +116,7 @@ export default function Projects({user, serverProjects}) {
         setViewDeleteModal(!viewDeleteModal)
         if(!remainingProjects) return
 
+        console.log(remainingProjects)
         setProjects(remainingProjects)
     }
 
@@ -156,15 +157,6 @@ export default function Projects({user, serverProjects}) {
                             </Box>
                         </Paper>
                     </Box>
-                    {/* {projects.length > 0 && <Box px={3}>
-                        <Link href="/projects/newproject">
-                            <a style={{textDecoration: 'none', color: 'inherit'}}>
-                                <Button className={classes.newButton} variant="contained">
-                                    New Project
-                                </Button>
-                            </a>
-                        </Link>
-                    </Box>} */}
                     <Box mb={3} px={3}>
                         <Paper className={classes.paper}>
                             <Box px={3}>

@@ -1,8 +1,11 @@
-import {List, ListItem, ListItemIcon, ListItemText, Grid, Typography} from '@material-ui/core'
+import {List, ListItem, ListItemIcon, ListItemText, Grid, Typography, IconButton} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
 import Link from 'next/link'
 import {useMemo} from 'react'
 import {Project} from './listsInterfaces'
+import EditIcon from '@material-ui/icons/Edit';
+import {useState, MouseEvent} from 'react'
+import EditProjectDialog from '../dialogs/editProjectDialog'
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -15,6 +18,26 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('xs')]: {
             display: 'none'
         }
+    },
+    editButton: {
+        backgroundColor: 'hsla(31, 82%, 54%, 1)',
+        color: 'rgba(255, 255, 255, .7) ',
+        fontSize: '.7rem',
+        opacity: 0,
+        position: 'absolute',
+        zIndex: 12,
+        padding: 3,
+        '&:hover': {
+            backgroundColor: 'hsla(31, 82%, 54%, .9)',
+            color: '#fff'
+        },
+    },
+    projectGrid: {
+        '&:hover': {
+            '& button': {
+                opacity: 1
+            }
+        }
     }
 }))
 
@@ -22,7 +45,17 @@ interface Props {
     projects: Project[]
 }
 
+interface NewInfo {
+    name: string;
+    description: string;
+}
+
 export default function ProjectList({projects}:Props) {
+
+    const [viewEditModal, setViewEditModal] = useState(-1)
+    const [stateProjects, setStateProjects] = useState(projects)
+
+    useMemo(() => setStateProjects(projects), [projects])
 
     const formattedDate = (inputDate:string) => {
         const date = new Date(inputDate)
@@ -31,13 +64,30 @@ export default function ProjectList({projects}:Props) {
         return `${day}-${month}-${year}`
     }
 
+    const toggleEditModal = (editIndex:number, newInfo?:NewInfo) => {
+        setViewEditModal(current => current === editIndex ? -1 : editIndex)
+        if(!newInfo) return
+        const copy = [...stateProjects]
+        copy[editIndex] = {
+            ...copy[editIndex],
+            name: newInfo.name,
+            description: newInfo.description
+        }
+        setStateProjects(copy)
+    }
+
+    const handleEditClick = (e:MouseEvent, editIndex:number) => {
+        e.preventDefault()
+        toggleEditModal(editIndex)
+    }
+
     const classes = useStyles()
     return (
         <List style={{width: '100%'}}>
-            {projects.map((project, index) => (
+            {stateProjects.map((project, index) => (
                 <Link href="/projects/[id]" as={`/projects/${project._id}`} key={index}>
                     <ListItem button>
-                        <Grid container wrap="nowrap" spacing={5}>
+                        <Grid container wrap="nowrap" className={classes.projectGrid} spacing={5}>
                             <Grid item style={{flexGrow: 1}}>
                                 <Typography variant="h4" className={classes.textWhite}>
                                     {project.name}
@@ -51,10 +101,15 @@ export default function ProjectList({projects}:Props) {
                                     {formattedDate(project.updateDate)}
                                 </Typography>
                             </Grid>
+                            <IconButton className={classes.editButton} onClick={(e) => handleEditClick(e, index)} >
+                                <EditIcon fontSize="small" />
+                            </IconButton>
                         </Grid>
                     </ListItem>
                 </Link>
             ))}
+            {viewEditModal > -1 && <EditProjectDialog open={true} toggleOpen={toggleEditModal} project={projects[viewEditModal]} 
+            index={viewEditModal} />}
         </List>
     )
 }

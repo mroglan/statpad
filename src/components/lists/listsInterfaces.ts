@@ -17,4 +17,5 @@ export interface Project {
     createDate: string;
     updateDate: string;
     description: string;
+    public: boolean;
 }

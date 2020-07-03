@@ -19,7 +19,8 @@ export default async function NewProject(req:NextApiRequest, res:NextApiResponse
             name: req.body.name,
             createDate: new Date(Date.now()),
             updateDate: new Date(Date.now()),
-            description: req.body.description
+            description: req.body.description,
+            public: req.body.public
         }
 
         const newProject = await db.collection('projects').insertOne(project)
