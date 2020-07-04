@@ -42,7 +42,7 @@ export default function ErrorBox({msg, index, handleRemoveError}:ErrorBoxProps) 
 
     const classes = useStyles()
     return (
-        <Grid container spacing={3} className={classes.root}>
+        <Grid container spacing={3} wrap="nowrap" className={classes.root}>
             <Grid item className={classes.alignJustifyCenter}>
                 <ErrorIcon />
             </Grid>

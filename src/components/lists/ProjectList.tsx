@@ -42,7 +42,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface Props {
-    projects: Project[]
+    projects: Project[];
+    editable: boolean;
 }
 
 interface NewInfo {
@@ -50,7 +51,7 @@ interface NewInfo {
     description: string;
 }
 
-export default function ProjectList({projects}:Props) {
+export default function ProjectList({projects, editable}:Props) {
 
     const [viewEditModal, setViewEditModal] = useState(-1)
     const [stateProjects, setStateProjects] = useState(projects)
@@ -101,14 +102,14 @@ export default function ProjectList({projects}:Props) {
                                     {formattedDate(project.updateDate)}
                                 </Typography>
                             </Grid>
-                            <IconButton className={classes.editButton} onClick={(e) => handleEditClick(e, index)} >
+                            {editable && <IconButton className={classes.editButton} onClick={(e) => handleEditClick(e, index)} >
                                 <EditIcon fontSize="small" />
-                            </IconButton>
+                            </IconButton>}
                         </Grid>
                     </ListItem>
                 </Link>
             ))}
-            {viewEditModal > -1 && <EditProjectDialog open={true} toggleOpen={toggleEditModal} project={stateProjects[viewEditModal]} 
+            {viewEditModal > -1 && editable && <EditProjectDialog open={true} toggleOpen={toggleEditModal} project={stateProjects[viewEditModal]} 
             index={viewEditModal} />}
         </List>
     )

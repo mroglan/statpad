@@ -153,7 +153,7 @@ export default function Projects({user, serverProjects}) {
                                             </Link>
                                         </Box>
                                     </Box>
-                                </Box> : <ProjectList projects={projects} />}
+                                </Box> : <ProjectList editable={true} projects={projects} />}
                             </Box>
                         </Paper>
                     </Box>

@@ -139,7 +139,7 @@ export default function Dashboard({user, recentProjects}) {
                                             </Link>
                                         </Box>
                                     </Box>
-                                </Box> : <ProjectList projects={recentProjects} />}
+                                </Box> : <ProjectList editable={false} projects={recentProjects} />}
                             </Box>
                         </Paper>
                     </Box>
