@@ -213,7 +213,7 @@ export interface IRegressionHT extends BaseHypothesisTest {
     }
 }
 
-interface BaseComponent {
+export interface BaseComponent {
     _id: string;
     project: string;
     name: string;
@@ -243,4 +243,23 @@ export interface HypTestsComp extends BaseComponent {
 }
 
 export type SyncData = (index:number, successful:boolean) => void;
+
+export interface User {
+    _id: string;
+    username: string;
+    email: string;
+    image?: string;
+}
+
+export interface Project {
+    _id: string;
+    owner: string;
+    editors: string[];
+    name: string;
+    createDate: string;
+    updateDate: string;
+    description: string;
+    public: boolean;
+    editorsInfo?: User[]
+}
 

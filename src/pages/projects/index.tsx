@@ -11,6 +11,7 @@ import Link from 'next/link'
 import {ObjectId} from 'mongodb'
 import {useState} from 'react'
 import DeleteProjectDialog from '../../components/dialogs/deleteProjectDialog'
+import Router from 'next/router'
 
 const useStyles = makeStyles(theme => ({
     root: {

@@ -16,6 +16,7 @@ import SimProb from '../../../../components/projectComponents/SimProb'
 import ConfidenceIntervals from '../../../../components/projectComponents/ConfidenceIntervals'
 import HypothesisTests from '../../../../components/projectComponents/HypothesisTests'
 import verifyEditor from '../../../../requests/verifyEditor'
+import checkObjectId from '../../../../utilities/checkObjectId'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -92,28 +93,35 @@ export default function Component({user, component, project, allComponents, data
 }
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
-    const user = await getUser(ctx)
-    const db = await database()
-    const compId = Array.isArray(ctx.params.compId) ? ctx.params.compId[0] : ctx.params.compId
-    const projId = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
+    try {
+        const user = await getUser(ctx)
+        const db = await database()
+        const compId = Array.isArray(ctx.params.compId) ? ctx.params.compId[0] : ctx.params.compId
+        const projId = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
 
-    // console.log('compId', compId)
-    // console.log('projId', projId)
+        if(!checkObjectId(compId) || !checkObjectId(projId)) throw 'invalid objectId'
 
-    const [component, project, allComponents] = await Promise.all([db.collection('components').findOne({_id: new ObjectId(compId)}), 
-    db.collection('projects').findOne({_id: new ObjectId(projId)}), getComponents(new ObjectId(projId))])
+        const [component, project, allComponents] = await Promise.all([db.collection('components').findOne({_id: new ObjectId(compId)}), 
+        db.collection('projects').findOne({_id: new ObjectId(projId)}), getComponents(new ObjectId(projId))])
 
-    // console.log('component', component)
-    // console.log('project', project)
-    // console.log('allComponents', allComponents)
+        // console.log('component', component)
+        // console.log('project', project)
+        // console.log('allComponents', allComponents)
 
-    verifyEditor(ctx, user._id, JSON.parse(JSON.stringify(project.editors)))
+        verifyEditor(ctx, user._id, JSON.parse(JSON.stringify(project.editors)))
 
-    const data = []
-    allComponents.forEach((comp) => {
-        if(comp.type === 'data') data.push(comp.data)
-    })
+        const data = []
+        allComponents.forEach((comp) => {
+            if(comp.type === 'data') data.push(comp.data)
+        })
 
-    return {props: {user, component: JSON.parse(JSON.stringify(component)), project: JSON.parse(JSON.stringify(project)), 
-    allComponents: JSON.parse(JSON.stringify(allComponents)), data}}
+        return {props: {user, component: JSON.parse(JSON.stringify(component)), project: JSON.parse(JSON.stringify(project)), 
+        allComponents: JSON.parse(JSON.stringify(allComponents)), data}}
+    } catch(e) {
+        ctx.res.writeHead(500, {
+            Location: `${process.env.BASE_ROUTE}/projects`
+        })
+        ctx.res.end()
+        return {props: {}}
+    }
 }

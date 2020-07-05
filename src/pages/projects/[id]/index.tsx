@@ -9,10 +9,14 @@ import {Grid, Paper, Box, Typography, Button} from '@material-ui/core'
 import ComponentsList from "../../../components/lists/ComponentsList"
 import NewComponentDialog from '../../../components/dialogs/newComponentDialog'
 import DeleteComponentDialog from '../../../components/dialogs/deleteComponentDialog'
+import InviteEditorDialog from '../../../components/dialogs/inviteEditorDialog'
 import Link from 'next/link'
 import {useState} from 'react'
 import {ObjectId} from 'mongodb'
 import verifyEditor from '../../../requests/verifyEditor'
+import checkObjectId from '../../../utilities/checkObjectId'
+import BasicProjectInfo from'../../../components/projectComponents/projectHome/BasicProjectInfo'
+import {User, BaseComponent} from '../../../components/projectComponents/projectInterfaces'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -106,11 +110,19 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Project({user, project, serverComponents}) {
+interface Props {
+    user: User;
+    project: any;
+    serverComponents: BaseComponent[];
+}
+
+export default function Project({user, project, serverComponents}:Props) {
 
     const [openModal, setOpenModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
+    const [openAddEditorModal, setOpenAddEditorModal] = useState(false)
     const [components, setComponents] = useState(serverComponents)
+    const [editors, setEditors] = useState(project.editorsInfo)
 
     const toggleNewComponentModal = (newComponent) => {
         setOpenModal(!openModal)
@@ -126,6 +138,12 @@ export default function Project({user, project, serverComponents}) {
         if(!remainingComponents) return
 
         setComponents(remainingComponents)
+    }
+
+    const toggleAddEditorModal = (newEditors?) => {
+        setOpenAddEditorModal(!openAddEditorModal)
+        if(!newEditors) return
+        setEditors(currentEditors => [...currentEditors, newEditors])
     }
 
     const classes = useStyles()
@@ -147,7 +165,8 @@ export default function Project({user, project, serverComponents}) {
                                 </Typography>
                             </Box>
                             <hr style={{marginBottom: 0}} />
-                            <Box p={3} className={classes.projectContent}>
+                            <BasicProjectInfo editors={editors} isPublic={project.public} />
+                            <Box px={3} className={classes.projectContent}>
                                 {components.length === 0 ? <Box className={classes.noComponentsContainer}>
                                     <Box>
                                         <Typography variant="h6" className={classes.noComponentsTitle}>
@@ -178,32 +197,57 @@ export default function Project({user, project, serverComponents}) {
                                             Remove Component
                                         </Button>
                                     </Grid>
+                                </Grid>
+                            </Box>
+                        </Paper>
+                    </Box>
+                    {user._id === project.owner && <Box mb={3} px={3}>
+                        <Paper className={classes.paper}>
+                            <Box px={3}>
+                                <Grid container direction="row" spacing={3}>
                                     <Grid item>
-                                        <Button className={classes.inviteButton}>
+                                        <Button className={classes.newButton} onClick={() => toggleAddEditorModal()}>
                                             Invite a User
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button className={classes.deleteButton}>
+                                            Remove a User
                                         </Button>
                                     </Grid>
                                 </Grid>
                             </Box>
                         </Paper>
-                    </Box>
+                    </Box>}
                 </Grid>
             </Grid>
             <NewComponentDialog open={openModal} toggleOpen={toggleNewComponentModal} components={components}
             projectId={project._id} />
             <DeleteComponentDialog open={deleteModal} toggleOpen={toggleRemoveComponentModal} components={components}
             projectId={project._id} />
+            <InviteEditorDialog open={openAddEditorModal} toggleOpen={toggleAddEditorModal} editors={editors}
+            userId={user._id} projectId={project._id} />
         </div>
     )
 }
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
-    const user = await getUser(ctx)
-    const id = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
-    const [projectInfo, serverComponents] = await Promise.all([ getProjectInfo(id),
-    getComponents(new ObjectId(id))])
-    
-    verifyEditor(ctx, user._id, JSON.parse(JSON.stringify(projectInfo.editors)))
+    try {
+        const user = await getUser(ctx)
+        const id = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
+        if(!checkObjectId(id)) throw 'invalid objectid'
 
-    return {props: {user, project: JSON.parse(JSON.stringify(projectInfo)), serverComponents: JSON.parse(JSON.stringify(serverComponents))}}
+        const [projectInfo, serverComponents] = await Promise.all([ getProjectInfo(id),
+        getComponents(new ObjectId(id))])
+        
+        verifyEditor(ctx, user._id, JSON.parse(JSON.stringify(projectInfo.editors)))
+
+        return {props: {user, project: JSON.parse(JSON.stringify(projectInfo)), serverComponents: JSON.parse(JSON.stringify(serverComponents))}}
+    } catch(e) {
+        ctx.res.writeHead(500, {
+            Location: `${process.env.BASE_ROUTE}/projects`
+        })
+        ctx.res.end()
+        return {props: {}}
+    } 
 }
