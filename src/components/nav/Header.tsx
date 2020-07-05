@@ -1,11 +1,12 @@
 import {makeStyles} from '@material-ui/core/styles'
-import {Grid, AppBar, Toolbar, Typography, Button, InputBase} from '@material-ui/core'
+import {Grid, AppBar, Toolbar, Typography, Button, InputBase, Box} from '@material-ui/core'
 import Link from 'next/link'
 import BarChartIcon from '@material-ui/icons/BarChart'
 import SearchIcon from '@material-ui/icons/Search';
 import logout from '../../requests/logout'
 import MenuIcon from '@material-ui/icons/Menu'
 import {useRef} from 'react'
+import UserNavDropdown from './UserNavDropdown'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -122,9 +123,10 @@ const useStyles = makeStyles(theme => ({
 
 interface Props {
     loggedIn: boolean;
+    user?: any;
 }
 
-export default function Header({loggedIn}:Props) {
+export default function Header({loggedIn, user}:Props) {
 
     const headInfoRef = useRef<HTMLDivElement>()
 
@@ -179,12 +181,15 @@ export default function Header({loggedIn}:Props) {
                             <a style={{color:'inherit', textDecoration:'none'}}>Login</a>
                         </Link>
                     </Button> : <>
-                    <Button color="inherit">
+                    {/* <Button color="inherit">
                         <Link href="/dashboard">
                             <a style={{color: 'inherit', textDecoration: 'none'}}>Dashboard</a>
                         </Link>
                     </Button>
-                    <Button color="inherit" onClick={(e) => logout()}>Logout</Button>
+                    <Button color="inherit" onClick={(e) => logout()}>Logout</Button> */}
+                    <Box pl={1}>
+                        <UserNavDropdown user={user} />
+                    </Box>
                     </>}
                     </div>
                 </div>

@@ -5,7 +5,7 @@ import getUser from '../../requests/getUser'
 import Header from '../../components/nav/Header'
 import {makeStyles} from '@material-ui/core/styles'
 import {Grid, Paper, Button, Box, Typography, TextField, FormControl, OutlinedInput, CircularProgress,
-    Snackbar, IconButton} from '@material-ui/core'
+    Snackbar, IconButton, Tooltip} from '@material-ui/core'
 import {useState} from 'react'
 import ErrorBox from '../../components/messageBox/ErrorBox'
 import CloseIcon from '@material-ui/icons/Close'
@@ -72,8 +72,8 @@ const useStyles = makeStyles(theme => ({
         color: 'rgba(255, 255, 255, .7) ',
         fontSize: '.7rem',
         position: 'absolute',
-        top: 0,
-        left: 0,
+        top: '1rem',
+        left: '1rem',
         transform: 'translate(50%)',
         zIndex: 12,
         padding: 3,
@@ -152,7 +152,7 @@ export default function Profile({user}) {
     const classes = useStyles()
     return (
         <div className={classes.root}>
-            <Header loggedIn={true} />
+            <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
                 <Grid item xs={6} sm={5} style={{margin: '0 auto', position: 'relative'}}>
                     {!imageLoading ? <Paper elevation={2} className={classes.imgContainer}>
@@ -166,9 +166,11 @@ export default function Profile({user}) {
                             </Grid>
                         </Grid>
                     </Box>}
-                    <IconButton className={classes.editButton} onClick={(e) => openImageFile()} >
-                        <EditIcon />
-                    </IconButton>
+                    <Tooltip title="Change image">
+                        <IconButton className={classes.editButton} onClick={(e) => openImageFile()} >
+                            <EditIcon />
+                        </IconButton>
+                    </Tooltip>
                     <input style={{height: 0, width: 0}} type="file" ref={imageInputRef} onChange={(e) => updateImage(e)} />
                 </Grid>
                 <Grid item xs={12} sm={7}>
@@ -212,7 +214,7 @@ export default function Profile({user}) {
                         </Box>
                         <Box mt={3} px={3} textAlign="center">
                             <Button variant="contained" className={classes.newButton} onClick={(e) => updateProfile()} >
-                                {loading ? <Grid container alignItems="center" ><CircularProgress classes={{svg: classes.spinner}} size={20} /> Updating</Grid> : 'Update Profile Info'}
+                                {loading ? <Grid container alignItems="center" ><CircularProgress classes={{svg: classes.spinner}} size={20} /> Updating</Grid> : 'Update Profile'}
                             </Button>
                         </Box>
                     </Paper>
@@ -229,7 +231,7 @@ export default function Profile({user}) {
         </div>
     )
 }
-//why
+
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const user = await getUser(ctx)
 

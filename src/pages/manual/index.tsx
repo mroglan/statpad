@@ -10,6 +10,7 @@ import {useMove, useHover} from 'react-use-gesture'
 import {useSprings, animated, interpolate} from 'react-spring'
 import Link from 'next/link'
 import {Fragment} from 'react'
+import getUser from '../../requests/getUser'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -64,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 
 const toHeight = (index:number) => ({height: 20 * index})
 
-export default function Manual({loggedIn}) {
+export default function Manual({loggedIn, user}) {
 
     const AnimatedBar = animated(Grid)
     const AnimatedCard = animated(Card)
@@ -94,7 +95,7 @@ export default function Manual({loggedIn}) {
     const classes = useStyles()
     return (
         <div className={classes.root} {...horzMovementBind()}>
-            <Header loggedIn={loggedIn} />
+            <Header loggedIn={loggedIn} user={user} />
             <Box>
                 <Grid container direction="row" wrap="nowrap" alignItems="flex-end" justify="space-around"
                 className={classes.barsContainer} style={{margin: '0 auto'}}>
@@ -212,5 +213,6 @@ export default function Manual({loggedIn}) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const isAuth = await authenticated(ctx)
-    return {props: {loggedIn: isAuth}}
+    const user = isAuth ? await getUser(ctx) : null
+    return {props: {loggedIn: isAuth, user}}
 }

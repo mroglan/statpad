@@ -130,7 +130,7 @@ export default function SignUp() {
     const classes = useStyles()
     return (
         <div className={classes.root}>
-            <Header loggedIn={false} />
+            <Header loggedIn={false} user={null} />
             <Grid container>
                 <Grid item md={6} sm={8} className={classes.signUpContainer}>
                     <Paper className={classes.paper}>

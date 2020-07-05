@@ -6,6 +6,7 @@ import authenticated from '../../requests/authenticated'
 import ManualNav from '../../components/nav/ManualNav'
 import ManualSideNav from '../../components/nav/ManualSideNav'
 import ExampleCarousel from '../../components/carousels/ExampleCarousel1'
+import getUser from '../../requests/getUser'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export default function HypothesisTests({loggedIn}) {
+export default function HypothesisTests({loggedIn, user}) {
 
     const exampleArray = [
         {
@@ -155,5 +156,6 @@ export default function HypothesisTests({loggedIn}) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const isAuth = await authenticated(ctx)
-    return {props: {loggedIn: isAuth}}
+    const user = isAuth ? await getUser(ctx) : null
+    return {props: {loggedIn: isAuth, user}}
 }

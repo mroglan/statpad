@@ -13,6 +13,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import InfoCarousel from '../components/homePage/InfoCarousel1'
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import getUser from '../requests/getUser'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,12 +55,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Home({loggedIn}) {
+export default function Home({loggedIn, user}) {
 
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <Header loggedIn={loggedIn} />
+      <Header loggedIn={loggedIn} user={user} />
       <Grid container justify="center">
         <Grid item xs={12} sm={8}>
           <Box textAlign="center" mb={2}>
@@ -194,5 +195,6 @@ export default function Home({loggedIn}) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
   const isAuth = await authenticated(ctx)
-  return {props: {loggedIn: isAuth}}
+  const user = isAuth ? await getUser(ctx) : null
+  return {props: {loggedIn: isAuth, user}}
 }

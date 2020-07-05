@@ -10,6 +10,7 @@ import {useRef, useEffect} from 'react'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import getUser from '../../requests/getUser'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -75,7 +76,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function About({loggedIn}) {
+export default function About({loggedIn, user}) {
 
     const AnimatedBox = animated(Box)
     const AnimatedCard = animated(Card)
@@ -132,7 +133,7 @@ export default function About({loggedIn}) {
     const classes = useStyles()
     return (
         <div className={classes.root} {...movementBind()}>
-            <Header loggedIn={loggedIn} />
+            <Header loggedIn={loggedIn} user={user} />
             <Box pb={3}>
                 <Grid container spacing={5} justify="space-between">
                     <Grid item xs={12} sm={7} md={4} className={classes.cardGridItem} >
@@ -224,5 +225,6 @@ export default function About({loggedIn}) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const isAuth = await authenticated(ctx)
-    return {props: {loggedIn: isAuth}}
+    const user = isAuth ? await getUser(ctx) : null
+    return {props: {loggedIn: isAuth, user}}
 }

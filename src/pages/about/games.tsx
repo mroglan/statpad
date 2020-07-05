@@ -10,6 +10,7 @@ import AboutNav from '../../components/nav/AboutNav'
 import AboutSideNav from '../../components/nav/AboutSideNav'
 import {useSprings, animated} from 'react-spring'
 import {useHover} from 'react-use-gesture'
+import getUser from '../../requests/getUser'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -75,7 +76,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export default function Games({loggedIn}) {
+export default function Games({loggedIn, user}) {
 
     const AnimatedCard = animated(Card)
 
@@ -111,7 +112,7 @@ export default function Games({loggedIn}) {
     const classes = useStyles()
     return (
         <div className={classes.root}>
-            <Header loggedIn={loggedIn} />
+            <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
                 <Grid item style={{margin: '0 auto'}} md={3}>
                     <Paper className={classes.sideBar}>
@@ -149,5 +150,6 @@ export default function Games({loggedIn}) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const isAuth = await authenticated(ctx)
-    return {props: {loggedIn: isAuth}}
+    const user = isAuth ? await getUser(ctx) : null
+    return {props: {loggedIn: isAuth, user}}
 }

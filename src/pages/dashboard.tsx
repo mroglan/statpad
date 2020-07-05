@@ -104,7 +104,7 @@ export default function Dashboard({user, recentProjects}) {
     const classes = useStyles()
     return (
         <div className={classes.root}>
-            <Header loggedIn={true} />
+            <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
                 <Grid item md={3} style={{margin: '0 auto'}}>
                     <Paper className={classes.sideBar}>

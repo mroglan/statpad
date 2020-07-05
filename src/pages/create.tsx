@@ -9,6 +9,7 @@ import Var1Stats from '../components/projectComponents/graphSubs/Var1Stats'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import authenticated from '../requests/authenticated'
+import getUser from '../requests/getUser'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -93,7 +94,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export default function Create({loggedIn}) {
+export default function Create({loggedIn, user}) {
 
     const [graphs, setGraphs] = useState(['graph'])
 
@@ -133,7 +134,7 @@ export default function Create({loggedIn}) {
 
     return (
         <div className={classes.root}>
-            <Header loggedIn={loggedIn} />
+            <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
                 <Grid item md={graphRows[0].length === 2 ? 4 : graphRows[0].length === 3 || graphRows[0].length === 4 ? 8 : 12}
                  className={`${classes.centered} ${classes.loadIn}`} >
@@ -195,6 +196,7 @@ export default function Create({loggedIn}) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const isAuth = await authenticated(ctx)
+    const user = isAuth ? await getUser(ctx) : null
     console.log(isAuth)
-    return {props: {loggedIn: isAuth}}
+    return {props: {loggedIn: isAuth, user}}
 }
