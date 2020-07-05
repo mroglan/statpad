@@ -229,7 +229,7 @@ export default function Profile({user}) {
         </div>
     )
 }
-
+//why
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const user = await getUser(ctx)
 
