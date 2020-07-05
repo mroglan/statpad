@@ -9,7 +9,8 @@ import {Grid, Paper, Button, Box, Typography, TextField, FormControl, OutlinedIn
 import {useState} from 'react'
 import ErrorBox from '../../components/messageBox/ErrorBox'
 import CloseIcon from '@material-ui/icons/Close'
-
+import EditIcon from '@material-ui/icons/Edit';
+import {useRef, ChangeEvent} from 'react'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,8 +30,12 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: 'hsl(241, 82%, 47%)',
     }, 
     profileImg: {
-        minWidth: '100%',
-        minHeight: '100%'
+        objectFit: 'cover',
+        width: '100%',
+        height: 300,
+        [theme.breakpoints.down('sm')]: {
+            height: 200
+        },
     },
     blankImg: {
         width: '100%',
@@ -61,16 +66,35 @@ const useStyles = makeStyles(theme => ({
     },
     successMsg: {
         backgroundColor: theme.palette.success.main
-    }
+    },
+    editButton: {
+        backgroundColor: 'hsla(31, 82%, 54%, 1)',
+        color: 'rgba(255, 255, 255, .7) ',
+        fontSize: '.7rem',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        transform: 'translate(50%)',
+        zIndex: 12,
+        padding: 3,
+        '&:hover': {
+            backgroundColor: 'hsla(31, 82%, 54%, .9)',
+            color: '#fff'
+        },
+    },
 }))
 
 export default function Profile({user}) {
 
     const [name, setName] = useState(user.username)
     const [email, setEmail] = useState(user.email)
+    const [image, setImage] = useState(user.image)
     const [error, setError] = useState([''])
     const [success, setSuccess] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [imageLoading, setImageLoading] = useState(false)
+
+    const imageInputRef = useRef<HTMLInputElement>()
 
     const handleRemoveError = (index:number) => {
         setError([''])
@@ -86,7 +110,7 @@ export default function Profile({user}) {
             body: JSON.stringify({
                 id: user._id,
                 username: name,
-                email
+                email, image
             })
         })
         setLoading(false)
@@ -98,15 +122,54 @@ export default function Profile({user}) {
         setError([json])
     }
 
+    const openImageFile = () => {
+        imageInputRef.current.click()
+    }
+
+    const updateImage = async (e:ChangeEvent<HTMLInputElement>) => {
+        setImageLoading(true)
+
+        const file = e.target.files[0]
+
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('upload_preset', 'lbdgzt98')
+        const options = {
+            method: 'POST',
+            body: formData
+        }
+
+        const res = await fetch(`https://api.Cloudinary.com/v1_1/dqtpxyaeo/image/upload`, options)
+        const json = await res.json()
+        console.log(json)
+
+        setImage(json.secure_url)
+        setImageLoading(false)
+    }
+
+    console.log(user)
+
     const classes = useStyles()
     return (
         <div className={classes.root}>
             <Header loggedIn={true} />
             <Grid container spacing={3}>
-                <Grid item xs={6} sm={5} style={{margin: '0 auto'}}>
-                    <Paper elevation={2} className={classes.imgContainer}>
-                        <img className={user.image ? classes.profileImg : classes.blankImg} src={user.image || '/users/blankProfile.png'} />
-                    </Paper>
+                <Grid item xs={6} sm={5} style={{margin: '0 auto', position: 'relative'}}>
+                    {!imageLoading ? <Paper elevation={2} className={classes.imgContainer}>
+                        <Grid container style={{height: '100%'}}>
+                            <img className={image ? classes.profileImg : classes.blankImg} src={image || '/users/blankProfile.png'} />
+                        </Grid>
+                    </Paper> : <Box className={classes.imgContainer} style={{backgroundColor: 'hsl(241, 20%, 45%)'}}>
+                        <Grid container style={{height: '100%'}} alignItems="center" justify="center">
+                            <Grid item>
+                                <CircularProgress classes={{svg: classes.spinner}} />
+                            </Grid>
+                        </Grid>
+                    </Box>}
+                    <IconButton className={classes.editButton} onClick={(e) => openImageFile()} >
+                        <EditIcon />
+                    </IconButton>
+                    <input style={{height: 0, width: 0}} type="file" ref={imageInputRef} onChange={(e) => updateImage(e)} />
                 </Grid>
                 <Grid item xs={12} sm={7}>
                     <Paper className={classes.paper}>
@@ -149,7 +212,7 @@ export default function Profile({user}) {
                         </Box>
                         <Box mt={3} px={3} textAlign="center">
                             <Button variant="contained" className={classes.newButton} onClick={(e) => updateProfile()} >
-                                {loading ? <Grid container alignItems="center" ><CircularProgress classes={{svg: classes.spinner}} size={20} /> Updating</Grid> : 'Update Profile'}
+                                {loading ? <Grid container alignItems="center" ><CircularProgress classes={{svg: classes.spinner}} size={20} /> Updating</Grid> : 'Update Profile Info'}
                             </Button>
                         </Box>
                     </Paper>

@@ -32,14 +32,16 @@ export default async function UpdateProfile(req:NextApiRequest, res:NextApiRespo
         await db.collection('users').updateOne({'_id': new ObjectId(req.body.id)}, {
             '$set': {
                 'username': req.body.username,
-                'email': req.body.email
+                'email': req.body.email, 
+                'image': req.body.image
             }
         })
 
         const claims = {
             _id: req.body.id,
             email: req.body.email,
-            username: req.body.username
+            username: req.body.username,
+            image: req.body.image
         }
 
         const jwt = sign(claims, process.env.SIGNATURE, {expiresIn: '48hr'})
