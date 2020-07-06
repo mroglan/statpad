@@ -57,7 +57,7 @@ export default function RemoveEditorDialog({open, toggleOpen, editors, projectId
     const [markedEditors, setMarkedEditors] = useState(editors.map(() => false))
     const [loading, setLoading] = useState(false)
 
-    useMemo(() => setMarkedEditors(editors.map(() => false)), [editors])
+    useMemo(() => setMarkedEditors(editors.map(() => false)), [open])
 
     const closeDialog = () => {
         toggleOpen()

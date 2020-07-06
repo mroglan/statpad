@@ -11,6 +11,7 @@ import Link from 'next/link'
 import {ObjectId} from 'mongodb'
 import {useState, useMemo} from 'react'
 import DeleteProjectDialog from '../../components/dialogs/deleteProjectDialog'
+import LeaveProjectDialog from '../../components/dialogs/leaveProjectDialog'
 import Router from 'next/router'
 
 const useStyles = makeStyles(theme => ({
@@ -120,6 +121,7 @@ const useStyles = makeStyles(theme => ({
 export default function Projects({user, serverProjects}) {
 
     const [viewDeleteModal, setViewDeleteModal] = useState(false)
+    const [viewLeaveModal, setViewLeaveModal] = useState(false)
     const [owned, setOwned] = useState(true)
     const [projects, setProjects] = useState(serverProjects)
 
@@ -129,13 +131,19 @@ export default function Projects({user, serverProjects}) {
         } else {
             return projects.filter(proj => proj.owner !== user._id)
         }
-    }, [owned])
+    }, [owned, projects])
 
     const toggleRemoveComponentModal = (remainingProjects) => {
         setViewDeleteModal(!viewDeleteModal)
         if(!remainingProjects) return
 
         console.log(remainingProjects)
+        setProjects(remainingProjects)
+    }
+
+    const toggleLeaveProjectModal = (remainingProjects?) => {
+        setViewLeaveModal(!viewLeaveModal)
+        if(!remainingProjects) return
         setProjects(remainingProjects)
     }
 
@@ -202,7 +210,7 @@ export default function Projects({user, serverProjects}) {
                                     <Grid item>
                                         {owned ? <Button className={classes.deleteButton} onClick={(e) => toggleRemoveComponentModal(null)} >
                                             Remove Project
-                                        </Button> : <Button className={classes.deleteButton}>
+                                        </Button> : <Button className={classes.deleteButton} onClick={(e) => toggleLeaveProjectModal()} >
                                             Leave Project
                                         </Button>}
                                     </Grid>
@@ -213,6 +221,8 @@ export default function Projects({user, serverProjects}) {
                 </Grid>
             </Grid>
             <DeleteProjectDialog open={viewDeleteModal} toggleOpen={toggleRemoveComponentModal} projects={projects}
+            owner={user._id} />
+            <LeaveProjectDialog open={viewLeaveModal} toggleOpen={toggleLeaveProjectModal} projects={projects} 
             owner={user._id} />
         </div>
     )

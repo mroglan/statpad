@@ -5,7 +5,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid, Typography, List, ListItem, ListItemIcon, ListItemText, Button} from '@material-ui/core'
-import {useRef, useState} from 'react'
+import {useRef, useState, useMemo} from 'react'
 import Router from 'next/router'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
@@ -57,6 +57,8 @@ export default function DeleteComponentDialog({open, toggleOpen, projects, owner
 
     const [deletedProjects, setDeletedProjects] = useState(projects.map(project => false))
     const [loading, setLoading] = useState(false)
+
+    useMemo(() => setDeletedProjects(projects.map(() => false)), [open])
 
     const closeDialog = () => {
         toggleOpen(null)

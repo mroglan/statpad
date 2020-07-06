@@ -53,39 +53,45 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function DeleteComponentDialog({open, toggleOpen, components, projectId}) {
+export default function LeaveProjectDialog({open, toggleOpen, projects, owner}) {
 
-    const [deletionComps, setDeletionComps] = useState(components.map(comp => false))
+    const [deletedProjects, setDeletedProjects] = useState(projects.map(project => false))
     const [loading, setLoading] = useState(false)
 
-    useMemo(() => setDeletionComps(components.map(() => false)), [open])
+    useMemo(() => {
+        console.log('using memo')
+        setDeletedProjects(projects.map(() => false))
+    }, [open])
 
     const closeDialog = () => {
         toggleOpen(null)
     }
 
     const toggleDeletion = (index:number) => {
-        const copy = [...deletionComps]
+        const copy = [...deletedProjects]
         copy[index] = !copy[index]
-        setDeletionComps(copy)
+        setDeletedProjects(copy)
     }
 
-    const deleteComponents = async () => {
+    const leaveProjects = async () => {
         setLoading(true) 
-        const {remaining, deleted} = components.reduce((result, comp, index) => {
-            if(deletionComps[index]) {
+        const {remaining, deleted} = projects.reduce((result, comp, index) => {
+            if(deletedProjects[index]) {
                 result.deleted.push(comp)
             } else {
                 result.remaining.push(comp)
             }
             return result
         }, {remaining: [], deleted: []})
-        const res = await fetch(`${process.env.API_ROUTE}/projects/deletecomponents`, {
+        const res = await fetch(`${process.env.API_ROUTE}/projects/leaveprojects`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(deleted)
+            body: JSON.stringify({
+                leaving: deleted,
+                userId: owner
+            })
         })
         setLoading(false)
         if(res.status !== 200) return
@@ -94,19 +100,19 @@ export default function DeleteComponentDialog({open, toggleOpen, components, pro
 
     const classes = useStyles()
     return (
-        <Dialog fullWidth open={open} onClose={closeDialog} aria-labelledby="Delete Component(s)"
+        <Dialog fullWidth open={open} onClose={closeDialog} aria-labelledby="Leave Project(s)"
         classes={{paper: classes.dialog}}>
-            <DialogTitle style={{textAlign: 'center'}} className={classes.textWhite}>Select Components to Delete</DialogTitle>
+            <DialogTitle style={{textAlign: 'center'}} className={classes.textWhite}>Select Projects to Leave</DialogTitle>
             <DialogContent dividers={true}>
                 <List>
-                    {components.map((component, index:number) => (
-                        <ListItem button className={`${deletionComps[index] ? classes.redBorder : classes.border} ${classes.margin}`} 
-                        key={index} onClick={(e) => toggleDeletion(index)} >
-                            <ListItemIcon className={deletionComps[index] ? classes.redText : ''} >
+                    {projects.map((project, index:number) => (
+                        <ListItem button className={`${deletedProjects[index] ? classes.redBorder : classes.border} ${classes.margin}`} 
+                        key={index} onClick={(e) => toggleDeletion(index)} style={{display: project.owner === owner ? 'none' : ''}} >
+                            <ListItemIcon className={deletedProjects[index] ? classes.redText : ''} >
                                 <DeleteOutlineIcon />
                             </ListItemIcon>
                             <ListItemText style={{color: '#fff'}}>
-                                {component.name}
+                                {project.name}
                             </ListItemText>
                         </ListItem>
                     ))}
@@ -114,8 +120,8 @@ export default function DeleteComponentDialog({open, toggleOpen, components, pro
             </DialogContent>
             <DialogActions>
                 <Grid container justify="center">
-                    <Button className={classes.deleteButton} onClick={(e) => deleteComponents()} >
-                        Delete Selected Components
+                    <Button className={classes.deleteButton} onClick={(e) => leaveProjects()} >
+                        Leave Selected Projects
                     </Button>
                 </Grid>
             </DialogActions>
