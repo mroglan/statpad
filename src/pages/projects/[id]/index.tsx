@@ -10,6 +10,7 @@ import ComponentsList from "../../../components/lists/ComponentsList"
 import NewComponentDialog from '../../../components/dialogs/newComponentDialog'
 import DeleteComponentDialog from '../../../components/dialogs/deleteComponentDialog'
 import InviteEditorDialog from '../../../components/dialogs/inviteEditorDialog'
+import RemoveEditorDialog from '../../../components/dialogs/removeEditorDialog'
 import Link from 'next/link'
 import {useState} from 'react'
 import {ObjectId} from 'mongodb'
@@ -121,6 +122,7 @@ export default function Project({user, project, serverComponents}:Props) {
     const [openModal, setOpenModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [openAddEditorModal, setOpenAddEditorModal] = useState(false)
+    const [openRemoveEditorModal, setOpenRemoveEditorModal] = useState(false)
     const [components, setComponents] = useState(serverComponents)
     const [editors, setEditors] = useState(project.editorsInfo)
 
@@ -143,7 +145,14 @@ export default function Project({user, project, serverComponents}:Props) {
     const toggleAddEditorModal = (newEditors?) => {
         setOpenAddEditorModal(!openAddEditorModal)
         if(!newEditors) return
-        setEditors(currentEditors => [...currentEditors, newEditors])
+        console.log(newEditors)
+        setEditors(currentEditors => [...currentEditors, ...newEditors])
+    }
+
+    const toggleRemoveEditorModal = (remainingEditors?) => {
+        setOpenRemoveEditorModal(!openRemoveEditorModal)
+        if(!remainingEditors) return
+        setEditors(remainingEditors)
     }
 
     const classes = useStyles()
@@ -211,7 +220,7 @@ export default function Project({user, project, serverComponents}:Props) {
                                         </Button>
                                     </Grid>
                                     <Grid item>
-                                        <Button className={classes.deleteButton}>
+                                        <Button className={classes.deleteButton} onClick={() => toggleRemoveEditorModal()}>
                                             Remove a User
                                         </Button>
                                     </Grid>
@@ -227,6 +236,9 @@ export default function Project({user, project, serverComponents}:Props) {
             projectId={project._id} />
             <InviteEditorDialog open={openAddEditorModal} toggleOpen={toggleAddEditorModal} editors={editors}
             userId={user._id} projectId={project._id} />
+            <RemoveEditorDialog open={openRemoveEditorModal} toggleOpen={toggleRemoveEditorModal} 
+            editors={editors}
+            projectId={project._id} />
         </div>
     )
 }

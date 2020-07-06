@@ -5,7 +5,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid, Typography, TextField, Button, Radio, IconButton, FormControl, OutlinedInput} from '@material-ui/core'
-import {createRef, useState, ChangeEvent} from 'react'
+import {createRef, useState, ChangeEvent, useMemo} from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import ErrorBox from '../messageBox/ErrorBox'
@@ -63,6 +63,8 @@ export default function InviteEditorDialog({open, toggleOpen, editors, projectId
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState([])
 
+    useMemo(() => setInputs(['']), [editors])
+
     const closeDialog = () => {
         toggleOpen(null)
     }
@@ -110,6 +112,7 @@ export default function InviteEditorDialog({open, toggleOpen, editors, projectId
         const json = await res.json()
         setLoading(false)
         if(res.status === 200) {
+            console.log('json', json)
             return toggleOpen(json)
         }
         setErrors(json)
