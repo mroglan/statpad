@@ -106,6 +106,8 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
         const [component, project, allComponents] = await Promise.all([db.collection('components').findOne({_id: new ObjectId(compId)}), 
         db.collection('projects').findOne({_id: new ObjectId(projId)}), getComponents(new ObjectId(projId))])
 
+        if(!project.public) throw 'not public'
+
         const data = []
         allComponents.forEach((comp) => {
             if(comp.type === 'data') data.push(comp.data)

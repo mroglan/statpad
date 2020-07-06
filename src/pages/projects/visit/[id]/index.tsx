@@ -113,6 +113,8 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
         const [projectInfo, serverComponents] = await Promise.all([ getProjectInfo(id),
         getComponents(new ObjectId(id))])
 
+        if(!projectInfo.public) throw 'not public'
+
         return {props: {
             project: JSON.parse(JSON.stringify(projectInfo)),
             components: JSON.parse(JSON.stringify(serverComponents)),

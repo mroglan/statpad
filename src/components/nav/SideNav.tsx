@@ -4,6 +4,7 @@ import BubbleChartIcon from '@material-ui/icons/BubbleChart';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 import Link from 'next/link'
 
 const useStyles = makeStyles(theme => ({
@@ -44,6 +45,16 @@ export default function SideNav() {
                     </ListItemIcon>
                     <ListItemText className={classes.listText}>
                         My Projects
+                    </ListItemText>
+                </ListItem>
+            </Link>
+            <Link href="/projects/visit">
+                <ListItem button className={classes.listItem}>
+                    <ListItemIcon style={{color: 'hsl(178, 81%, 52%)'}}>
+                        <DeviceHubIcon />
+                    </ListItemIcon>
+                    <ListItemText className={classes.listText}>
+                        Visit Projects
                     </ListItemText>
                 </ListItem>
             </Link>
