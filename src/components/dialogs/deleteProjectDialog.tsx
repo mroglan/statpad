@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function DeleteComponentDialog({open, toggleOpen, projects}) {
+export default function DeleteComponentDialog({open, toggleOpen, projects, owner}) {
 
     const [deletedProjects, setDeletedProjects] = useState(projects.map(project => false))
     const [loading, setLoading] = useState(false)
@@ -99,7 +99,7 @@ export default function DeleteComponentDialog({open, toggleOpen, projects}) {
                 <List>
                     {projects.map((project, index:number) => (
                         <ListItem button className={`${deletedProjects[index] ? classes.redBorder : classes.border} ${classes.margin}`} 
-                        key={index} onClick={(e) => toggleDeletion(index)} >
+                        key={index} onClick={(e) => toggleDeletion(index)} style={{display: project.owner === owner ? '' : 'none'}} >
                             <ListItemIcon className={deletedProjects[index] ? classes.redText : ''} >
                                 <DeleteOutlineIcon />
                             </ListItemIcon>

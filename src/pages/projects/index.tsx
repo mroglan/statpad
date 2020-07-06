@@ -4,12 +4,12 @@ import getProjects from '../../requests/getProjects'
 import database from '../../database/database'
 import SideNav from '../../components/nav/SideNav'
 import {makeStyles} from '@material-ui/core/styles'
-import {Grid, Paper, Button, Box, Typography} from '@material-ui/core'
+import {Grid, Paper, Button, Box, Typography, FormControl, Select, MenuItem} from '@material-ui/core'
 import Header from '../../components/nav/Header'
 import ProjectList from '../../components/lists/ProjectList'
 import Link from 'next/link'
 import {ObjectId} from 'mongodb'
-import {useState} from 'react'
+import {useState, useMemo} from 'react'
 import DeleteProjectDialog from '../../components/dialogs/deleteProjectDialog'
 import Router from 'next/router'
 
@@ -106,12 +106,30 @@ const useStyles = makeStyles(theme => ({
         },
         margin: theme.spacing(1)
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        maxWidth: 200,
+        '& > div': {
+            border: '1px solid hsl(241, 82%, 90%)',
+            borderRadius: '1rem'
+        }
+    },
 }))
 
 export default function Projects({user, serverProjects}) {
 
     const [viewDeleteModal, setViewDeleteModal] = useState(false)
+    const [owned, setOwned] = useState(true)
     const [projects, setProjects] = useState(serverProjects)
+
+    const filteredProjects = useMemo(() => {
+        if(owned) {
+            return projects.filter(proj => proj.owner === user._id)
+        } else {
+            return projects.filter(proj => proj.owner !== user._id)
+        }
+    }, [owned])
 
     const toggleRemoveComponentModal = (remainingProjects) => {
         setViewDeleteModal(!viewDeleteModal)
@@ -140,7 +158,17 @@ export default function Projects({user, serverProjects}) {
                                 </Typography>
                             </Box>
                             <hr style={{marginBottom: 0}} />
-                            <Box p={3} className={classes.content}>
+                            <Box px={3} pt={3}>
+                                <FormControl variant="filled" className={classes.formControl} hiddenLabel margin="dense">
+                                    <Select disableUnderline={true} 
+                                    value={owned} onChange={(e) => setOwned(e.target.value === 'true')} aria-label="Project Filter"
+                                    classes={{icon: classes.textWhite, filled: classes.textWhite }}>
+                                        <MenuItem value={'true'}>Owned by me</MenuItem>
+                                        <MenuItem value={'false'}>Shared with me</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box px={3} pb={3} className={classes.content}>
                                 {projects.length === 0 ? <Box className={classes.noProjectsContainer}>
                                     <Box>
                                         <Typography variant="h6" className={classes.noProjectsTitle}>
@@ -154,7 +182,7 @@ export default function Projects({user, serverProjects}) {
                                             </Link>
                                         </Box>
                                     </Box>
-                                </Box> : <ProjectList editable={true} projects={projects} />}
+                                </Box> : <ProjectList editable={owned} projects={filteredProjects} />}
                             </Box>
                         </Paper>
                     </Box>
@@ -172,9 +200,11 @@ export default function Projects({user, serverProjects}) {
                                     </Link>
                                     </Grid>
                                     <Grid item>
-                                        <Button className={classes.deleteButton} onClick={(e) => toggleRemoveComponentModal(null)} >
+                                        {owned ? <Button className={classes.deleteButton} onClick={(e) => toggleRemoveComponentModal(null)} >
                                             Remove Project
-                                        </Button>
+                                        </Button> : <Button className={classes.deleteButton}>
+                                            Leave Project
+                                        </Button>}
                                     </Grid>
                                 </Grid>
                             </Box>
@@ -182,7 +212,8 @@ export default function Projects({user, serverProjects}) {
                     </Box>
                 </Grid>
             </Grid>
-            <DeleteProjectDialog open={viewDeleteModal} toggleOpen={toggleRemoveComponentModal} projects={projects} />
+            <DeleteProjectDialog open={viewDeleteModal} toggleOpen={toggleRemoveComponentModal} projects={projects}
+            owner={user._id} />
         </div>
     )
 }

@@ -175,7 +175,7 @@ export default function Project({user, project, serverComponents}:Props) {
                             </Box>
                             <hr style={{marginBottom: 0}} />
                             <BasicProjectInfo editors={editors} isPublic={project.public} />
-                            <Box px={3} className={classes.projectContent}>
+                            <Box px={3} pb={3} className={classes.projectContent}>
                                 {components.length === 0 ? <Box className={classes.noComponentsContainer}>
                                     <Box>
                                         <Typography variant="h6" className={classes.noComponentsTitle}>
