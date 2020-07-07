@@ -7,6 +7,7 @@ import OneSampleHT from './HTSubs/OneSampleHT'
 import TwoSampleHT from './HTSubs/TwoSampleHT'
 import RegressionHT from './HTSubs/RegressionHT'
 import {BaseHypothesisTest, InputData, Data, HypTestsComp} from './projectInterfaces'
+import updateCompDate from '../../requests/updateCompDate'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -184,6 +185,7 @@ export default function HypotheisTests({component, data}:Props) {
                 syncedRef.current = syncedRef.current.map(el => false)
                 setSuccessMsg(true)
             }
+            await updateCompDate(component._id)
         }
     }
 

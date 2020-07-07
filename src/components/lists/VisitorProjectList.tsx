@@ -70,7 +70,7 @@ export default function ProjectList({projects}:Props) {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant="body1" className={classes.dimWhite}>
+                                <Typography variant="body1" className={classes.dimWhite} style={{whiteSpace: 'nowrap'}}>
                                     {formattedDate(project.updateDate)}
                                 </Typography>
                             </Grid>

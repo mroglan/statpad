@@ -8,6 +8,7 @@ import Var1Stats from './graphSubs/Var1Stats'
 import { Snackbar } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close'
 import {BaseGraph, InputData, Data, GraphComp} from './projectInterfaces'
+import updateCompDate from '../../requests/updateCompDate'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -313,6 +314,7 @@ export default function Graphs({component, data}:Props) {
                 syncedRef.current = syncedRef.current.map(el => false)
                 setSuccessMsg(true)
             }
+            await updateCompDate(component._id)
         }
     }
 

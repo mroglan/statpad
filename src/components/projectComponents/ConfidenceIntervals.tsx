@@ -7,6 +7,7 @@ import TwoSampleCI from './CISubs/TwoSampleCI'
 import RegressionCI from './CISubs/RegressionCI'
 import CloseIcon from '@material-ui/icons/Close'
 import {ConIntervalsComp, BaseConfidenceInterval, Data, InputData} from './projectInterfaces'
+import updateCompDate from '../../requests/updateCompDate'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -186,6 +187,7 @@ export default function ConfidenceIntervals({component, data}:Props) {
                 syncedRef.current = syncedRef.current.map(el => false)
                 setSuccessMsg(true)
             }
+            await updateCompDate(component._id)
         }
     }
 

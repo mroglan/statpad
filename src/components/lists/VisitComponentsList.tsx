@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.success.main
     },
     typeContainer: {
-        flexBasis: 100
+        flexBasis: 100,
+        flexShrink: 0
     },
     listSpacing: {
         margin: '1rem 0'
@@ -66,7 +67,7 @@ export default function CopmonentList({components}:Props) {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant="body1" className={classes.dimWhite}>
+                                <Typography variant="body1" className={classes.dimWhite} style={{whiteSpace: 'nowrap'}}>
                                     {formattedDate(component.updateDate)}
                                 </Typography>
                             </Grid>

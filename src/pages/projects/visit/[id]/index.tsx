@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetServerSidePropsContext } from "next"
 import getUser from "../../../../requests/getUser"
 import authenticated from '../../../../requests/authenticated'
-import getProjectInfo from '../../../../requests/getProjectInfo'
+import {getProjectInfoNoUpdate} from '../../../../requests/getProjectInfo'
 import getComponents from '../../../../requests/getComponents'
 import {makeStyles} from '@material-ui/core/styles'
 import Header from '../../../../components/nav/Header'
@@ -110,7 +110,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
         const id = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
         if(!checkObjectId(id)) throw 'invalide objectId'
 
-        const [projectInfo, serverComponents] = await Promise.all([ getProjectInfo(id),
+        const [projectInfo, serverComponents] = await Promise.all([ getProjectInfoNoUpdate(id),
         getComponents(new ObjectId(id))])
 
         if(!projectInfo.public) throw 'not public'

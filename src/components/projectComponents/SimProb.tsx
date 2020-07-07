@@ -9,6 +9,7 @@ import Simulation from './simProbSubs/Simulation'
 import BinomialProb from './simProbSubs/BinomialProb'
 import GeoProb from './simProbSubs/GeometricProb'
 import {BaseSimProbTest, InputData, Data, SimProbComp} from './projectInterfaces'
+import updateCompDate from '../../requests/updateCompDate'
 
 const useStyles = makeStyles(theme => ({
     newButton: {
@@ -201,6 +202,7 @@ export default function SimProb({component, data}:Props) {
                 syncedRef.current = syncedRef.current.map(el => false)
                 setSuccessMsg(true)
             }
+            await updateCompDate(component._id)
         }
     }
 
