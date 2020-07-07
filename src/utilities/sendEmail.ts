@@ -12,7 +12,7 @@ export default async function sendEmail({name, email, link}:Props) {
 
     const msg = {
         to: email,
-        from: 'manueljoseph113@gmail.com',
+        from: 'wowstatpad@gmail.com',
         subject: 'Verify your email',
         text: 'It worked...',
         html: `<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
