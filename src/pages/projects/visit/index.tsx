@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
             '& nav': {
                 display: 'flex',
                 flexFlow: 'row wrap',
-                justifyContent: 'center',
                 maxWidth: 600,
                 [theme.breakpoints.down('xs')]: {
                     maxWidth: 300
