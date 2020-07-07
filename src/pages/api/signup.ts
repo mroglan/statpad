@@ -1,6 +1,8 @@
 import {NextApiRequest, NextApiResponse} from 'next'
 import database from '../../database/database'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
+import sendEmail from '../../utilities/sendEmail'
 
 export default async function signUp(req: NextApiRequest, res: NextApiResponse) {
     //console.log(req.body)
@@ -41,13 +43,35 @@ export default async function signUp(req: NextApiRequest, res: NextApiResponse) 
         const user = {
             username: req.body.username,
             email: req.body.email,
-            password: hashedPassword
+            password: hashedPassword,
+            isVerified: false
         }
         const newUser = await db.collection('users').insertOne(user)
-        console.log('inserted new user')
+
+        const randomToken = await new Promise((res, rej) => {
+            crypto.randomBytes(48, (err, buffer) => {
+                if(err) {
+                    return rej(err)
+                }
+                return res(buffer.toString('hex'))
+            })
+        })
+        //console.log(randomToken)
+        //console.log(newUser)
+
+        await db.collection('verificationTokens').insertOne({
+            userId: newUser.ops[0]._id,
+            token: randomToken,
+            createdAt: new Date(Date.now())
+        })
+
+        await sendEmail({name: req.body.username, email: req.body.email, 
+            link: `${process.env.BASE_ROUTE}/auth/confirmemail/${randomToken}`})
+
         res.status(200).json({msg: 'Success'})
     } catch(e) {
         if(errors.length === 0) {
+            console.log(e)
             errors.push({msg: 'Internal Server Error'})
             return res.status(500).json(errors)
         } else {

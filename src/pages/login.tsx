@@ -140,7 +140,7 @@ export default function Login({signedUp}) {
                         </Grid>
                         <Grid container>
                             {signedUpMessage && <Grid item xs={12} style={{marginBottom: '1rem'}}>
-                                    <SuccessBox msg={'You can now login in!'} handleRemoveSuccess={handleRemoveSuccess} />
+                                    <SuccessBox msg={'Check your email to verify your account and then login!'} handleRemoveSuccess={handleRemoveSuccess} />
                                 </Grid>}
                         </Grid>
                         <Grid container>

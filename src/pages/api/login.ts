@@ -11,6 +11,7 @@ interface UserI {
     email: string;
     password: string;
     image?: string;
+    isVerified: boolean;
 }
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
@@ -27,6 +28,10 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         const user: UserI = await db.collection('users').findOne({'email': req.body.email})
         if(!user) {
             errors.push({msg: 'This email is not registered'})
+            throw 'new error'
+        }
+        if(!user.isVerified) {
+            errors.push({msg: 'This email is not verified'})
             throw 'new error'
         }
         const match = await new Promise((resolve, reject) => {
