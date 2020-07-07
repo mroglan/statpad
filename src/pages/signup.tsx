@@ -257,7 +257,7 @@ export default function SignUp() {
         </div>
     )
 }
-
+//reload
 const FormikTextField = (props) => {
     const [field, meta] = useField({
         name: props.name,
