@@ -75,8 +75,8 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center'
     },
     link: {
-        color: theme.palette.success.light,
-        textDecorationColor: theme.palette.success.light
+        color: theme.palette.success.main,
+        textDecorationColor: theme.palette.success.main
     }
 }))
 
@@ -236,7 +236,7 @@ export default function SignUp() {
                     </Paper>
                     <Box mt={3}>
                         <Paper className={classes.lightPaper}>
-                            <Grid container spacing={3}>
+                            <Grid container spacing={1}>
                                 <Grid item className={classes.alignJustifyCenter}>
                                     <Typography variant="h5">
                                         Already have an account?

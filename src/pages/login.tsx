@@ -76,8 +76,8 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center'
     },
     link: {
-        color: theme.palette.success.light,
-        textDecorationColor: theme.palette.success.light
+        color: theme.palette.success.main,
+        textDecorationColor: theme.palette.success.main
     }
 }))
 
@@ -205,7 +205,7 @@ export default function Login({signedUp}) {
                     </Paper>
                     <Box mt={3}>
                         <Paper className={classes.lightPaper}>
-                            <Grid container spacing={3}>
+                            <Grid container spacing={1}>
                                 <Grid item className={classes.alignJustifyCenter}>
                                     <Typography variant="h5">
                                         New here?
@@ -216,6 +216,24 @@ export default function Login({signedUp}) {
                                         <a className={classes.link}><Typography variant="h5">
                                             Sign up
                                         </Typography></a>
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                        <Paper className={classes.lightPaper}>
+                            <Grid container spacing={1}>
+                                <Grid item className={classes.alignJustifyCenter}>
+                                    <Typography variant="h5">
+                                        No confirmation email?
+                                    </Typography>
+                                </Grid>
+                                <Grid item className={classes.alignJustifyCenter}>
+                                    <Link href="/auth/resendemail">
+                                        <a className={classes.link}>
+                                            <Typography variant="h5">
+                                                Resend
+                                            </Typography>
+                                        </a>
                                     </Link>
                                 </Grid>
                             </Grid>

@@ -31,7 +31,7 @@ export default function SuccessfulConfirmation() {
                         <Box textAlign="center" pt={3} color="hsl(140, 81%, 31%)">
                             <CheckCircleOutlineIcon fontSize="large" />
                         </Box>
-                        <Box>
+                        <Box px={2}>
                             <Typography variant="h4" className={classes.title}>
                                 Congratulations, your account is verified and you can now login!
                             </Typography>
