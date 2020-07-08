@@ -104,6 +104,7 @@ export default function Profile({user}) {
         setLoading(true)
         const res = await fetch(`${process.env.API_ROUTE}/profile/updateprofile`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

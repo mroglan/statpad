@@ -81,6 +81,7 @@ export default function RemoveEditorDialog({open, toggleOpen, editors, projectId
         }, {remaining: [], deleted: []})
         const res = await fetch(`${process.env.API_ROUTE}/projects/removeeditors`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

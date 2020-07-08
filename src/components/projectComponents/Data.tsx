@@ -17,9 +17,10 @@ const useStyles = makeStyles(theme => ({
 
 interface Props {
     component: DataComp;
+    projectId: string;
 }
 
-export default function Data({component}:Props) {
+export default function Data({component, projectId}:Props) {
 
     //console.log(component)
 
@@ -38,13 +39,15 @@ export default function Data({component}:Props) {
         setSyncing(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/updatedata`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 id: component._id,
                 type: component.type,
-                data: newRows
+                data: newRows,
+                projectId
             })
         })
 

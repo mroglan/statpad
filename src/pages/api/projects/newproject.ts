@@ -1,17 +1,21 @@
 import database from '../../../database/database'
 import { NextApiRequest, NextApiResponse } from 'next';
 import {ObjectId} from 'mongodb'
+import {verifyUser} from '../../../requests/verifyUser'
 
-export default async function NewProject(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function NewProject(req:NextApiRequest, res:NextApiResponse) {
 
     if(req.method !== 'POST') {
-        res.send('oops...')
-        return
+        return res.json({msg: 'Oops...'})
     }
 
     try {
 
-        const db:any = await database()
+        if(req.body.owner !== req.body.jwtUser._id) {
+            return res.status(401).json({msg: 'YOU CANNOT PASS'})
+        }
+
+        const db = await database()
 
         const project = {
             owner: new ObjectId(req.body.owner),
@@ -25,9 +29,9 @@ export default async function NewProject(req:NextApiRequest, res:NextApiResponse
 
         const newProject = await db.collection('projects').insertOne(project)
         //console.log(newProject)
-        res.status(200).json(newProject.ops[0]._id)
+        return res.status(200).json(newProject.ops[0]._id)
     } catch(e) {
         console.log(e)
         return res.status(500).json([{msg: 'Internal Server Error'}])
     }
-}
+})

@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import database from '../../../../database/database'
 import {ObjectId} from 'mongodb'
+import {verifyUser} from '../../../../requests/verifyUser'
 
-export default async function UpdateGraph(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function UpdateGraph(req:NextApiRequest, res:NextApiResponse) {
 
     if(req.method !== 'POST') {
         return res.json({msg: 'Oops...'})
@@ -21,4 +22,4 @@ export default async function UpdateGraph(req:NextApiRequest, res:NextApiRespons
         console.log(e)
         return res.status(500).json({msg: 'Internal Server Error'})
     }
-}
+})

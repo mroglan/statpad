@@ -1,8 +1,12 @@
 import database from '../../../database/database'
 import {ObjectId} from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
+import {verifyUser} from '../../../requests/verifyUser'
 
-export default async function createNewComponent(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function createNewComponent(req:NextApiRequest, res:NextApiResponse) {
+
+    console.log('user', req.body.jwtUser)
+
     try {
         const db = await database()
         const component:any = {
@@ -31,6 +35,14 @@ export default async function createNewComponent(req:NextApiRequest, res:NextApi
             default:
                 throw 'new error'
         }
+
+        const project = await db.collection('projects').findOne({'_id': component.project})
+        if(!project) throw 'weird...'
+
+        if(!project.editors.find(editor => editor.toString() === req.body.jwtUser._id)) {
+            return res.status(401).json({msg: 'YOU CANNOT PASS'})
+        }
+
         const newComponent = await db.collection('components').insertOne(component)
 
         return res.status(200).json(newComponent)
@@ -38,4 +50,4 @@ export default async function createNewComponent(req:NextApiRequest, res:NextApi
         console.log(e)
         return res.status(500).json({msg: 'Internal Server Error'})
     }
-}
+})

@@ -82,6 +82,7 @@ export default function EditComponentDialog({open, toggleOpen, component, index}
         setLoading(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/updatecomponent`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

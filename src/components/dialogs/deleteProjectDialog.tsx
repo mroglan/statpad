@@ -82,10 +82,13 @@ export default function DeleteComponentDialog({open, toggleOpen, projects, owner
         }, {remaining: [], deleted: []})
         const res = await fetch(`${process.env.API_ROUTE}/projects/deleteprojects`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(deleted)
+            body: JSON.stringify({
+                deleteProjects: deleted
+            })
         })
         setLoading(false)
         if(res.status !== 200) return

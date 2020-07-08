@@ -137,6 +137,7 @@ export default function CreateProject({user}) {
     const handleSubmit = async (values, actions) => {
         const res = await fetch(`${process.env.API_ROUTE}/projects/newproject`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

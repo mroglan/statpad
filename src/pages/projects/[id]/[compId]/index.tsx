@@ -80,11 +80,11 @@ export default function Component({user, component, project, allComponents, data
                     </Box>
                     <Box my={3}>
                         {/* <DataTable syncData={syncData} initialData={initialData} syncing={syncing} /> */}
-                        {component.type === 'data' ? <Data component={component} /> : 
-                        component.type === 'graphs' ? <Graphs component={component} data={data} /> :
-                        component.type === 'sim+prob' ? <SimProb component={component} data={data} /> : 
-                        component.type === 'confidenceIntervals' ? <ConfidenceIntervals component={component} data={data} /> : 
-                        <HypothesisTests component={component} data={data} /> }
+                        {component.type === 'data' ? <Data component={component} projectId={project._id} /> : 
+                        component.type === 'graphs' ? <Graphs component={component} data={data} projectId={project._id} /> :
+                        component.type === 'sim+prob' ? <SimProb component={component} data={data} projectId={project._id} /> : 
+                        component.type === 'confidenceIntervals' ? <ConfidenceIntervals component={component} data={data} projectId={project._id} /> : 
+                        <HypothesisTests component={component} data={data} projectId={project._id} /> }
                     </Box>
                 </Grid>
             </Grid>

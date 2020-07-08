@@ -116,9 +116,10 @@ const defaultRegressionProperties = {
 interface Props {
     component: ConIntervalsComp;
     data: InputData;
+    projectId: string;
 }
 
-export default function ConfidenceIntervals({component, data}:Props) {
+export default function ConfidenceIntervals({component, data, projectId}:Props) {
     
     const [intervals, setIntervals] = useState<BaseConfidenceInterval[]>([])
     const [loading, setLoading] = useState(false)
@@ -168,6 +169,7 @@ export default function ConfidenceIntervals({component, data}:Props) {
             }
             data2.push([].concat(...pushArray))
         }
+        if(data2.length === 0) data2 = [[]]
         setFormattedData(data2)
     }, [data])
 
@@ -198,10 +200,14 @@ export default function ConfidenceIntervals({component, data}:Props) {
         setIntervals(intervalsCopy)
         await fetch(`${process.env.API_ROUTE}/projects/components/deleteinterval`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(id)
+            body: JSON.stringify({
+                intervalId: id,
+                projectId
+            })
         })
     }
 
@@ -212,10 +218,14 @@ export default function ConfidenceIntervals({component, data}:Props) {
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newinterval`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newInterval)
+            body: JSON.stringify({
+                interval: newInterval,
+                projectId
+            })
         })
         const json = await res.json()
 

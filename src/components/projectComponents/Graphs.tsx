@@ -173,9 +173,10 @@ const defaultCharts = [{
 interface Props {
     component: GraphComp;
     data: InputData;
+    projectId: string;
 }
 
-export default function Graphs({component, data}:Props) {
+export default function Graphs({component, data, projectId}:Props) {
 
     const [graphs, setGraphs] = useState<BaseGraph[]>([])
     const [loading, setLoading] = useState(false)
@@ -211,7 +212,7 @@ export default function Graphs({component, data}:Props) {
         getComponents()
     }, [component])
 
-    const [formattedData, setFormattedData] = useState<Data>([])
+    const [formattedData, setFormattedData] = useState<Data>([[]])
     useMemo(() => {
         let data2 = []
         console.log('using memo....')
@@ -223,6 +224,7 @@ export default function Graphs({component, data}:Props) {
             }
             data2.push([].concat(...pushArray))
         }
+        if(data2.length === 0) data2 = [[]]
         setFormattedData(data2)
     }, [data])
 
@@ -233,10 +235,14 @@ export default function Graphs({component, data}:Props) {
         setGraphs(graphsCopy)
         await fetch(`${process.env.API_ROUTE}/projects/components/deletegraph`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(id)
+            body: JSON.stringify({
+                graphId: id,
+                projectId
+            })
         })
     }
 
@@ -248,10 +254,14 @@ export default function Graphs({component, data}:Props) {
         else if(type === '1varStats') setNew1VarStats(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newgraph`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newGraph)
+            body: JSON.stringify({
+                graph: newGraph,
+                projectId
+            })
         })
         const json = await res.json()
         if(type === 'graph') setNewGraph(false)

@@ -3,11 +3,17 @@ import database from "../../../database/database";
 import {ObjectId} from 'mongodb'
 import {sign} from 'jsonwebtoken'
 import cookie from 'cookie'
+import {verifyUser} from '../../../requests/verifyUser'
 
-export default async function UpdateProfile(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function UpdateProfile(req:NextApiRequest, res:NextApiResponse) {
 
     if(req.method !== 'POST') {
         return res.json({msg: 'Oops...'})
+    }
+
+    //console.log('user', req.body.jwtUser)
+    if(req.body.jwtUser._id !== req.body.id) {
+        return res.status(401).json({msg: 'wow buddy this aint your account'})
     }
 
     const errors = []
@@ -58,4 +64,4 @@ export default async function UpdateProfile(req:NextApiRequest, res:NextApiRespo
         if(errors.length === 0) return res.status(500).json(['Internal Server Error'])
         return res.status(500).json(errors)
     }
-}
+})

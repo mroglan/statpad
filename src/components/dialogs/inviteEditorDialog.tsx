@@ -100,6 +100,7 @@ export default function InviteEditorDialog({open, toggleOpen, editors, projectId
         setLoading(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/addeditor`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

@@ -1,17 +1,27 @@
 import database from '../../../database/database'
 import {ObjectId} from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
+import {verifyUser} from '../../../requests/verifyUser'
 
-export default async function AddEditor(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function AddEditor(req:NextApiRequest, res:NextApiResponse) {
 
     if(req.method !== 'POST') {
         return res.json({msg: 'Oops...'})
     }
 
+    //console.log('user', req.body.jwtUser)
+
     const errors = []
     try {
         const db = await database()
-        const editors = await db.collection('users').find({'username': {'$in': req.body.newEditors}}).toArray()
+        const [editors, currentProject] = await Promise.all([
+            db.collection('users').find({'username': {'$in': req.body.newEditors}}).toArray(),
+            db.collection('projects').findOne({'_id': new ObjectId(req.body.projectId)})
+        ])
+
+        if(currentProject.owner.toString() !== req.body.jwtUser._id) {
+            return res.status(401).json({msg: 'YOU CANNOT PASS'})
+        }
         
         if(editors.length < req.body.newEditors.length) {
             const notIncluded = req.body.newEditors.reduce((notFoundEditors, editor) => {
@@ -43,4 +53,4 @@ export default async function AddEditor(req:NextApiRequest, res:NextApiResponse)
         console.log(errors)
         res.status(500).json(errors)
     }
-}
+})

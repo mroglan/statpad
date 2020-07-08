@@ -114,9 +114,10 @@ const defaultRegressionProperties = {
 interface Props {
     component: HypTestsComp;
     data: InputData;
+    projectId: string;
 }
 
-export default function HypotheisTests({component, data}:Props) {
+export default function HypotheisTests({component, data, projectId}:Props) {
 
     const [tests, setTests] = useState<any>([])
     const [loading, setLoading] = useState(false)
@@ -166,6 +167,7 @@ export default function HypotheisTests({component, data}:Props) {
             }
             data2.push([].concat(...pushArray))
         }
+        if(data2.length === 0) data2 = [[]]
         setFormattedData(data2)
     }, [data])
 
@@ -196,10 +198,14 @@ export default function HypotheisTests({component, data}:Props) {
         setTests(testsCopy)
         await fetch(`${process.env.API_ROUTE}/projects/components/deletehtest`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(id)
+            body: JSON.stringify({
+                testId: id,
+                projectId
+            })
         })
     }
 
@@ -210,10 +216,14 @@ export default function HypotheisTests({component, data}:Props) {
 
         const res = await fetch(`${process.env.API_ROUTE}/projects/components/newhtest`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newTest)
+            body: JSON.stringify({
+                test: newTest,
+                projectId
+            })
         })
         const json = await res.json()
 

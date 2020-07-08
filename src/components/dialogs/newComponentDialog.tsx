@@ -57,6 +57,7 @@ export default function NewComponentDialog({open, toggleOpen, components, projec
         setLoading(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/newcomponent`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

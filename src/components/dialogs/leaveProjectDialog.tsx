@@ -85,6 +85,7 @@ export default function LeaveProjectDialog({open, toggleOpen, projects, owner}) 
         }, {remaining: [], deleted: []})
         const res = await fetch(`${process.env.API_ROUTE}/projects/leaveprojects`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

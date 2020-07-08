@@ -93,6 +93,7 @@ export default function EditProjectDialog({open, toggleOpen, project, index}:Pro
         setLoading(true)
         const res = await fetch(`${process.env.API_ROUTE}/projects/updateproject`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
