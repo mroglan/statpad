@@ -62,12 +62,13 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
             maxAge: 172800,
             path: '/'
         }))
-        res.status(200).json({msg: 'You are logged in'})
+
+        return res.status(200).json({msg: 'You are logged in'})
     } catch(e) {
         if(errors.length === 0) {
             errors.push(e)
             return res.status(500).json(errors)
         }
-        res.status(409).json(errors)
+        return res.status(409).json(errors)
     }
 }

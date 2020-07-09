@@ -149,7 +149,8 @@ export default function Dashboard({user, recentProjects}) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
-    const user = await getUser(ctx)
+    const user:any = await getUser(ctx)
+    if(!user) return {props: {}}
     const db = await database()
     const recentProjectsFound = await db.collection('projects').find({'editors': new ObjectId(user._id)}).sort({updateDate: -1}).limit(5).toArray()
     const recentProjects = recentProjectsFound.map(doc => {
