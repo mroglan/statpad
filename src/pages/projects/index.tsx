@@ -228,7 +228,8 @@ export default function Projects({user, serverProjects}) {
 }
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
-    const user = await getUser(ctx)
+    const user:any = await getUser(ctx)
+    
     //console.log(user)
     const projects = await getProjects({'editors': new ObjectId(user._id)})
 

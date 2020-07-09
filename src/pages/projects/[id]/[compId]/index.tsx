@@ -94,7 +94,7 @@ export default function Component({user, component, project, allComponents, data
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     try {
-        const user = await getUser(ctx)
+        const user:any = await getUser(ctx)
         const db = await database()
         const compId = Array.isArray(ctx.params.compId) ? ctx.params.compId[0] : ctx.params.compId
         const projId = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id

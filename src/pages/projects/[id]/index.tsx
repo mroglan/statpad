@@ -244,7 +244,7 @@ export default function Project({user, project, serverComponents}:Props) {
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     try {
-        const user = await getUser(ctx)
+        const user:any = await getUser(ctx)
         const id = Array.isArray(ctx.params.id) ? ctx.params.id[0] : ctx.params.id
         if(!checkObjectId(id)) throw 'invalid objectid'
 
