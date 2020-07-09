@@ -155,7 +155,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
     
     try {
         const isAuth = await authenticated(ctx)
-        const user = isAuth ? await getUser(ctx) : null
+        const user:any = isAuth ? await getUser(ctx) : null
 
         const userId = user ? new ObjectId(user._id) : ''
         //console.log('type of userId', typeof userId)
