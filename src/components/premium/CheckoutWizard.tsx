@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 export default function CheckoutWizard({currentStep}) {
 
     const steps = [
-        'Sign In', 'Basic Info', 'Payment Method', 'Purchase Premium'
+        'Sign In', 'Basic Info', 'Payment Method', 'Complete Purchase'
     ]
 
     const classes = useStyles() 

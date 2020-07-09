@@ -4,13 +4,17 @@ import Header from '../../components/nav/Header'
 import Stripe from 'stripe'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import getUser from '../../requests/getUser'
+import authenticated from '../../requests/authenticated'
 import {parseCookies, setCookie} from 'nookies'
 import {loadStripe} from '@stripe/stripe-js'
-import {Elements} from '@stripe/react-stripe-js'
-import CheckoutForm from '../../components/premium/CheckoutForm'
 import CheckoutWizard from '../../components/premium/CheckoutWizard'
+import BasicInfo from '../../components/premium/BasicInfo'
+import PaymentMethod from '../../components/premium/PaymentMethod'
+import StripePayment from '../../components/premium/StripePayment'
+import SignIn from '../../components/premium/SignIn'
 import {Formik, Form, Field, useField} from 'formik'
 import {useState} from 'react'
+import {Elements} from '@stripe/react-stripe-js'
 
 const stripePromise = loadStripe('pk_test_51H2lxQLlQTQgAaZ3198eMV8xPTLSm3dGXTbMk47SJhH3PbVglO5pLfluhm3FLLlkgfnd7ogeCACRk2XHZgMgxteZ00JlPgUFme')
 
@@ -20,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Checkout({user, paymentIntent}) {
+export default function Checkout({loggedIn, user, paymentIntent}) {
 
     const [basicInfo, setBasicInfo] = useState({
         firstName: '',
@@ -32,17 +36,28 @@ export default function Checkout({user, paymentIntent}) {
 
     const [currentStep, setCurrentStep] = useState(user ? 1 : 0)
 
+    const changeStep = (change:number) => {
+        setCurrentStep(currentStep + change)
+    }
+
     const classes = useStyles()
     return (
         <div className={classes.root}>
-            <Header loggedIn={true} user={user} />
+            <Header loggedIn={loggedIn} user={user} />
             <Grid container>
                 <Grid item style={{margin: '0 auto'}} xs={12} sm={10} md={8}>
                     <Box my={3}>
                         <CheckoutWizard currentStep={currentStep} />
                     </Box>
-                    <Box my={3}>
-                        
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item style={{margin: '0 auto'}} xs={12} sm={8} md={6} >
+                    <Box>
+                        {currentStep === 0 ? <SignIn changeStep={changeStep} /> : 
+                        currentStep === 1 ? <BasicInfo info={basicInfo} setInfo={setBasicInfo} changeStep={changeStep} /> : 
+                        currentStep === 2 ? <PaymentMethod paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} changeStep={changeStep} /> : 
+                        paymentMethod === 'stripe' ? <Elements stripe={stripePromise}><StripePayment paymentIntent={paymentIntent} changeStep={changeStep} /></Elements> : ''}
                     </Box>
                 </Grid>
             </Grid>
@@ -51,8 +66,8 @@ export default function Checkout({user, paymentIntent}) {
 }
 
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
-    const user:any = await getUser(ctx)
-    if(!user) return {props: {}}
+    const isAuth = await authenticated(ctx)
+    const user:any = isAuth ? await getUser(ctx) : null
 
     const stripe = new Stripe('sk_test_51H2lxQLlQTQgAaZ3g4KzwMFlcvz64iGJtyUcJdV8b5Xl460I76gtIhfC4AC3SAs9eyVvi1PMEHhLVQWfqtkL08tH00FuxE9oGS', {
         apiVersion: '2020-03-02'
@@ -80,6 +95,6 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
     })
 
     return {props: {
-        user, paymentIntent
+        loggedIn: isAuth, user, paymentIntent
     }}
 }
