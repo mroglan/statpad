@@ -45,7 +45,7 @@ export default function Checkout({loggedIn, user, paymentIntent}) {
 
     useEffect(() => {
         const script = document.createElement('script')
-        script.src = `https://www.paypal.com/sdk/js?client-id=ASXOBFezxQ8LXrufvfkgd2vTf9WW2QviV9ia1qi5wWrGHgLQ0OQQSHN-yVJy_T3-Z4pzNMjDm2_NVp0U`
+        script.src = `https://www.paypal.com/sdk/js?client-id=AVYpz29sdqSyZfiluamc1N-qPLCOx4UYkIK1Zg373QKDUz4obiXHcx4P_8IX8iw1FDB2Eq1kNXXIiRsg`
 
         script.addEventListener('load', () => setPaypalLoaded(true))
         document.body.append(script)
