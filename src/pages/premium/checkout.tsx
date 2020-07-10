@@ -11,9 +11,10 @@ import CheckoutWizard from '../../components/premium/CheckoutWizard'
 import BasicInfo from '../../components/premium/BasicInfo'
 import PaymentMethod from '../../components/premium/PaymentMethod'
 import StripePayment from '../../components/premium/StripePayment'
+import PaypalPayment from '../../components/premium/PaypalPayment'
 import SignIn from '../../components/premium/SignIn'
 import {Formik, Form, Field, useField} from 'formik'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {Elements} from '@stripe/react-stripe-js'
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY)
@@ -40,6 +41,16 @@ export default function Checkout({loggedIn, user, paymentIntent}) {
         setCurrentStep(currentStep + change)
     }
 
+    const [paypalLoaded, setPaypalLoaded] = useState(false)
+
+    useEffect(() => {
+        const script = document.createElement('script')
+        script.src = `https://www.paypal.com/sdk/js?client-id=ASXOBFezxQ8LXrufvfkgd2vTf9WW2QviV9ia1qi5wWrGHgLQ0OQQSHN-yVJy_T3-Z4pzNMjDm2_NVp0U`
+
+        script.addEventListener('load', () => setPaypalLoaded(true))
+        document.body.append(script)
+    }, [])
+
     const classes = useStyles()
     return (
         <div className={classes.root}>
@@ -57,7 +68,8 @@ export default function Checkout({loggedIn, user, paymentIntent}) {
                         {currentStep === 0 ? <SignIn changeStep={changeStep} /> : 
                         currentStep === 1 ? <BasicInfo info={basicInfo} setInfo={setBasicInfo} changeStep={changeStep} /> : 
                         currentStep === 2 ? <PaymentMethod paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} changeStep={changeStep} /> : 
-                        paymentMethod === 'stripe' ? <Elements stripe={stripePromise}><StripePayment paymentIntent={paymentIntent} changeStep={changeStep} /></Elements> : ''}
+                        paymentMethod === 'stripe' ? <Elements stripe={stripePromise}><StripePayment paymentIntent={paymentIntent} changeStep={changeStep} /></Elements> : 
+                        paymentMethod === 'paypal' ? <PaypalPayment changeStep={changeStep} paypalLoaded={paypalLoaded} /> : 'Wow something is wrong'}
                     </Box>
                 </Grid>
             </Grid>
