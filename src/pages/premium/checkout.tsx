@@ -16,7 +16,7 @@ import {Formik, Form, Field, useField} from 'formik'
 import {useState} from 'react'
 import {Elements} from '@stripe/react-stripe-js'
 
-const stripePromise = loadStripe('pk_test_51H2lxQLlQTQgAaZ3198eMV8xPTLSm3dGXTbMk47SJhH3PbVglO5pLfluhm3FLLlkgfnd7ogeCACRk2XHZgMgxteZ00JlPgUFme')
+const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY)
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -69,7 +69,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
     const isAuth = await authenticated(ctx)
     const user:any = isAuth ? await getUser(ctx) : null
 
-    const stripe = new Stripe('sk_test_51H2lxQLlQTQgAaZ3g4KzwMFlcvz64iGJtyUcJdV8b5Xl460I76gtIhfC4AC3SAs9eyVvi1PMEHhLVQWfqtkL08tH00FuxE9oGS', {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
         apiVersion: '2020-03-02'
     })
 
