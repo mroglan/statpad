@@ -12,6 +12,7 @@ interface UserI {
     password: string;
     image?: string;
     isVerified: boolean;
+    premium: boolean;
 }
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
@@ -48,7 +49,8 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
             _id: user._id,
             email: user.email,
             username: user.username,
-            image: user.image
+            image: user.image,
+            premium: user.premium
         }
         console.log('set claims...')
         console.log(process.env.SIGNATURE)

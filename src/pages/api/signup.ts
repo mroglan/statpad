@@ -44,7 +44,8 @@ export default async function signUp(req: NextApiRequest, res: NextApiResponse) 
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
-            isVerified: false
+            isVerified: false,
+            premium: false
         }
         const newUser = await db.collection('users').insertOne(user)
 

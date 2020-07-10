@@ -5,6 +5,9 @@ import {makeStyles} from '@material-ui/core/styles'
 import {Paper, Grid, Box, Typography, Button} from '@material-ui/core'
 import ErrorBox from '../messageBox/ErrorBox'
 import SuccessMessage from './SuccessMessage'
+import addPremium from '../../requests/addPremium'
+import removePremium from '../../requests/removePremium'
+import addPremiumToJWT from '../../requests/addPremiumToJWT'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -36,26 +39,36 @@ export default function StripePayment({paymentIntent, changeStep}) {
 
     const [checkoutErr, setCheckoutErr] = useState([])
     const [checkoutSuccess, setCheckoutSuccess] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const submitPurchase = async () => {
 
+        setLoading(true)
+
         try {  
+            await addPremium()
             const {error, paymentIntent: {status}} = await stripe.confirmCardPayment(paymentIntent.client_secret, {
                 payment_method: {
                     card: elements.getElement(CardElement)
                 }
             })
 
-            if(error) throw new Error(error.message)
+            if(error) {
+                await removePremium()
+                throw new Error(error.message)
+            }
 
             if(status === 'succeeded') {
+                await addPremiumToJWT()
                 destroyCookie(null, 'paymentIntentId', {
                     path: '/'
                 })
                 setCheckoutErr([])
                 setCheckoutSuccess(true)
             }
+            setLoading(false)
         } catch(e) {
+            setLoading(false)
             setCheckoutErr([e.message])
         }
     }
@@ -106,7 +119,7 @@ export default function StripePayment({paymentIntent, changeStep}) {
                     </Grid>
                     <Grid item>
                         <Button variant="contained" className={classes.submitButton} onClick={() => submitPurchase()}
-                        disabled={!stripe} >
+                        disabled={!stripe || loading} >
                             Purchase
                         </Button>
                     </Grid>
