@@ -7,13 +7,21 @@ import sendEmail from '../../utilities/sendEmail'
 export default async function signUp(req: NextApiRequest, res: NextApiResponse) {
     //console.log(req.body)
     if(req.method !== 'POST') {
-        res.send('oops...')
+        res.json({msg: 'Oops...'})
         return
     }
-    const db:any = await database()
     
     const errors = []
     try {
+
+        const db:any = await database()
+
+        const usernameRegex = /^\w+$/
+
+        if(!req.body.username.match(usernameRegex)) {
+            errors.push({msg: 'Username can only contain letters, numbers, and underscores'})
+            throw 'new error'
+        }
 
         const users = await db.collection('users').find({}).toArray()
 
