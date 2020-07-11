@@ -93,7 +93,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
         paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
 
         return {props: {
-            user, paymentIntent
+            loggedIn: isAuth, user, paymentIntent
         }}
     }
 

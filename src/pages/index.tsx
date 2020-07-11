@@ -101,7 +101,7 @@ export default function Home({loggedIn, user}) {
                     </li>
                     <li>
                       <Typography variant="body1" className={classes.textWhite}>
-                        Plots for you data
+                        Plots for your data
                       </Typography>
                     </li>
                     <li>

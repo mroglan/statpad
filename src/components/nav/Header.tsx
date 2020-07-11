@@ -118,6 +118,8 @@ const useStyles = makeStyles(theme => ({
         height: 64,
         display: 'flex',
         alignItems: 'center'
+    },
+    button: {
     }
 }))
 
@@ -166,17 +168,22 @@ export default function Header({loggedIn, user}:Props) {
                     </div>
                     <div className={classes.grow}></div>
                     <div className={classes.usefulLinks}>
-                        <Button color="inherit">
+                        <Button color="inherit" className={classes.button}>
                             <Link href="/about">
                                 <a style={{color: 'inherit', textDecoration: 'none'}}>About</a>
                             </Link>
                         </Button>
-                        <Button color="inherit">
+                        <Button color="inherit" className={classes.button}>
                             <Link href="/manual">
                                 <a style={{color: 'inherit', textDecoration:'none'}}>Manual</a>
                             </Link>
                         </Button>
-                    {!loggedIn ? <Button color="inherit">
+                        <Button color="inherit" className={classes.button}>
+                            <Link href="/premium">
+                                <a style={{color: 'hsl(31, 92%, 49%)', textDecoration: 'none'}}>Premium</a>
+                            </Link>
+                        </Button>
+                    {!loggedIn ? <Button color="inherit" className={classes.button}>
                         <Link href="/login">
                             <a style={{color:'inherit', textDecoration:'none'}}>Login</a>
                         </Link>
