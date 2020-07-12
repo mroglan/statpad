@@ -102,7 +102,7 @@ export default function SimProb({loggedIn, user}) {
         <>
         <Head>
             <title>Simulations &amp; Probability | Statpad Manual</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Explore Simulations &amp; Probability in Statpad: tree diagrams, 2 way tables, simulations, and much more!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

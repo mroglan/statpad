@@ -133,7 +133,7 @@ export default function SignUp() {
         <>
         <Head>
             <title>Signup | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Signup for a free Statpad Account to save your projects and explore new features!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={false} user={null} />

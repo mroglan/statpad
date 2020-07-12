@@ -98,7 +98,8 @@ export default function Manual({loggedIn, user}) {
         <>
         <Head>
             <title>The Manual | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Learn about Statpad's features: Data inputs, Graphs, Simulations &amp; Probability, 
+            Confidence Intervals, and Hypothesis Tests" />
         </Head>
         <div className={classes.root} {...horzMovementBind()}>
             <Header loggedIn={loggedIn} user={user} />

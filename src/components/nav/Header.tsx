@@ -148,7 +148,7 @@ export default function Header({loggedIn, user}:Props) {
                 <div className={classes.logoContainer}>
                     <Typography variant="h6" className={classes.logo}>
                         <Link href="/"><a className={classes.link}>
-                            <Typography variant="h4" className={classes.flex}><BarChartIcon style={{fontSize: 40}} />Statpad</Typography>
+                            <Typography component="h1" variant="h4" className={classes.flex}><BarChartIcon style={{fontSize: 40}} />Statpad</Typography>
                         </a></Link>
                     </Typography>
                 </div>

@@ -75,7 +75,7 @@ export default function ViewProfile({publicProjects, editors, loggedIn, user, pr
         <>
         <Head>
             <title>{profile.username} | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content={`View the Statpad profile of ${profile.username}`} />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
@@ -157,7 +157,15 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
         const allProjEditors:any[] = projects.reduce((editors, project) => {
             return [...editors, ...project.editorsInfo]
         }, []).filter(editor => editor._id.toString() !== profile._id.toString())
-        const editors = [...Array.from(new Set(allProjEditors))]
+        //const editors = [...Array.from(new Set(allProjEditors))]
+
+        const editors = allProjEditors.reduce((filteredEditors, editor) => {
+            if(filteredEditors.find(el => el._id.toString() === editor._id.toString())) {
+                return filteredEditors
+            }
+            filteredEditors.push(editor)
+            return filteredEditors
+        }, [])
         
         const publicProjects = projects.filter(proj => proj.public)
 

@@ -122,7 +122,7 @@ export default function VisitProjects({loggedIn, user, initialProjects}) {
         <>
         <Head>
             <title>Visit Projects | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Visit any public Statpad projects you would like!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
@@ -168,15 +168,16 @@ export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePro
         //console.log('type of userId', typeof userId)
         const db = await database()
         const projects = await db.collection('projects').aggregate([
-            {'$sample': {
-                'size': 5
-            }}, {'$match': {
+            {'$match': {
                 'public': true,
                 'editors': {
                     '$not': {
                         '$in': [userId]
                     }
                 }
+            }},
+            {'$sample': {
+                'size': 5
             }}
         ]).toArray()
         //console.log(projects)

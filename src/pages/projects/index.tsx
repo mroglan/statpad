@@ -152,7 +152,7 @@ export default function Projects({user, serverProjects}) {
         <>
         <Head>
             <title>My Projects | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="View your Statpad Projects" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />

@@ -134,7 +134,7 @@ export default function Login({signedUp}) {
         <>
         <Head>
             <title>Login | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Login to your free Statpad Account to take advantage of some amazing tools." />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={false} user={null} />

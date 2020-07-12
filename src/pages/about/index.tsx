@@ -136,7 +136,7 @@ export default function About({loggedIn, user}) {
         <>
         <Head>
             <title>About Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Learn about Statpad and other random stuff that may have nothing to do with it" />
         </Head>
         <div className={classes.root} {...movementBind()}>
             <Header loggedIn={loggedIn} user={user} />

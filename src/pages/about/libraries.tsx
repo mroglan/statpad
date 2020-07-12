@@ -67,7 +67,7 @@ export default function Libraries({loggedIn, user}) {
         <>
         <Head>
             <title>Libraries | About Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="View some of the libraries that went into creating Statpad!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

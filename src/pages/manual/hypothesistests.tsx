@@ -82,7 +82,7 @@ export default function HypothesisTests({loggedIn, user}) {
         <>
         <Head>
             <title>Hypothesis Tests | Statpad Manual</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Explore Hypothesis Tests in Statpad: 1 sample tests, 2 sample tests, and regression tests!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} />

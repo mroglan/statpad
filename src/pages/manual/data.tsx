@@ -70,7 +70,8 @@ export default function Data({loggedIn, user}) {
         <>
         <Head>
             <title>Data | Statpad Manual</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Explore Data inputs in Statpad: adding rows, 
+            adding columns, and connecting your data to other project components!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

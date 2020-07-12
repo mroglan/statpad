@@ -137,7 +137,7 @@ export default function Create({loggedIn, user}) {
         <>
         <Head>
             <title>Basic Create | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Use Basic Create to quickly create graphs and regressions for free without having to create any account" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

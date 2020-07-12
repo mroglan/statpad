@@ -41,7 +41,7 @@ export default function ResendEmail() {
         <>
         <Head>
             <title>Resend Confirmation Email | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Didn't receive a confirmation email for your Statpad account? Simply resend it" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={false} user={null} />

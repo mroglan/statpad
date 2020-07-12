@@ -90,7 +90,7 @@ export default function ConfidenceIntervals({loggedIn, user}) {
         <>
         <Head>
             <title>Confidence Intervals | Statpad Manual</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Explore Confidence Intervals in Statpad: 1 sample intervals, 2 sample intervals, and regression intervals!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

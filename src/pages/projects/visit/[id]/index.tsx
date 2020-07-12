@@ -77,7 +77,7 @@ export default function VisitProject({loggedIn, user, project, components}) {
         <>
         <Head>
             <title>{project.name} | Visit</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content={`Visit ${project.name}`} />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

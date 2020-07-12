@@ -65,7 +65,6 @@ export default function Home({loggedIn, user}) {
       <meta property="og:image" content="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509485/webpage/k72yxqcaxwmxpsh252xl.png" />
       <meta property="og:type" content="website" />
       <meta property="og:description" content="Welcome to Statpad, the ultimate resource for stat padding through graphs, simulations, confidence intervals, and much more!" />
-      <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
       <link rel="canonical" href="https://statpad.vercel.app/" /> 
     </Head>
     <div className={classes.root}>

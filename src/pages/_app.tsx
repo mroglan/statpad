@@ -60,11 +60,12 @@ export default class MyApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>Statpad</title>
+          <title>Statpad: The Ultimate Tool for Statistics</title>
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
           />
+          <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
         </Head>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

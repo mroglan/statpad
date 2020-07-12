@@ -57,7 +57,7 @@ export default function Checkout({loggedIn, user, paymentIntent}) {
         <>
         <Head>
             <title>Purchase Premium | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Purchase the most epic Premium Account you will ever see for only $4.99!!!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

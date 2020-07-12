@@ -167,7 +167,7 @@ export default function PremiumInfoBooklet() {
                         <Link href="/premium/checkout">
                             <a style={{textDecoration: 'none'}}>
                                 <Button variant="contained" className={classes.button}>
-                                    Purchase
+                                    Purchase for $4.99
                                 </Button>
                             </a>
                         </Link>

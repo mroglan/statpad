@@ -70,7 +70,7 @@ export default function Component({user, component, project, allComponents, data
         <>
         <Head>
             <title>{component.name} | {project.name}</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content={`The ${component.name} component of ${project.name} `} />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />

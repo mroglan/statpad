@@ -106,7 +106,7 @@ export default function Dashboard({user, recentProjects}) {
         <>
         <Head>
             <title>Dashboard | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" /> 
+            <meta name="description" content="View any recent projects you have been working on" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />

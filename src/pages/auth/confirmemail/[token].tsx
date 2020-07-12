@@ -19,7 +19,7 @@ export default function ConfirmAccount({success}) {
         <>
         <Head>
             <title>Verify Account | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="Verify your Statpad Account. This link should be accessible through an email sent to you." />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={false} user={null} />

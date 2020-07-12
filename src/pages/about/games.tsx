@@ -115,7 +115,7 @@ export default function Games({loggedIn, user}) {
         <>
         <Head>
             <title>Games | About Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="View some games you can play if you do not feel like doing Stat" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />

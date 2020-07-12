@@ -156,7 +156,7 @@ export default function Profile({user}) {
         <>
         <Head>
             <title>My Profile | Statpad</title>
-            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+            <meta name="description" content="View and make changes to your Statpad profile!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />
