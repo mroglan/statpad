@@ -4,9 +4,6 @@ import Header from '../components/nav/Header'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import authenticated from '../requests/authenticated'
 import Link from 'next/link'
-import {useTransition, animated, interpolate} from 'react-spring'
-import {useMove, useHover} from 'react-use-gesture'
-import {useState, useEffect} from 'react'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -14,6 +11,7 @@ import InfoCarousel from '../components/homePage/InfoCarousel1'
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import getUser from '../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,6 +57,17 @@ export default function Home({loggedIn, user}) {
 
   const classes = useStyles()
   return (
+    <>
+    <Head>
+      <meta name="description" content="Welcome to Statpad, the ultimate resource for stat padding through graphs, simulations, confidence intervals, and much more!" />
+      <meta property="og:title" content="The Ultimate Tool for Stat Padding" />
+      <meta property="og:url" content="https://statpad.vercel.app/" />
+      <meta property="og:image" content="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509485/webpage/k72yxqcaxwmxpsh252xl.png" />
+      <meta property="og:type" content="website" />
+      <meta property="og:description" content="Welcome to Statpad, the ultimate resource for stat padding through graphs, simulations, confidence intervals, and much more!" />
+      <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+      <link rel="canonical" href="https://statpad.vercel.app/" /> 
+    </Head>
     <div className={classes.root}>
       <Header loggedIn={loggedIn} user={user} />
       <Grid container justify="center">
@@ -190,6 +199,7 @@ export default function Home({loggedIn, user}) {
         </Grid>
       </Grid>
     </div>
+    </>
   )
 }
 

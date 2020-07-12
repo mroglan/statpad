@@ -12,6 +12,7 @@ import {useState} from 'react'
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import Link from 'next/link'
 import VisitorProjectList from '../../../components/lists/VisitorProjectList'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -71,6 +72,11 @@ export default function ViewProfile({publicProjects, editors, loggedIn, user, pr
     
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>{profile.username} | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
@@ -123,6 +129,7 @@ export default function ViewProfile({publicProjects, editors, loggedIn, user, pr
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

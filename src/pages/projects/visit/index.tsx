@@ -11,6 +11,7 @@ import authenticated from '../../../requests/authenticated'
 import VisitProjectList from '../../../components/lists/VisitorProjectList'
 import {useState} from 'react'
 import SyncIcon from '@material-ui/icons/Sync';
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -118,6 +119,11 @@ export default function VisitProjects({loggedIn, user, initialProjects}) {
 
     const classes = useStyles() 
     return (
+        <>
+        <Head>
+            <title>Visit Projects | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
@@ -148,6 +154,7 @@ export default function VisitProjects({loggedIn, user, initialProjects}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

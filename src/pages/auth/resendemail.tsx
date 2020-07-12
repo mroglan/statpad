@@ -5,6 +5,7 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import ResendModal from '../../components/emailConfirmation/ResendModal1'
 import Header from '../../components/nav/Header'
 import {useState} from 'react'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,6 +38,11 @@ export default function ResendEmail() {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>Resend Confirmation Email | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={false} user={null} />
             <Box mt={3} mx={3}>
@@ -64,5 +70,6 @@ export default function ResendEmail() {
             </Box>
             <ResendModal open={viewResendModal} toggleOpen={toggleResendModal} />
         </div>
+        </>
     )
 }

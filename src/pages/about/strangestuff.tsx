@@ -6,6 +6,7 @@ import authenticated from '../../requests/authenticated'
 import AboutNav from '../../components/nav/AboutNav'
 import AboutSideNav from '../../components/nav/AboutSideNav'
 import getUser from '../../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -59,6 +60,11 @@ export default function StrangeStuff({loggedIn, user}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>Strange Stuff | About Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
@@ -209,6 +215,7 @@ export default function StrangeStuff({loggedIn, user}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

@@ -11,6 +11,7 @@ import authenticated from '../../requests/checkNotAuth'
 import Link from 'next/link'
 import SideNav from '../../components/nav/SideNav'
 import getUser from '../../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,7 +26,6 @@ const useStyles = makeStyles(theme => ({
             '& nav': {
                 display: 'flex',
                 flexFlow: 'row wrap',
-                justifyContent: 'center',
                 maxWidth: 600,
                 [theme.breakpoints.down('xs')]: {
                     maxWidth: 300
@@ -157,6 +157,11 @@ export default function CreateProject({user}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>New Project | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
@@ -285,6 +290,7 @@ export default function CreateProject({user}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

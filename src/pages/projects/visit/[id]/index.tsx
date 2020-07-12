@@ -11,6 +11,7 @@ import checkObjectId from "../../../../utilities/checkObjectId"
 import {ObjectId} from 'mongodb'
 import BasicProjectInfo from'../../../../components/projectComponents/projectHome/BasicProjectInfo'
 import VisitComponentsList from '../../../../components/lists/VisitComponentsList'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -73,6 +74,11 @@ export default function VisitProject({loggedIn, user, project, components}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>{project.name} | Visit</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
@@ -97,6 +103,7 @@ export default function VisitProject({loggedIn, user, project, components}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

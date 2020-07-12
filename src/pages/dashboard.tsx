@@ -11,6 +11,7 @@ import {useRef} from 'react'
 import Link from 'next/link'
 import ProjectList from '../components/lists/ProjectList'
 import {ObjectId} from 'mongodb'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -102,6 +103,11 @@ export default function Dashboard({user, recentProjects}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>Dashboard | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" /> 
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
@@ -145,6 +151,7 @@ export default function Dashboard({user, recentProjects}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

@@ -16,6 +16,7 @@ import SignIn from '../../components/premium/SignIn'
 import {Formik, Form, Field, useField} from 'formik'
 import {useState, useEffect} from 'react'
 import {Elements} from '@stripe/react-stripe-js'
+import Head from 'next/head'
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY)
 
@@ -53,6 +54,11 @@ export default function Checkout({loggedIn, user, paymentIntent}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>Purchase Premium | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container>
@@ -74,6 +80,7 @@ export default function Checkout({loggedIn, user, paymentIntent}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

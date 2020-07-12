@@ -18,6 +18,11 @@ export default function Premium({loggedIn, user}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>PREMIUM | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             {/* turn page animation to revaeal features... */}
@@ -25,6 +30,7 @@ export default function Premium({loggedIn, user}) {
                 <PremiumInfoBooklet />
             </Box>
         </div>
+        </>
     )
 }
 

@@ -11,6 +11,7 @@ import {useSprings, animated, interpolate} from 'react-spring'
 import Link from 'next/link'
 import {Fragment} from 'react'
 import getUser from '../../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -94,6 +95,11 @@ export default function Manual({loggedIn, user}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>The Manual | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root} {...horzMovementBind()}>
             <Header loggedIn={loggedIn} user={user} />
             <Box>
@@ -208,6 +214,7 @@ export default function Manual({loggedIn, user}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

@@ -18,6 +18,7 @@ import verifyEditor from '../../../requests/verifyEditor'
 import checkObjectId from '../../../utilities/checkObjectId'
 import BasicProjectInfo from'../../../components/projectComponents/projectHome/BasicProjectInfo'
 import {User, BaseComponent} from '../../../components/projectComponents/projectInterfaces'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -156,6 +157,11 @@ export default function Project({user, project, serverComponents}:Props) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>{project.name}</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
@@ -239,6 +245,7 @@ export default function Project({user, project, serverComponents}:Props) {
             editors={editors}
             projectId={project._id} />
         </div>
+        </>
     )
 }
 

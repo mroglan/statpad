@@ -10,6 +10,7 @@ import SuccessBox from '../components/messageBox/SuccessBox'
 import { GetServerSideProps } from 'next'
 import checkNotAuth from '../requests/checkNotAuth'
 import Link from 'next/link'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -130,6 +131,11 @@ export default function Login({signedUp}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>Login | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={false} user={null} />
             <Grid container>
@@ -242,6 +248,7 @@ export default function Login({signedUp}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

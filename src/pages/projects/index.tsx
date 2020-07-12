@@ -13,6 +13,7 @@ import {useState, useMemo} from 'react'
 import DeleteProjectDialog from '../../components/dialogs/deleteProjectDialog'
 import LeaveProjectDialog from '../../components/dialogs/leaveProjectDialog'
 import Router from 'next/router'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -148,6 +149,11 @@ export default function Projects({user, serverProjects}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>My Projects | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
@@ -224,6 +230,7 @@ export default function Projects({user, serverProjects}) {
             <LeaveProjectDialog open={viewLeaveModal} toggleOpen={toggleLeaveProjectModal} projects={projects} 
             owner={user._id} />
         </div>
+        </>
     )
 }
 

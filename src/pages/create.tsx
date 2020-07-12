@@ -10,6 +10,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import authenticated from '../requests/authenticated'
 import getUser from '../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -133,6 +134,11 @@ export default function Create({loggedIn, user}) {
     const classes = useStyles()
 
     return (
+        <>
+        <Head>
+            <title>Basic Create | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
@@ -191,6 +197,7 @@ export default function Create({loggedIn, user}) {
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

@@ -11,6 +11,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import getUser from '../../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -132,6 +133,11 @@ export default function About({loggedIn, user}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>About Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root} {...movementBind()}>
             <Header loggedIn={loggedIn} user={user} />
             <Box pb={3}>
@@ -220,6 +226,7 @@ export default function About({loggedIn, user}) {
                 </Grid>
             </Box>
         </div>
+        </>
     )
 }
 

@@ -18,6 +18,7 @@ import VisitHypothesisTests from '../../../../../components/projectComponents/vi
 import verifyEditor from '../../../../../requests/verifyEditor'
 import checkObjectId from '../../../../../utilities/checkObjectId'
 import authenticated from '../../../../../requests/authenticated'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -67,6 +68,11 @@ export default function Component({user, loggedIn, component, project, allCompon
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>{component.name} | {project.name} | Visit</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
@@ -90,6 +96,7 @@ export default function Component({user, loggedIn, component, project, allCompon
                 </Grid>
             </Grid>
         </div>
+        </>
     )
 }
 

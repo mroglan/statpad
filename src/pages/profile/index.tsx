@@ -11,6 +11,7 @@ import ErrorBox from '../../components/messageBox/ErrorBox'
 import CloseIcon from '@material-ui/icons/Close'
 import EditIcon from '@material-ui/icons/Edit';
 import {useRef, ChangeEvent} from 'react'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -152,6 +153,11 @@ export default function Profile({user}) {
 
     const classes = useStyles()
     return (
+        <>
+        <Head>
+            <title>My Profile | Statpad</title>
+            <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+        </Head>
         <div className={classes.root}>
             <Header loggedIn={true} user={user} />
             <Grid container spacing={3}>
@@ -230,6 +236,7 @@ export default function Profile({user}) {
                 </IconButton>
             } />
         </div>
+        </>
     )
 }
 

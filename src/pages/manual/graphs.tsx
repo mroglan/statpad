@@ -7,6 +7,7 @@ import ManualNav from '../../components/nav/ManualNav'
 import ManualSideNav from '../../components/nav/ManualSideNav'
 import ExampleCarousel from '../../components/carousels/ExampleCarousel1'
 import getUser from '../../requests/getUser'
+import Head from 'next/head'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -106,6 +107,11 @@ export default function Graphs({loggedIn, user}) {
     
     const classes = useStyles()
     return (
+    <>
+    <Head>
+        <title>Graphs | Statpad Manual</title>
+        <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqtpxyaeo/image/upload/v1594509878/webpage/kbe7kwyavz3ye7fxamnl.png" />
+    </Head>
     <div className={classes.root}>
         <Header loggedIn={loggedIn} user={user} />
         <Grid container spacing={3}>
@@ -236,6 +242,7 @@ export default function Graphs({loggedIn, user}) {
             </Grid>
         </Grid>
     </div>
+    </>
     )
 }
 
