@@ -19,10 +19,10 @@ export default function AboutSideNav() {
     const classes = useStyles()
     return (
         <List component="nav" style={{padding: 0}}>
-            <Link href="/about/libraries">
+            <Link href="/about/resources">
                 <ListItem button className={classes.listItem}>
                     <ListItemText className={classes.listText}>
-                        Libraries
+                        Resources
                     </ListItemText>
                 </ListItem>
             </Link>

@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     },
     sectionInfo: {
         padding: '0 1rem 1rem 1rem',
-        lineHeight: '2rem'
+        lineHeight: '2rem',
     },
     sideBar: {
         position: 'sticky',
@@ -66,8 +66,8 @@ export default function Libraries({loggedIn, user}) {
     return (
         <>
         <Head>
-            <title>Libraries | About Statpad</title>
-            <meta name="description" content="View some of the libraries that went into creating Statpad!" />
+            <title>Resources | About Statpad</title>
+            <meta name="description" content="View some of the resources that went into creating Statpad!" />
         </Head>
         <div className={classes.root}>
             <Header loggedIn={loggedIn} user={user} />
@@ -79,7 +79,7 @@ export default function Libraries({loggedIn, user}) {
                 </Grid>
                 <Grid item xs={12} md={9}>
                     <Box>
-                        <AboutNav comp={{name: 'Libraries', path: 'libraries'}} />
+                        <AboutNav comp={{name: 'Resources', path: 'resources'}} />
                     </Box>
                     <Box>
                         <Paper elevation={1} className={classes.paper}>
@@ -240,6 +240,46 @@ export default function Libraries({loggedIn, user}) {
                                 This library is used to complement react-spring and make detecting a "gesture" from a user easier.
                                 When a specific gesture is detected, I can then use react-spring to create an animation. This project uses
                                 the mouse move and hover gestures, but use-gesture also supports dragging, pinching, scrolling, and much more.
+                            </Typography>
+                        </Paper>
+                    </Box>
+                    <Box>
+                        <Paper elevation={1} className={classes.paper}>
+                            <Typography gutterBottom variant="h4" className={`${classes.textWhite} ${classes.sectionTitle}`}>
+                                <a className={classes.link} target="_blank" href="https://developer.paypal.com/docs/checkout/reference/customize-sdk/">
+                                    Paypal
+                                </a>
+                            </Typography>
+                            <Typography variant="body1" className={`${classes.lightWhite} ${classes.sectionInfo}`}>
+                                No paypal library used for the front end but payments are handled using an external script that
+                                allows users to be redirected to paypal to purchase Statpad Premium. 
+                            </Typography>
+                        </Paper>
+                    </Box>
+                    <Box>
+                        <Paper elevation={1} className={classes.paper}>
+                            <Typography gutterBottom variant="h4" className={`${classes.textWhite} ${classes.sectionTitle}`}>
+                                <a className={classes.link} target="_blank" href="https://www.npmjs.com/package/@sendgrid/mail">
+                                    SendGrid
+                                </a>
+                            </Typography>
+                            <Typography variant="body1" className={`${classes.lightWhite} ${classes.sectionInfo}`}>
+                                A library (@sendgrid/mail) is used to easily send emails to new users through SendGrid. SendGrid is used to 
+                                send an email for users to confirm their account. The email contains a url with their verification token 
+                                code. 
+                            </Typography>
+                        </Paper>
+                    </Box>
+                    <Box>
+                        <Paper elevation={1} className={classes.paper}>
+                            <Typography gutterBottom variant="h4" className={`${classes.textWhite} ${classes.sectionTitle}`}>
+                                <a className={classes.link} target="_blank" href="https://www.npmjs.com/package/stripe">
+                                    Stripe
+                                </a>
+                            </Typography>
+                            <Typography variant="body1" className={`${classes.lightWhite} ${classes.sectionInfo}`}>
+                                Stripe is used to handle payments with credit or debit cards for Statpad Premium. In this application the stripe library
+                                and a Stripe library for React is used. 
                             </Typography>
                         </Paper>
                     </Box>

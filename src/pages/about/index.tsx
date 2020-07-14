@@ -143,16 +143,16 @@ export default function About({loggedIn, user}) {
             <Box pb={3}>
                 <Grid container spacing={5} justify="space-between">
                     <Grid item xs={12} sm={7} md={4} className={classes.cardGridItem} >
-                        <Link href="/about/libraries">
+                        <Link href="/about/resources">
                             <a style={{textDecoration: 'none'}}>
                                 <AnimatedCard className={classes.card} style={{transform: cards[0].transform}} {...cardHoverBind(0)} >
                                     <CardMedia className={classes.cardImage} image="/aboutMain/libraries.png" title="Libraries" />
                                     <CardContent className={classes.cardContent}>
                                         <Typography variant="h5" gutterBottom>
-                                            Some Libraries Used
+                                            Some Resources Used
                                         </Typography>
                                         <Typography variant="body2" className={classes.lightWhite}>
-                                            suk it Angular
+                                            libraries, database, backend, frontend ...
                                         </Typography>
                                     </CardContent>
                                 </AnimatedCard>
