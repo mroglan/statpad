@@ -1,6 +1,7 @@
 import {Bar} from 'react-chartjs-2'
 import {ChartDataInterface, PlotProps, BarAndHistogramGraphOptions} from './chartInterfaces'
 
+const barNum = 10
 
 export default function BarGraph({data, properties, graphProperties}: PlotProps) {
 
@@ -11,6 +12,35 @@ export default function BarGraph({data, properties, graphProperties}: PlotProps)
         if(row[properties[0].y.num] !== 0 || row[properties[0].x.num] !== 0) if(!row[properties[0].x.num] || !row[properties[0].y.num]) return
         return {x: row[properties[0].x.num], y: row[properties[0].y.num]}
     }).filter((dataPoint: ChartDataInterface) => dataPoint)
+
+    const sortedHistogramData:ChartDataInterface[] = chartData.map(({x, y}) => ({x: Number(x), y: Number(y)})).sort((p1, p2) => p1.x - p2.x) // sort in ascending order
+
+    const histDataMin = sortedHistogramData[0].x
+    const histDataMax = sortedHistogramData[sortedHistogramData.length - 1].x
+
+    const intervalMin = histDataMin // Math.floor(histDataMin / 10) * 10
+    const intervalMax = histDataMax + ((histDataMax - histDataMin) / barNum) // (Math.ceil(histDataMax / 10) * 10) + (Number.isInteger(histDataMax / 10) ? 10 : 0)
+
+    const interval = properties[0].options.bar.interval ? Number(properties[0].options.bar.interval) : (intervalMax - intervalMin) / barNum
+
+    const ranges:{min:number, max:number}[] = []
+
+    for(let i = 0; Number((((i + 1) * interval) + intervalMin).toFixed(2)) < intervalMax + interval; i++) {
+        ranges.push({min: Number(((i * interval) + intervalMin).toFixed(2)), max: Number((((i + 1) * interval) + intervalMin).toFixed(2))})
+    }
+
+    const histData = ranges.map(({min, max}) => {
+        const sum = sortedHistogramData.reduce((total, point) => {
+            if(point.x >= min && point.x < max) {
+                return total += point.y
+            }
+            return total
+        }, 0)
+        return {x: `[${min}, ${max})`, y: sum}
+    })
+
+    console.log(histData)
+
 
     const graphOptions:BarAndHistogramGraphOptions = {
         responsive: true,
@@ -57,13 +87,16 @@ export default function BarGraph({data, properties, graphProperties}: PlotProps)
         }
     }
 
-    const labels = chartData.map((point:ChartDataInterface) => point.x)
-    const values = chartData.map((point:ChartDataInterface) => Number(point.y))
+    const barLabels = chartData.map((point:ChartDataInterface) => point.x)
+    const barValues = chartData.map((point:ChartDataInterface) => Number(point.y))
+
+    const histLabels = histData.map((point) => point.x)
+    const histValues = histData.map(point => point.y)
 
     const barGraphData = {
-        labels,
+        labels: properties[0].type === 'bar' ? barLabels : histLabels,
         datasets: [{
-            data: values,
+            data: properties[0].type === 'bar' ? barValues : histValues,
             label: properties[0].label,
             backgroundColor: properties[0].options.bar.backgroundColor,
             borderColor: properties[0].options.bar.borderColor,

@@ -39,6 +39,7 @@ export interface ChartProperties {
             backgroundColor: string;
             borderColor: string;
             borderWidth: number;
+            interval?: string;
         }
     };
 }

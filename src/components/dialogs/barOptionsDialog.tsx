@@ -58,7 +58,8 @@ export default function barOptionsDialog({property, index, handlePropertyChange,
         propertyCopy.options.bar = {
             backgroundColor: backgroundColorRef.current.value,
             borderColor: borderColorRef.current.value,
-            borderWidth: borderWidthRef.current.value
+            borderWidth: borderWidthRef.current.value,
+            interval: intervalRef.current.value
         }
         handlePropertyChange(propertyCopy, index - 1)
         handleOptionsClose()
@@ -68,6 +69,7 @@ export default function barOptionsDialog({property, index, handlePropertyChange,
     const backgroundColorRef = useRef<HTMLInputElement>()
     const borderColorRef = useRef<HTMLInputElement>()
     const borderWidthRef = useRef<HTMLInputElement>()
+    const intervalRef = useRef<HTMLInputElement>()
 
     const classes = useStyles()
     return (
@@ -98,6 +100,13 @@ export default function barOptionsDialog({property, index, handlePropertyChange,
                         <TextField type="text" defaultValue={property.options.bar.borderWidth} inputRef={borderWidthRef}
                         className={classes.numberInput} InputProps={{disableUnderline: true}} />
                     </Grid>
+                </Grid>
+                <Grid container direction="row" className={classes.morePadding}>
+                    {property.type === 'histogram' && <Grid item sm={4} container alignItems="center">
+                        <label>Interval</label>
+                        <TextField type="text" defaultValue={property.options.bar.interval || ''} inputRef={intervalRef}
+                        className={classes.numberInput} InputProps={{disableUnderline: true}} />
+                    </Grid>}
                 </Grid>
             </DialogContent>
             <DialogActions>
