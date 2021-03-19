@@ -85,7 +85,7 @@ export default function HypothesisTests({loggedIn, user}) {
             <meta name="description" content="Explore Hypothesis Tests in Statpad: 1 sample tests, 2 sample tests, and regression tests!" />
         </Head>
         <div className={classes.root}>
-            <Header loggedIn={loggedIn} />
+            <Header loggedIn={loggedIn} user={user} />
             <Grid container spacing={3}>
                 <Grid item style={{margin: '0 auto'}} md={3}>
                     <Paper className={classes.sideBar}>

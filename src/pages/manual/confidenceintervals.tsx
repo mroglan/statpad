@@ -172,5 +172,5 @@ export default function ConfidenceIntervals({loggedIn, user}) {
 export const getServerSideProps:GetServerSideProps = async (ctx:GetServerSidePropsContext) => {
     const isAuth = await authenticated(ctx)
     const user = isAuth ? await getUser(ctx) : null
-    return {props: {loggedIn: isAuth}}
+    return {props: {loggedIn: isAuth, user}}
 }
